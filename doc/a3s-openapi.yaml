@@ -3452,6 +3452,8 @@ components:
         - uuid
         - name
         - description
+        - roleIds
+        - functionIds
       type: object
       properties:
         uuid:

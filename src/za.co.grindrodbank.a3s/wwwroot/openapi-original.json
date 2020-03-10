@@ -5337,7 +5337,7 @@
             "type" : "array"
           }
         },
-        "required" : [ "description", "name", "uuid" ],
+        "required" : [ "description", "functionIds", "name", "roleIds", "uuid" ],
         "type" : "object"
       },
       "RoleTransient" : {

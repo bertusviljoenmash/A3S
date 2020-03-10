@@ -259,7 +259,6 @@ namespace za.co.grindrodbank.a3s.Services
                 }
             }
         }
- 
 
         private async Task<List<RoleFunctionTransientModel>> DetectAndCaptureNewRoleFunctionsAssignments(RoleModel roleModel, Guid roleId, RoleSubmit roleSubmit, Guid capturedBy, Guid roleSubRealm, List<RoleFunctionTransientModel> affectedRoleFunctionTransientRecords)
         {
