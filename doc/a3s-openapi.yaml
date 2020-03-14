@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   description: >-
     API Definition for A3S. This service allows authentication, authorisation and accounting.
-  version: 1.1.2
+  version: 1.1.0
   title: A3S
 paths:
   #region - User
@@ -3495,6 +3495,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Team'
+        customAttributes:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              value:
+                type: string
 
     UserSubmit:
       description: |
@@ -3539,6 +3548,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TeamId'          
+        customAttributes:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              value:
+                type: string
     UserPasswordChangeSubmit:
       description: |
         Used to change a user's password.
@@ -3961,7 +3979,17 @@ components:
           description: An array of all the role names that are to be added to the user. The user must already exist or be defined in other sections of the security contract.
           items:
             type: string
-      
+        customAttributes:
+          type: array
+          description: An array of all custom claims for the user.
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+
     SecurityContractDefaultConfigurationLdapAttributeLink:
       description: |
         An LdapAttributeLink - A LDAP attribute link definition
