@@ -359,14 +359,16 @@ namespace za.co.grindrodbank.a3s.tests.Services
             userRepository.GetByUsernameAsync(Arg.Any<string>(), Arg.Any<bool>()).Returns(new UserModel
             {
                 UserName = "Test User Model",
-                Email = "test@email.com"
+                Email = "test@email.com",
+                CustomAttributes = new List<UserCustomAttributeModel>()
             });
 
             // The service should attempt an update on the users, ensure this is possible.
             userRepository.UpdateAsync(Arg.Any<UserModel>()).Returns(new UserModel
             {
                 UserName = "Test User Model",
-                Email = "test@email.com"
+                Email = "test@email.com",
+                CustomAttributes = new List<UserCustomAttributeModel>()
             });
 
             securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository,
@@ -382,7 +384,8 @@ namespace za.co.grindrodbank.a3s.tests.Services
                     new SecurityContractDefaultConfigurationUser
                     {
                         Username = "Test User",
-                        Email = "test@email.com"
+                        Email = "test@email.com",
+                        CustomAttributes = new List<UserCustomAttribute>()
                     }
                 }
             }};
