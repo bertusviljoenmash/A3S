@@ -3981,7 +3981,7 @@ components:
             type: string
         customAttributes:
           type: array
-          description: An array of all custom claims for the user.
+          description: An array of all custom attributes for the user.
           items:
             type: object
             properties:
