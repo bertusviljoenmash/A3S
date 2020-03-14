@@ -6224,9 +6224,8 @@
             "type" : "array"
           },
           "customAttributes" : {
-            "description" : "An array of all custom attributes for the user.",
             "items" : {
-              "$ref" : "#/components/schemas/SecurityContractDefaultConfigurationUser_customAttributes"
+              "$ref" : "#/components/schemas/UserCustomAttribute"
             },
             "type" : "array"
           }
@@ -7337,20 +7336,6 @@
           }
         },
         "type" : "object"
-      },
-      "SecurityContractDefaultConfigurationUser_customAttributes" : {
-        "example" : {
-          "value" : "value",
-          "key" : "key"
-        },
-        "properties" : {
-          "key" : {
-            "type" : "string"
-          },
-          "value" : {
-            "type" : "string"
-          }
-        }
       }
     }
   }

@@ -128,11 +128,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public List<string> Roles { get; set; }
 
         /// <summary>
-        /// An array of all custom attributes for the user.
+        /// Gets or Sets CustomAttributes
         /// </summary>
-        /// <value>An array of all custom attributes for the user.</value>
         [DataMember(Name="customAttributes", EmitDefaultValue=false)]
-        public List<SecurityContractDefaultConfigurationUserCustomAttributes> CustomAttributes { get; set; }
+        public List<UserCustomAttribute> CustomAttributes { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
