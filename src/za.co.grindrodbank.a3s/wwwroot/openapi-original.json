@@ -5461,7 +5461,7 @@
           },
           "customAttributes" : {
             "items" : {
-              "$ref" : "#/components/schemas/User_customAttributes"
+              "$ref" : "#/components/schemas/UserCustomAttribute"
             },
             "type" : "array"
           }
@@ -5538,7 +5538,7 @@
           },
           "customAttributes" : {
             "items" : {
-              "$ref" : "#/components/schemas/User_customAttributes"
+              "$ref" : "#/components/schemas/UserCustomAttribute"
             },
             "type" : "array"
           }
@@ -5566,6 +5566,22 @@
             "type" : "string"
           },
           "oldPassword" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "UserCustomAttribute" : {
+        "description" : "Model for user custom attribute.\n",
+        "example" : {
+          "value" : "value",
+          "key" : "key"
+        },
+        "properties" : {
+          "key" : {
+            "type" : "string"
+          },
+          "value" : {
             "type" : "string"
           }
         },
@@ -6210,7 +6226,7 @@
           "customAttributes" : {
             "description" : "An array of all custom attributes for the user.",
             "items" : {
-              "$ref" : "#/components/schemas/User_customAttributes"
+              "$ref" : "#/components/schemas/SecurityContractDefaultConfigurationUser_customAttributes"
             },
             "type" : "array"
           }
@@ -7322,7 +7338,7 @@
         },
         "type" : "object"
       },
-      "User_customAttributes" : {
+      "SecurityContractDefaultConfigurationUser_customAttributes" : {
         "example" : {
           "value" : "value",
           "key" : "key"

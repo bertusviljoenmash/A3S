@@ -3498,13 +3498,7 @@ components:
         customAttributes:
           type: array
           items:
-            type: object
-            properties:
-              key:
-                type: string
-              value:
-                type: string
-
+            $ref: '#/components/schemas/UserCustomAttribute'
     UserSubmit:
       description: |
         Model used to create or update a user.
@@ -3551,12 +3545,7 @@ components:
         customAttributes:
           type: array
           items:
-            type: object
-            properties:
-              key:
-                type: string
-              value:
-                type: string
+            $ref: '#/components/schemas/UserCustomAttribute'
     UserPasswordChangeSubmit:
       description: |
         Used to change a user's password.
@@ -3570,6 +3559,15 @@ components:
         newPasswordConfirmed:
           type: string
         oldPassword:
+          type: string
+    UserCustomAttribute:
+      description: |
+        Model for user custom attribute.
+      type: object
+      properties:
+        key:
+          type: string
+        value:
           type: string
     #endregion
     

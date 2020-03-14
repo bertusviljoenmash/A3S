@@ -189,7 +189,8 @@ namespace za.co.grindrodbank.a3s.Models
             modelBuilder.Entity<UserCustomAttributeModel>()
                 .HasOne(u => u.User)
                 .WithMany(c => c.CustomAttributes)
-                .HasForeignKey(u => u.UserId);
+                .HasForeignKey(u => u.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Customisations for one to many relationship between LdapAuthenticationModes and LdapAuthenticationModeLdapAttributes
             modelBuilder.Entity<LdapAuthenticationModeLdapAttributeModel>()

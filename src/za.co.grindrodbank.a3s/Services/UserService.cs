@@ -86,7 +86,6 @@ namespace za.co.grindrodbank.a3s.Services
 
                 await AssignRolesToUserFromRoleIdList(createdUser, userSubmit.RoleIds);
                 await AssignTeamsToUserFromTeamIdList(createdUser, userSubmit.TeamIds);
-                AssignUserCustomAttributes(createdUser, userSubmit.CustomAttributes);
 
                 createdUser = await userRepository.UpdateAsync(createdUser);
 
@@ -152,9 +151,11 @@ namespace za.co.grindrodbank.a3s.Services
                 userModel.NormalizedUserName = userSubmit.Username.ToUpper();
                 userModel.ChangedBy = updatedById;
 
+                userModel.CustomAttributes = mapper.Map<List<UserCustomAttributeModel>>(userSubmit.CustomAttributes);
+                userModel.CustomAttributes.ForEach(x => x.UserId = userModel.Id);
+
                 await AssignRolesToUserFromRoleIdList(userModel, userSubmit.RoleIds);
                 await AssignTeamsToUserFromTeamIdList(userModel, userSubmit.TeamIds);
-                AssignUserCustomAttributes(userModel, userSubmit.CustomAttributes);
                 UserModel updatedUser = await userRepository.UpdateAsync(userModel);
 
                 // All successful
@@ -281,27 +282,6 @@ namespace za.co.grindrodbank.a3s.Services
                         Role = role,
                         User = user
                     });
-                }
-            }
-        }
-
-        private void AssignUserCustomAttributes(UserModel user, List<UserCustomAttributes> userCustomAttributes)
-        {
-            foreach (var attribute in userCustomAttributes)
-            {
-                var existingAttribute = user.CustomAttributes.FirstOrDefault(x => x.Key.Equals(attribute.Key, StringComparison.Ordinal));
-
-                if (existingAttribute == null)
-                {
-                    user.CustomAttributes.Add(new UserCustomAttributeModel()
-                    {
-                        Key = attribute.Key,
-                        Value = attribute.Value
-                    });
-                }
-                else
-                {
-                    existingAttribute.Value = attribute.Value;
                 }
             }
         }

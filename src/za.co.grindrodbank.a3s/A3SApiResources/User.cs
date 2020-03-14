@@ -103,7 +103,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         /// Gets or Sets CustomAttributes
         /// </summary>
         [DataMember(Name="customAttributes", EmitDefaultValue=false)]
-        public List<UserCustomAttributes> CustomAttributes { get; set; }
+        public List<UserCustomAttribute> CustomAttributes { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

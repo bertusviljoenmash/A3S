@@ -144,7 +144,6 @@ namespace za.co.grindrodbank.a3s.Repositories
 
         public async Task<UserModel> UpdateAsync(UserModel user)
         {
-
             a3SContext.Entry(user).State = EntityState.Modified;
             await a3SContext.SaveChangesAsync();
 

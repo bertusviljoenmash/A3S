@@ -132,7 +132,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         /// </summary>
         /// <value>An array of all custom attributes for the user.</value>
         [DataMember(Name="customAttributes", EmitDefaultValue=false)]
-        public List<UserCustomAttributes> CustomAttributes { get; set; }
+        public List<SecurityContractDefaultConfigurationUserCustomAttributes> CustomAttributes { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

@@ -30,7 +30,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
     /// 
     /// </summary>
     [DataContract]
-    public partial class UserCustomAttributes : IEquatable<UserCustomAttributes>
+    public partial class SecurityContractDefaultConfigurationUserCustomAttributes : IEquatable<SecurityContractDefaultConfigurationUserCustomAttributes>
     { 
         /// <summary>
         /// Gets or Sets Key
@@ -51,7 +51,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class UserCustomAttributes {\n");
+            sb.Append("class SecurityContractDefaultConfigurationUserCustomAttributes {\n");
             sb.Append("  Key: ").Append(Key).Append("\n");
             sb.Append("  Value: ").Append(Value).Append("\n");
             sb.Append("}\n");
@@ -76,15 +76,15 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((UserCustomAttributes)obj);
+            return obj.GetType() == GetType() && Equals((SecurityContractDefaultConfigurationUserCustomAttributes)obj);
         }
 
         /// <summary>
-        /// Returns true if UserCustomAttributes instances are equal
+        /// Returns true if SecurityContractDefaultConfigurationUserCustomAttributes instances are equal
         /// </summary>
-        /// <param name="other">Instance of UserCustomAttributes to be compared</param>
+        /// <param name="other">Instance of SecurityContractDefaultConfigurationUserCustomAttributes to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(UserCustomAttributes other)
+        public bool Equals(SecurityContractDefaultConfigurationUserCustomAttributes other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -123,12 +123,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(UserCustomAttributes left, UserCustomAttributes right)
+        public static bool operator ==(SecurityContractDefaultConfigurationUserCustomAttributes left, SecurityContractDefaultConfigurationUserCustomAttributes right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(UserCustomAttributes left, UserCustomAttributes right)
+        public static bool operator !=(SecurityContractDefaultConfigurationUserCustomAttributes left, SecurityContractDefaultConfigurationUserCustomAttributes right)
         {
             return !Equals(left, right);
         }
