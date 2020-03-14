@@ -41,7 +41,7 @@ namespace za.co.grindrodbank.a3s.Models
         public DbSet<TermsOfServiceUserAcceptanceModel> TermsOfServiceUserAcceptance { get; set; }
         public DbSet<SubRealmModel> SubRealm { get; set; }
         public DbSet<ProfileModel> Profile { get; set; }
-        public DbSet<UserCustomAttributeModel> UserCustomAttributes { get; set; }
+        public DbSet<UserCustomAttributeModel> UserCustomAttribute { get; set; }
 
         // Identity specific database tables. We want to operate on these, but let them be managed by Identity.
         public DbSet<UserClaimModel> ApplicationUserClaims { get; set; }
