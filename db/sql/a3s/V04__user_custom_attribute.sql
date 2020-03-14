@@ -1,3 +1,10 @@
+--
+-- *************************************************
+-- Copyright (c) 2019, Grindrod Bank Limited
+-- License MIT: https://opensource.org/licenses/MIT
+-- **************************************************
+--
+
 -- Diff code generated with pgModeler (PostgreSQL Database Modeler)
 -- pgModeler version: 0.9.2-beta
 -- Diff date: 2020-03-14 15:14:58
