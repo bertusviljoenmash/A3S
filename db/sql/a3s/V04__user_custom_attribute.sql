@@ -42,9 +42,9 @@ ALTER TABLE _a3s.user_custom_attribute OWNER TO postgres;
 
 
 -- [ Created foreign keys ] --
--- object: fk_user_custom_attribute_application_user_user_id | type: CONSTRAINT --
--- ALTER TABLE _a3s.user_custom_attribute DROP CONSTRAINT IF EXISTS fk_user_custom_attribute_application_user_user_id CASCADE;
-ALTER TABLE _a3s.user_custom_attribute ADD CONSTRAINT fk_user_custom_attribute_application_user_user_id FOREIGN KEY (user_id)
+-- object: "fk_application_user.user_id" | type: CONSTRAINT --
+-- ALTER TABLE _a3s.user_custom_attribute DROP CONSTRAINT IF EXISTS "fk_application_user.user_id" CASCADE;
+ALTER TABLE _a3s.user_custom_attribute ADD CONSTRAINT "fk_application_user.user_id" FOREIGN KEY (user_id)
 REFERENCES _a3s.application_user (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --

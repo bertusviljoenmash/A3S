@@ -1484,7 +1484,7 @@ On every update of a terms of service agreement version for a team, all user acc
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="fk_user_custom_attribute_application_user_user_id" type="fk-constr" comparison-type="MATCH FULL"
+<constraint name=""fk_application_user.user_id"" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="_a3s.application_user" table="_a3s.user_custom_attribute">
 	<columns names="user_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
@@ -1699,7 +1699,7 @@ On every update of a terms of service agreement version for a team, all user acc
 
 <relationship name="rel_user_custom_attribute_application_user" type="relfk" layer="0"
 	 src-table="_a3s.user_custom_attribute"
-	 dst-table="_a3s.application_user" reference-fk="fk_user_custom_attribute_application_user_user_id"
+	 dst-table="_a3s.application_user" reference-fk=""fk_application_user.user_id""
 	 src-required="false" dst-required="false"/>
 
 </dbmodel>

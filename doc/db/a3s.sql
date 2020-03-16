@@ -1882,11 +1882,11 @@ ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance
 
 
 --
--- Name: user_custom_attribute fk_user_custom_attribute_application_user_user_id; Type: FK CONSTRAINT; Schema: _a3s; Owner: postgres
+-- Name: user_custom_attribute "fk_application_user.user_id"; Type: FK CONSTRAINT; Schema: _a3s; Owner: postgres
 --
 
 ALTER TABLE ONLY _a3s.user_custom_attribute
-    ADD CONSTRAINT fk_user_custom_attribute_application_user_user_id FOREIGN KEY (user_id) REFERENCES _a3s.application_user(id) MATCH FULL;
+    ADD CONSTRAINT "fk_application_user.user_id" FOREIGN KEY (user_id) REFERENCES _a3s.application_user(id) MATCH FULL;
 
 
 --
