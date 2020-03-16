@@ -106,7 +106,8 @@ namespace za.co.grindrodbank.a3sidentityserver.tests.Services
                 Id = id,
                 Email = "temp@local",
                 FirstName = "Temp",
-                Surname = "User"
+                Surname = "User",
+                CustomAttributes = new List<UserCustomAttributeModel>()
             };
         }
 

@@ -31,6 +31,8 @@ namespace za.co.grindrodbank.a3s.Models
         public List<TermsOfServiceUserAcceptanceModel> TermsOfServiceAcceptances { get; set; }
         // A User can have many profiles associated with it.
         public List<ProfileModel> Profiles { get; set; }
+        public List<UserCustomAttributeModel> CustomAttributes { get; set; }
+
 
         public Guid ChangedBy { get; set; }
 

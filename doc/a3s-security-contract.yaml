@@ -264,6 +264,11 @@ defaultConfigurations:
         # The roles in this list will be assigned to the user. If the roles don't exist, they will NOT be created and will simply be ignored.
         roles:
           - "A3S Super Admin"
+        customAttributes:
+          - key: identity-number
+            value: "8211193422082"
+          - key: agent-id
+            value: "id117"
       - username: a3s-user1
         name: a3s user 1
         surname: some surname
@@ -271,6 +276,11 @@ defaultConfigurations:
         password: "Password1#"
         roles:
           - "A3S User Manager"
+        customAttributes:
+          - key: identity-number
+            value: "8210173422081"
+          - key: agent-id
+            value: "id191"
       - username: a3s-ops-admin
         name: a3s ops admin
         surname: some surname
@@ -278,6 +288,11 @@ defaultConfigurations:
         password: "Password1#"
         roles:
           - "A3S Authentication Manager Compound Role"
+        customAttributes:
+          - key: identity-number
+            value: "8209123422083"
+          - key: agent-id
+            value: "id122"
       - username: a3s-ldap-user
         name: a3s ldap user
         surname: some surname
@@ -286,6 +301,11 @@ defaultConfigurations:
         ldapAuthenticationMode: open-ldap-dev
         roles:
           - "A3S Authentication Manager Compound Role"
+        customAttributes:
+          - key: identity-number
+            value: "8207253422082"
+          - key: agent-id
+            value: "id1233"
 
     teams:
       - name: default-team

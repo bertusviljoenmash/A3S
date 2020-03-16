@@ -265,5 +265,8 @@
     <Compile Include="..\za.co.grindrodbank.a3s\Repositories\PermissionRepository.cs">
       <Link>Repositories\PermissionRepository.cs</Link>
     </Compile>
+    <Compile Include="..\za.co.grindrodbank.a3s\Models\UserCustomAttributeModel.cs">
+      <Link>Models\UserCustomAttributeModel.cs</Link>
+    </Compile>
 </ItemGroup>
 </Project>

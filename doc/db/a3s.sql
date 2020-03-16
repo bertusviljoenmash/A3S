@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.7
--- Dumped by pg_dump version 10.7
+-- Dumped from database version 11.7
+-- Dumped by pg_dump version 12.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -12,6 +12,7 @@ SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
+SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
@@ -24,9 +25,21 @@ CREATE SCHEMA _a3s;
 
 ALTER SCHEMA _a3s OWNER TO postgres;
 
-SET default_tablespace = '';
+--
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
+--
 
-SET default_with_oids = false;
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA _a3s;
+
+
+--
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
+
+
+SET default_tablespace = '';
 
 --
 -- Name: application; Type: TABLE; Schema: _a3s; Owner: postgres
@@ -343,6 +356,7 @@ ALTER TABLE _a3s.aspnet_user_role OWNER TO postgres;
 --
 
 COMMENT ON TABLE _a3s.aspnet_user_role IS 'Asp.Net identity default table. Not Used, but has to exist.';
+
 
 --
 -- Name: function; Type: TABLE; Schema: _a3s; Owner: postgres
@@ -812,9 +826,9 @@ CREATE TABLE _a3s.team (
     id uuid NOT NULL,
     name text NOT NULL,
     description text,
+    terms_of_service_id uuid,
     changed_by uuid NOT NULL,
     sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL,
-    terms_of_service_id uuid,
     sub_realm_id uuid
 );
 
@@ -966,6 +980,27 @@ COMMENT ON COLUMN _a3s.terms_of_service_user_acceptance_history.acceptance_time 
 
 
 --
+-- Name: user_custom_attribute; Type: TABLE; Schema: _a3s; Owner: postgres
+--
+
+CREATE TABLE _a3s.user_custom_attribute (
+    id uuid NOT NULL,
+    user_id text,
+    key text,
+    value text
+);
+
+
+ALTER TABLE _a3s.user_custom_attribute OWNER TO postgres;
+
+--
+-- Name: TABLE user_custom_attribute; Type: COMMENT; Schema: _a3s; Owner: postgres
+--
+
+COMMENT ON TABLE _a3s.user_custom_attribute IS 'Stores the custom attributes for users';
+
+
+--
 -- Name: user_role; Type: TABLE; Schema: _a3s; Owner: postgres
 --
 
@@ -1005,6 +1040,7 @@ ALTER TABLE _a3s.user_team OWNER TO postgres;
 --
 
 COMMENT ON TABLE _a3s.user_team IS 'Users and Teams link';
+
 
 --
 -- Name: ldap_authentication_mode_ldap_attribute ldap_authentication_mode_ldap_attribute_pkey; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
@@ -1382,11 +1418,27 @@ ALTER TABLE ONLY _a3s.terms_of_service
 
 
 --
+-- Name: user_custom_attribute uk_user_id_key_value; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.user_custom_attribute
+    ADD CONSTRAINT uk_user_id_key_value UNIQUE (user_id, key, value);
+
+
+--
 -- Name: profile uq_profile; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
 --
 
 ALTER TABLE ONLY _a3s.profile
     ADD CONSTRAINT uq_profile UNIQUE (sub_realm_id);
+
+
+--
+-- Name: user_custom_attribute user_custom_attribute_pk; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.user_custom_attribute
+    ADD CONSTRAINT user_custom_attribute_pk PRIMARY KEY (id);
 
 
 --
@@ -1827,6 +1879,14 @@ ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance
 
 ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance
     ADD CONSTRAINT fk_terms_of_service_user_acceptance_user_user_id FOREIGN KEY (user_id) REFERENCES _a3s.application_user(id) MATCH FULL;
+
+
+--
+-- Name: user_custom_attribute "fk_application_user.user_id"; Type: FK CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.user_custom_attribute
+    ADD CONSTRAINT "fk_application_user.user_id" FOREIGN KEY (user_id) REFERENCES _a3s.application_user(id) MATCH FULL;
 
 
 --

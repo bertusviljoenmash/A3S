@@ -14,12 +14,25 @@ using za.co.grindrodbank.a3s.Services;
 using NSubstitute;
 using Xunit;
 using za.co.grindrodbank.a3s.A3SApiResources;
+using AutoMapper;
+using za.co.grindrodbank.a3s.MappingProfiles;
 
 namespace za.co.grindrodbank.a3s.tests.Services
 {
     public class SecurityContractDefaultConfigurationService_Tests
     {
         ISecurityContractDefaultConfigurationService securityContractDefaultConfigurationService;
+        IMapper mapper;
+
+        public SecurityContractDefaultConfigurationService_Tests()
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new UserCustomAttributeResourceUserCustomAttributeModelProfile());
+            });
+
+            mapper = config.CreateMapper();
+        }
 
         [Fact]
         public async Task ApplySecurityContractDefaultsAsync_WithValidNoSectionsInput_NoExceptionsThrown()
@@ -33,7 +46,8 @@ namespace za.co.grindrodbank.a3s.tests.Services
             var applicationDataPolicyRepository = Substitute.For<IApplicationDataPolicyRepository>();
             var ldapAuthenticationModeRepository = Substitute.For<ILdapAuthenticationModeRepository>();
 
-            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository, applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository);
+            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository,
+                applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository, mapper);
 
             // Create a security contract with a default configuration section, but dont set any of the sub components.
             var securityContract = new SecurityContract();
@@ -69,7 +83,8 @@ namespace za.co.grindrodbank.a3s.tests.Services
                 Name = "Test Application Model"
             });
 
-            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository, applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository);
+            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository,
+                applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository, mapper);
 
             // Create a security contract with a default configuration section, but dont set any of the sub components.
             var securityContract = new SecurityContract();
@@ -147,7 +162,8 @@ namespace za.co.grindrodbank.a3s.tests.Services
                 Name = "Test Role Model",
             });
 
-            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository, applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository);
+            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository,
+                applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository, mapper);
 
             // Create a security contract with a default configuration section, but dont set any of the sub components.
             var securityContract = new SecurityContract();
@@ -216,7 +232,8 @@ namespace za.co.grindrodbank.a3s.tests.Services
                 Name = "Test Role Model",
             });
 
-            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository, applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository);
+            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository,
+                applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository, mapper);
 
             // Create a security contract with a default configuration section, but dont set any of the sub components.
             var securityContract = new SecurityContract();
@@ -277,7 +294,8 @@ namespace za.co.grindrodbank.a3s.tests.Services
                 UserName = "Test User Model",
             });
 
-            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository, applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository);
+            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository,
+                applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository, mapper);
 
             // Create a security contract with a default configuration section, but dont set any of the sub components.
             var securityContract = new SecurityContract();
@@ -341,17 +359,20 @@ namespace za.co.grindrodbank.a3s.tests.Services
             userRepository.GetByUsernameAsync(Arg.Any<string>(), Arg.Any<bool>()).Returns(new UserModel
             {
                 UserName = "Test User Model",
-                Email = "test@email.com"
+                Email = "test@email.com",
+                CustomAttributes = new List<UserCustomAttributeModel>()
             });
 
             // The service should attempt an update on the users, ensure this is possible.
             userRepository.UpdateAsync(Arg.Any<UserModel>()).Returns(new UserModel
             {
                 UserName = "Test User Model",
-                Email = "test@email.com"
+                Email = "test@email.com",
+                CustomAttributes = new List<UserCustomAttributeModel>()
             });
 
-            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository, applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository);
+            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository,
+                applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository, mapper);
 
             // Create a security contract with a default configuration section, but dont set any of the sub components.
             var securityContract = new SecurityContract();
@@ -363,7 +384,8 @@ namespace za.co.grindrodbank.a3s.tests.Services
                     new SecurityContractDefaultConfigurationUser
                     {
                         Username = "Test User",
-                        Email = "test@email.com"
+                        Email = "test@email.com",
+                        CustomAttributes = new List<UserCustomAttribute>()
                     }
                 }
             }};
@@ -389,7 +411,8 @@ namespace za.co.grindrodbank.a3s.tests.Services
             var applicationRepository = Substitute.For<IApplicationRepository>();
             var applicationDataPolicyRepository = Substitute.For<IApplicationDataPolicyRepository>();
             var ldapAuthenticationModeRepository = Substitute.For<ILdapAuthenticationModeRepository>();
-            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository, applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository);
+            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository,
+                applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository, mapper);
 
             Exception caughtException = null;
 
@@ -415,7 +438,8 @@ namespace za.co.grindrodbank.a3s.tests.Services
             var applicationRepository = Substitute.For<IApplicationRepository>();
             var applicationDataPolicyRepository = Substitute.For<IApplicationDataPolicyRepository>();
             var ldapAuthenticationModeRepository = Substitute.For<ILdapAuthenticationModeRepository>();
-            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository, applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository);
+            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository,
+                applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository, mapper);
 
             Exception caughtException = null;
 
@@ -441,7 +465,8 @@ namespace za.co.grindrodbank.a3s.tests.Services
             var applicationRepository = Substitute.For<IApplicationRepository>();
             var applicationDataPolicyRepository = Substitute.For<IApplicationDataPolicyRepository>();
             var ldapAuthenticationModeRepository = Substitute.For<ILdapAuthenticationModeRepository>();
-            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository, applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository);
+            securityContractDefaultConfigurationService = new SecurityContractDefaultConfigurationService(roleRepository, userRepository, functionRepository, teamRepository,
+                applicationRepository, applicationDataPolicyRepository, ldapAuthenticationModeRepository, mapper);
 
             Exception caughtException = null;
 
