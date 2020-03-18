@@ -57,7 +57,7 @@ namespace za.co.grindrodbank.a3s.tests.Fakes
             throw new NotImplementedException();
         }
 
-        public Task<PaginatedResult<ApplicationModel>> GetPaginatedListAsync(int page, int pageSize, string filterName, List<KeyValuePair<string, string>> orderBy)
+        public Task<PaginatedResult<ApplicationModel>> GetPaginatedListAsync(int page, int pageSize, string filterName, string filterFunctionName, List<KeyValuePair<string, string>> orderBy)
         {
             throw new NotImplementedException();
         }
