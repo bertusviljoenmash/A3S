@@ -1,6 +1,6 @@
 ﻿{
 	"info": {
-		"_postman_id": "b665ff40-36ab-4fc0-90da-3cac9333d2b3",
+		"_postman_id": "9cd86671-ca27-4885-877e-9309a02a48ef",
 		"name": "A3S - Integration",
 		"description": "A Postman collection desgined to be executed remotely using Newman within the CI/CD context.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -3716,6 +3716,91 @@
 					"response": []
 				},
 				{
+					"name": "CreateRole - Plain role 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b5992873-e926-4977-bbdf-5bcdc932fb4d",
+								"exec": [
+									"pm.test(\"Response is OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Check that role is correctly structured.\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('uuid');",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"    pm.expect(jsonData).to.have.property('description');",
+									"    pm.expect(jsonData).to.have.property('roleIds');",
+									"    pm.expect(jsonData).to.have.property('functionIds');",
+									"});",
+									"",
+									"pm.test(\"Check that returned role was correctly created.\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.eql(\"test-role-plain-2\");",
+									"    pm.expect(jsonData.description).to.eql(\"test-role-plain-2-description\");",
+									"});",
+									"",
+									"pm.test(\"Check that the associated roles list is empty.\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.roleIds.length).to.equal(0);",
+									"});",
+									"",
+									"pm.test(\"Set environment role UUID and child Role UUID to UUID of the newly created role.\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"child-role-2-guid\", jsonData.uuid);",
+									"});    ",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{session_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"test-role-plain-2\",\n    \"description\" : \"test-role-plain-2-description\",\n    \"functionIds\": [],\n    \"roleIds\": []\n}"
+						},
+						"url": {
+							"raw": "{{a3s-host}}/roles",
+							"host": [
+								"{{a3s-host}}"
+							],
+							"path": [
+								"roles"
+							]
+						},
+						"description": "Creates a new role."
+					},
+					"response": []
+				},
+				{
 					"name": "UpdateRole - Supply Correctly Structured Child Role ID GUID, Guid does not exist - Expect 404",
 					"event": [
 						{
@@ -3759,16 +3844,16 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"uuid\": \"{{role-guid}}\",\n    \"name\": \"test-role-fail\",\n    \"description\" : \"test-new-role-description2\",\n    \"functionIds\": [],\n    \"roleIds\": [\"1f42d750-8ea3-4007-8a7c-41a8822e2099\"]\n}"
+							"raw": "{\n\t\"uuid\": \"{{child-role-2-guid}}\",\n    \"name\": \"test-role-fail\",\n    \"description\" : \"test-new-role-description2\",\n    \"functionIds\": [],\n    \"roleIds\": [\"1f42d750-8ea3-4007-8a7c-41a8822e2099\"]\n}"
 						},
 						"url": {
-							"raw": "{{a3s-host}}/roles/{{role-guid}}",
+							"raw": "{{a3s-host}}/roles/{{child-role-2-guid}}",
 							"host": [
 								"{{a3s-host}}"
 							],
 							"path": [
 								"roles",
-								"{{role-guid}}"
+								"{{child-role-2-guid}}"
 							]
 						},
 						"description": "Creates a new role with and invalid structured Child Role Id GUID, resulting in an error 400 (malformed)."
@@ -3819,16 +3904,16 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"uuid\": \"{{role-guid}}\",\n    \"name\": \"test-role-fail\",\n    \"description\" : \"test-new-role-description2\",\n    \"functionIds\": [\"1f42d750-8ea3-4007-8a7c-41a8822e2099\"],\n    \"roleIds\": [\"{{child-role-guid}}\"]\n}"
+							"raw": "{\n\t\"uuid\": \"{{child-role-2-guid}}\",\n    \"name\": \"test-role-fail\",\n    \"description\" : \"test-new-role-description2\",\n    \"functionIds\": [\"1f42d750-8ea3-4007-8a7c-41a8822e2099\"],\n    \"roleIds\": []\n}"
 						},
 						"url": {
-							"raw": "{{a3s-host}}/roles/{{role-guid}}",
+							"raw": "{{a3s-host}}/roles/{{child-role-2-guid}}",
 							"host": [
 								"{{a3s-host}}"
 							],
 							"path": [
 								"roles",
-								"{{role-guid}}"
+								"{{child-role-2-guid}}"
 							]
 						},
 						"description": "Creates a new role with and invalid structured function Id GUID, resulting in an error 404 (not found)."
@@ -3892,6 +3977,66 @@
 							]
 						},
 						"description": "Updates an existing role with attached compound child role, which should result in 422 - ItemNotProcessable."
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateRole - Update child role to become compound role - Expect 422",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b5992873-e926-4977-bbdf-5bcdc932fb4d",
+								"exec": [
+									"pm.test(\"Response is 422 - ItemNotProcessable\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{session_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"uuid\": \"{{role-guid}}\",\n    \"name\": \"test-role-with-parent-compound\",\n    \"description\" : \"test-new-role-with-parent-compound\",\n    \"functionIds\": [],\n    \"roleIds\": [\"{{child-role-2-guid}}\"]\n}"
+						},
+						"url": {
+							"raw": "{{a3s-host}}/roles/{{child-role-guid}}",
+							"host": [
+								"{{a3s-host}}"
+							],
+							"path": [
+								"roles",
+								"{{child-role-guid}}"
+							]
+						},
+						"description": "Updates an existing child role to become compound role, which should result in 422 - ItemNotProcessable."
 					},
 					"response": []
 				}
@@ -7501,6 +7646,96 @@
 					"response": []
 				},
 				{
+					"name": "CreateTeam - plain team 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b5992873-e926-4977-bbdf-5bcdc932fb4d",
+								"exec": [
+									"pm.test(\"Response is OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Check that team is correctly structured.\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('uuid');",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"    pm.expect(jsonData).to.have.property('description');",
+									"    pm.expect(jsonData).to.have.property('teamIds');",
+									"    pm.expect(jsonData).to.have.property('dataPolicyIds');",
+									"});",
+									"",
+									"pm.test(\"Check that returned team was correctly created.\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.eql(\"test-team-plain-2\");",
+									"    pm.expect(jsonData.description).to.eql(\"test-team-plain-2-description\");",
+									"});",
+									"",
+									"pm.test(\"Check that the associated teams list is empty.\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.teamIds.length).to.equal(0);",
+									"});",
+									"",
+									"pm.test(\"Check that the associated data policies list is empty.\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.dataPolicyIds.length).to.equal(0);",
+									"});",
+									"",
+									"pm.test(\"Set environment team UUID and child Team UUID to UUID of the newly created team.\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"child-team-2-guid\", jsonData.uuid);",
+									"});    ",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{session_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"test-team-plain-2\",\n    \"description\" : \"test-team-plain-2-description\",\n    \"teamIds\": [],\n    \"dataPolicyIds\": []\n}"
+						},
+						"url": {
+							"raw": "{{a3s-host}}/teams",
+							"host": [
+								"{{a3s-host}}"
+							],
+							"path": [
+								"teams"
+							]
+						},
+						"description": "Creates a new team without any child teams."
+					},
+					"response": []
+				},
+				{
 					"name": "UpdateTeam - Supply correctly structured child team Guid, Guid does not exist - expect 404",
 					"event": [
 						{
@@ -7544,16 +7779,16 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"uuid\": \"{{team-guid}}\",\n    \"name\": \"test-team-br\",\n    \"description\" : \"test-new-team-br\",\n    \"teamIds\": [\"1f42d750-8ea3-4007-8a7c-41a8822e2099\"],\n    \"dataPolicyIds\": [\"{{data-policy-guid}}\"],\n    \"termsOfServiceId\": \"{{terms-of-service-guid}}\"\n}"
+							"raw": "{\n\t\"uuid\": \"{{child-team-2-guid}}\",\n    \"name\": \"test-team-br\",\n    \"description\" : \"test-new-team-br\",\n    \"teamIds\": [\"1f42d750-8ea3-4007-8a7c-41a8822e2099\"],\n    \"dataPolicyIds\": [\"{{data-policy-guid}}\"],\n    \"termsOfServiceId\": \"{{terms-of-service-guid}}\"\n}"
 						},
 						"url": {
-							"raw": "{{a3s-host}}/teams/{{team-guid}}",
+							"raw": "{{a3s-host}}/teams/{{child-team-2-guid}}",
 							"host": [
 								"{{a3s-host}}"
 							],
 							"path": [
 								"teams",
-								"{{team-guid}}"
+								"{{child-team-2-guid}}"
 							]
 						},
 						"description": "Update an existing team with an correctly structured child team Guid that does not exist, resulting in a 404 - Not found."
@@ -7604,16 +7839,16 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"uuid\": \"{{team-guid}}\",\n    \"name\": \"test-team-br\",\n    \"description\" : \"test-new-team-br\",\n    \"teamIds\": [\"{{child-team-guid}}\"],\n    \"dataPolicyIds\": [\"1f42d750-8ea3-4007-8a7c-41a8822e2099\"],\n    \"termsOfServiceId\": \"{{terms-of-service-guid}}\"\n}"
+							"raw": "{\n\t\"uuid\": \"{{child-team-2-guid}}\",\n    \"name\": \"test-team-br\",\n    \"description\" : \"test-new-team-br\",\n    \"teamIds\": [\"{{child-team-guid}}\"],\n    \"dataPolicyIds\": [\"1f42d750-8ea3-4007-8a7c-41a8822e2099\"],\n    \"termsOfServiceId\": \"{{terms-of-service-guid}}\"\n}"
 						},
 						"url": {
-							"raw": "{{a3s-host}}/teams/{{team-guid}}",
+							"raw": "{{a3s-host}}/teams/{{child-team-2-guid}}",
 							"host": [
 								"{{a3s-host}}"
 							],
 							"path": [
 								"teams",
-								"{{team-guid}}"
+								"{{child-team-2-guid}}"
 							]
 						},
 						"description": "Update an existing team with an correctly structured data policy Guid that does not exist, resulting in a 404 - Not found."
@@ -7677,6 +7912,126 @@
 							]
 						},
 						"description": "Updates an existing team's base attributes and clears any related entities from the team."
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTeam - Compound Team Attached - Expect 422",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b5992873-e926-4977-bbdf-5bcdc932fb4d",
+								"exec": [
+									"pm.test(\"Response is 422 - ItemNotProcessable\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{session_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"uuid\": \"{{team-guid}}\",\n    \"name\": \"test-team-with-compound\",\n    \"description\" : \"test-new-team-with-compound\",\n    \"functionIds\": [],\n    \"teamIds\": [\"{{compound-team-guid}}\"],\n    \"dataPolicyIds\": [],\n    \"termsOfServiceId\": null\n}"
+						},
+						"url": {
+							"raw": "{{a3s-host}}/teams/{{team-guid}}",
+							"host": [
+								"{{a3s-host}}"
+							],
+							"path": [
+								"teams",
+								"{{team-guid}}"
+							]
+						},
+						"description": "Updates an existing team with attached compound team, which should result in 422 - ItemNotProcessable."
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTeam - Update child team to become compound team - Expect 422",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b5992873-e926-4977-bbdf-5bcdc932fb4d",
+								"exec": [
+									"pm.test(\"Response is 422 - ItemNotProcessable\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{session_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"uuid\": \"{{team-guid}}\",\n    \"name\": \"test-team-with-compound\",\n    \"description\" : \"test-new-team-with-compound\",\n    \"functionIds\": [],\n    \"teamIds\": [\"{{child-team-2-guid}}\"],\n    \"dataPolicyIds\": [],\n    \"termsOfServiceId\": null\n}"
+						},
+						"url": {
+							"raw": "{{a3s-host}}/teams/{{child-team-guid}}",
+							"host": [
+								"{{a3s-host}}"
+							],
+							"path": [
+								"teams",
+								"{{child-team-guid}}"
+							]
+						},
+						"description": "Updates an existing child role to become compound role, which should result in 422 - ItemNotProcessable."
 					},
 					"response": []
 				}
@@ -19977,7 +20332,7 @@
 											"    pm.expect(jsonData.current).to.eql(1);",
 											"    pm.expect(jsonData.size).to.eql(10);",
 											"    pm.expect(jsonData.prev).to.eql(undefined);",
-											"    pm.expect(jsonData.count).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
 											"    pm.expect(jsonData.total).to.eql(2);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
@@ -20072,7 +20427,7 @@
 											"    pm.expect(jsonData.current).to.eql(1);",
 											"    pm.expect(jsonData.size).to.eql(10);",
 											"    pm.expect(jsonData.prev).to.eql(undefined);",
-											"    pm.expect(jsonData.count).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
 											"    pm.expect(jsonData.total).to.eql(2);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
@@ -20179,15 +20534,15 @@
 											"    ",
 											"    pm.expect(jsonData.current).to.eql(1);",
 											"    pm.expect(jsonData.size).to.eql(1);",
-											"    pm.expect(jsonData.count).to.eql(11);",
-											"    pm.expect(jsonData.total).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
+											"    pm.expect(jsonData.total).to.eql(12);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
 											"    var baseUrl = currentHost + \"/roles\"",
 											"    ",
 											"    pm.expect(jsonData.prev).to.eql(undefined);",
 											"    pm.expect(jsonData.next).to.eql(baseUrl + \"?page=2&size=1&includeRelations=false\");",
-											"    pm.expect(jsonData.last).to.eql(baseUrl + \"?page=11&size=1&includeRelations=false\");",
+											"    pm.expect(jsonData.last).to.eql(baseUrl + \"?page=12&size=1&includeRelations=false\");",
 											"    pm.expect(jsonData.first).to.eql(baseUrl + \"?page=1&size=1&includeRelations=false\");",
 											"});",
 											""
@@ -20283,15 +20638,15 @@
 											"    ",
 											"    pm.expect(jsonData.current).to.eql(2);",
 											"    pm.expect(jsonData.size).to.eql(1);",
-											"    pm.expect(jsonData.count).to.eql(11);",
-											"    pm.expect(jsonData.total).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
+											"    pm.expect(jsonData.total).to.eql(12);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
 											"    var baseUrl = currentHost + \"/roles\"",
 											"    ",
 											"    pm.expect(jsonData.prev).to.eql(baseUrl + \"?page=1&size=1&includeRelations=false\");",
 											"    pm.expect(jsonData.next).to.eql(baseUrl + \"?page=3&size=1&includeRelations=false\");",
-											"    pm.expect(jsonData.last).to.eql(baseUrl + \"?page=11&size=1&includeRelations=false\");",
+											"    pm.expect(jsonData.last).to.eql(baseUrl + \"?page=12&size=1&includeRelations=false\");",
 											"    pm.expect(jsonData.first).to.eql(baseUrl + \"?page=1&size=1&includeRelations=false\");",
 											"});",
 											""
@@ -20387,7 +20742,7 @@
 											"    ",
 											"    pm.expect(jsonData.current).to.eql(2);",
 											"    pm.expect(jsonData.size).to.eql(2);",
-											"    pm.expect(jsonData.count).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
 											"    pm.expect(jsonData.total).to.eql(6);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
@@ -20491,7 +20846,7 @@
 											"    ",
 											"    pm.expect(jsonData.current).to.eql(3);",
 											"    pm.expect(jsonData.size).to.eql(2);",
-											"    pm.expect(jsonData.count).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
 											"    pm.expect(jsonData.total).to.eql(6);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
@@ -20568,10 +20923,10 @@
 											"    pm.expect(jsonData[0]).to.have.property('description');",
 											"});",
 											"",
-											"pm.test(\"Check that there is 1 element in the repsonse.\", function () {",
+											"pm.test(\"Check that there is 2 element in the repsonse.\", function () {",
 											"    var jsonData = pm.response.json();",
 											"    ",
-											"    pm.expect(jsonData.length).to.equal(1);",
+											"    pm.expect(jsonData.length).to.equal(2);",
 											"});",
 											"",
 											"pm.test(\"Check that 'X-Pagination' header is present.\", function () {",
@@ -20594,7 +20949,7 @@
 											"    ",
 											"    pm.expect(jsonData.current).to.eql(6);",
 											"    pm.expect(jsonData.size).to.eql(2);",
-											"    pm.expect(jsonData.count).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
 											"    pm.expect(jsonData.total).to.eql(6);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
@@ -20701,7 +21056,7 @@
 											"    ",
 											"    pm.expect(jsonData.current).to.eql(1);",
 											"    pm.expect(jsonData.size).to.eql(10);",
-											"    pm.expect(jsonData.count).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
 											"    pm.expect(jsonData.total).to.eql(2);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
@@ -20804,7 +21159,7 @@
 											"    ",
 											"    pm.expect(jsonData.current).to.eql(1);",
 											"    pm.expect(jsonData.size).to.eql(10);",
-											"    pm.expect(jsonData.count).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
 											"    pm.expect(jsonData.total).to.eql(2);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
@@ -21035,7 +21390,7 @@
 											"    ",
 											"    pm.expect(jsonData.current).to.eql(1);",
 											"    pm.expect(jsonData.size).to.eql(10);",
-											"    pm.expect(jsonData.count).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
 											"    pm.expect(jsonData.total).to.eql(2);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
@@ -21131,7 +21486,7 @@
 											"    pm.expect(jsonData.current).to.eql(1);",
 											"    pm.expect(jsonData.size).to.eql(10);",
 											"    pm.expect(jsonData.prev).to.eql(undefined);",
-											"    pm.expect(jsonData.count).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
 											"    pm.expect(jsonData.total).to.eql(2);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
@@ -21238,15 +21593,15 @@
 											"    ",
 											"    pm.expect(jsonData.current).to.eql(1);",
 											"    pm.expect(jsonData.size).to.eql(1);",
-											"    pm.expect(jsonData.count).to.eql(11);",
-											"    pm.expect(jsonData.total).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
+											"    pm.expect(jsonData.total).to.eql(12);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
 											"    var baseUrl = currentHost + \"/teams\"",
 											"    ",
 											"    pm.expect(jsonData.prev).to.eql(undefined);",
 											"    pm.expect(jsonData.next).to.eql(baseUrl + \"?page=2&size=1&includeRelations=false\");",
-											"    pm.expect(jsonData.last).to.eql(baseUrl + \"?page=11&size=1&includeRelations=false\");",
+											"    pm.expect(jsonData.last).to.eql(baseUrl + \"?page=12&size=1&includeRelations=false\");",
 											"    pm.expect(jsonData.first).to.eql(baseUrl + \"?page=1&size=1&includeRelations=false\");",
 											"});",
 											""
@@ -21342,15 +21697,15 @@
 											"    ",
 											"    pm.expect(jsonData.current).to.eql(2);",
 											"    pm.expect(jsonData.size).to.eql(1);",
-											"    pm.expect(jsonData.count).to.eql(11);",
-											"    pm.expect(jsonData.total).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
+											"    pm.expect(jsonData.total).to.eql(12);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
 											"    var baseUrl = currentHost + \"/teams\"",
 											"    ",
 											"    pm.expect(jsonData.prev).to.eql(baseUrl + \"?page=1&size=1&includeRelations=false\");",
 											"    pm.expect(jsonData.next).to.eql(baseUrl + \"?page=3&size=1&includeRelations=false\");",
-											"    pm.expect(jsonData.last).to.eql(baseUrl + \"?page=11&size=1&includeRelations=false\");",
+											"    pm.expect(jsonData.last).to.eql(baseUrl + \"?page=12&size=1&includeRelations=false\");",
 											"    pm.expect(jsonData.first).to.eql(baseUrl + \"?page=1&size=1&includeRelations=false\");",
 											"});",
 											""
@@ -21446,7 +21801,7 @@
 											"    ",
 											"    pm.expect(jsonData.current).to.eql(2);",
 											"    pm.expect(jsonData.size).to.eql(2);",
-											"    pm.expect(jsonData.count).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
 											"    pm.expect(jsonData.total).to.eql(6);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
@@ -21550,7 +21905,7 @@
 											"    ",
 											"    pm.expect(jsonData.current).to.eql(3);",
 											"    pm.expect(jsonData.size).to.eql(2);",
-											"    pm.expect(jsonData.count).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
 											"    pm.expect(jsonData.total).to.eql(6);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
@@ -21627,10 +21982,10 @@
 											"    pm.expect(jsonData[0]).to.have.property('description');",
 											"});",
 											"",
-											"pm.test(\"Check that there is 1 element in the repsonse.\", function () {",
+											"pm.test(\"Check that there is 2 element in the repsonse.\", function () {",
 											"    var jsonData = pm.response.json();",
 											"    ",
-											"    pm.expect(jsonData.length).to.equal(1);",
+											"    pm.expect(jsonData.length).to.equal(2);",
 											"});",
 											"",
 											"pm.test(\"Check that 'X-Pagination' header is present.\", function () {",
@@ -21653,7 +22008,7 @@
 											"    ",
 											"    pm.expect(jsonData.current).to.eql(6);",
 											"    pm.expect(jsonData.size).to.eql(2);",
-											"    pm.expect(jsonData.count).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
 											"    pm.expect(jsonData.total).to.eql(6);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
@@ -21760,7 +22115,7 @@
 											"    ",
 											"    pm.expect(jsonData.current).to.eql(1);",
 											"    pm.expect(jsonData.size).to.eql(10);",
-											"    pm.expect(jsonData.count).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
 											"    pm.expect(jsonData.total).to.eql(2);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",
@@ -21863,7 +22218,7 @@
 											"    ",
 											"    pm.expect(jsonData.current).to.eql(1);",
 											"    pm.expect(jsonData.size).to.eql(10);",
-											"    pm.expect(jsonData.count).to.eql(11);",
+											"    pm.expect(jsonData.count).to.eql(12);",
 											"    pm.expect(jsonData.total).to.eql(2);",
 											"    // Check the values of the pagination links.",
 											"    var currentHost = pm.environment.get(\"a3s-host\");",

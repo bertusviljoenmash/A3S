@@ -113,6 +113,10 @@ namespace za.co.grindrodbank.a3s.Services
                         throw new ItemNotProcessableException($"Team with name '{teamSubmit.Name}' already exists.");
                 }
 
+                // Confirm this team isn't becoming a compound team while already part of a compound team
+                if (teamSubmit.TeamIds.Any() && existingTeam.ParentTeams != null && existingTeam.ParentTeams.Any())
+                    throw new ItemNotProcessableException($"This team is already part of a compound team, and as such, cannot become a compound team itself.");
+
                 // Map the first level team submit attributes onto the team model.
                 existingTeam.Name = teamSubmit.Name;
                 existingTeam.Description = teamSubmit.Description;
