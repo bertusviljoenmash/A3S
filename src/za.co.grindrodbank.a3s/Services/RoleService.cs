@@ -97,6 +97,10 @@ namespace za.co.grindrodbank.a3s.Services
                         throw new ItemNotProcessableException($"Role with name '{roleSubmit.Name}' already exists.");
                 }
 
+                // Confirm this role isn't becoming a compound role while already part of a compound role
+                if (roleSubmit.RoleIds.Count > 0 && role.ParentRoles.Count > 0)
+                    throw new ItemNotProcessableException($"This role is already part of a compound role, and as such, cannot become a compound role itself.");
+
                 role.Name = roleSubmit.Name;
                 role.Description = roleSubmit.Description;
                 role.ChangedBy = updatedById;
