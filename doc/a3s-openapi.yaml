@@ -1719,7 +1719,7 @@ paths:
           schema:
             type: integer
             minimum: 1
-            maximum: 20
+            maximum: 1000
             format: int32
             default: 10
         - name: filterName
@@ -1731,6 +1731,15 @@ paths:
             minLength: 0
             maxLength: 255
           example: FilterByEntityType
+        - name: filterFunctionName
+          in: query
+          required: false
+          description: A search query filter on the name of a function assigned to an application.
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 255
+          example: FilterByEntityTypeF
         - name: orderBy
           in: query
           required: false

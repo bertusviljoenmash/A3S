@@ -2656,7 +2656,7 @@
           "schema" : {
             "default" : 10,
             "format" : "int32",
-            "maximum" : 20,
+            "maximum" : 1000,
             "minimum" : 1,
             "type" : "integer"
           },
@@ -2667,6 +2667,19 @@
           "explode" : true,
           "in" : "query",
           "name" : "filterName",
+          "required" : false,
+          "schema" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A search query filter on the name of a function assigned to an application.",
+          "example" : "FilterByEntityTypeF",
+          "explode" : true,
+          "in" : "query",
+          "name" : "filterFunctionName",
           "required" : false,
           "schema" : {
             "maxLength" : 255,

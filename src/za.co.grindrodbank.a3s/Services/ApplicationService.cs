@@ -35,9 +35,9 @@ namespace za.co.grindrodbank.a3s.Services
             return mapper.Map<List<Application>>(await applicationRepository.GetListAsync());
         }
 
-        public async Task<PaginatedResult<ApplicationModel>> GetListAsync(int page, int pageSize, string filterName, List<KeyValuePair<string, string>> orderBy)
+        public async Task<PaginatedResult<ApplicationModel>> GetListAsync(int page, int pageSize, string filterName, string filterFunctionName, List<KeyValuePair<string, string>> orderBy)
         {
-            return await applicationRepository.GetPaginatedListAsync(page, pageSize, filterName, orderBy);
+            return await applicationRepository.GetPaginatedListAsync(page, pageSize, filterName, filterFunctionName, orderBy);
         }
     }
 }
