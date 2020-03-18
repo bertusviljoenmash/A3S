@@ -12,6 +12,7 @@ using za.co.grindrodbank.a3s.Models;
 using za.co.grindrodbank.a3s.Repositories;
 using AutoMapper;
 using za.co.grindrodbank.a3s.A3SApiResources;
+using System.Linq;
 
 namespace za.co.grindrodbank.a3s.Services
 {
@@ -98,7 +99,7 @@ namespace za.co.grindrodbank.a3s.Services
                 }
 
                 // Confirm this role isn't becoming a compound role while already part of a compound role
-                if (roleSubmit.RoleIds.Count > 0 && role.ParentRoles.Count > 0)
+                if (roleSubmit.RoleIds.Any() && role.ParentRoles != null && role.ParentRoles.Any())
                     throw new ItemNotProcessableException($"This role is already part of a compound role, and as such, cannot become a compound role itself.");
 
                 role.Name = roleSubmit.Name;
