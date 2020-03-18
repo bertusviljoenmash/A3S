@@ -44,6 +44,7 @@ namespace za.co.grindrodbank.a3s.Models
         public DbSet<RoleTransientModel> RoleTransient { get; set; }
         public DbSet<RoleFunctionTransientModel> RoleFunctionTransient { get; set; }
         public DbSet<RoleRoleTransientModel> RoleRoleTransient { get; set; }
+        public DbSet<UserCustomAttributeModel> UserCustomAttribute { get; set; }
 
         // Identity specific database tables. We want to operate on these, but let them be managed by Identity.
         public DbSet<UserClaimModel> ApplicationUserClaims { get; set; }
@@ -186,6 +187,13 @@ namespace za.co.grindrodbank.a3s.Models
                 .HasOne(t => t.User)
                 .WithMany(u => u.UserTokens)
                 .HasForeignKey(t => t.UserId);
+
+            // Customisations for one to many relationship between users and userCustomAttributes
+            modelBuilder.Entity<UserCustomAttributeModel>()
+                .HasOne(u => u.User)
+                .WithMany(c => c.CustomAttributes)
+                .HasForeignKey(u => u.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Customisations for one to many relationship between LdapAuthenticationModes and LdapAuthenticationModeLdapAttributes
             modelBuilder.Entity<LdapAuthenticationModeLdapAttributeModel>()

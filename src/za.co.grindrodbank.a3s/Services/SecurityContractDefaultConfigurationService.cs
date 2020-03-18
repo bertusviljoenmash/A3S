@@ -13,6 +13,7 @@ using za.co.grindrodbank.a3s.Repositories;
 using NLog;
 using za.co.grindrodbank.a3s.A3SApiResources;
 using za.co.grindrodbank.a3s.Exceptions;
+using AutoMapper;
 
 namespace za.co.grindrodbank.a3s.Services
 {
@@ -25,12 +26,13 @@ namespace za.co.grindrodbank.a3s.Services
         private readonly IApplicationRepository applicationRepository;
         private readonly IApplicationDataPolicyRepository applicationDataPolicyRepository;
         private readonly ILdapAuthenticationModeRepository ldapAuthenticationModeRepository;
+        private readonly IMapper mapper;
 
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
 
         public SecurityContractDefaultConfigurationService(IRoleRepository roleRepository, IUserRepository userRepository, IFunctionRepository functionRepository,
             ITeamRepository teamRepository, IApplicationRepository applicationRepository, IApplicationDataPolicyRepository applicationDataPolicyRepository,
-            ILdapAuthenticationModeRepository ldapAuthenticationModeRepository)
+            ILdapAuthenticationModeRepository ldapAuthenticationModeRepository, IMapper mapper)
         {
             this.roleRepository = roleRepository;
             this.userRepository = userRepository;
@@ -39,6 +41,7 @@ namespace za.co.grindrodbank.a3s.Services
             this.applicationRepository = applicationRepository;
             this.applicationDataPolicyRepository = applicationDataPolicyRepository;
             this.ldapAuthenticationModeRepository = ldapAuthenticationModeRepository;
+            this.mapper = mapper;
         }
 
         public async Task ApplyDefaultConfigurationDefinitionAsync(SecurityContractDefaultConfiguration securityContractDefaultConfiguration, Guid updatedById, bool dryRun, SecurityContractDryRunResult securityContractDryRunResult)
@@ -496,6 +499,7 @@ namespace za.co.grindrodbank.a3s.Services
             {
                 logger.Debug($"[defaultConfigurations.name: '{defaultConfigurationName}'].[users.username: '{defaultUser.Username}']: User '{defaultUser.Username}' already exist. Updating it.");
                 defaultUserToApply = existingUser;
+                defaultUserToApply.CustomAttributes.Clear();
             }
             else
             {
@@ -522,6 +526,9 @@ namespace za.co.grindrodbank.a3s.Services
             defaultUserToApply.IsDeleted = defaultUser.IsDeleted;
             defaultUserToApply.DeletedTime = defaultUser.DeletedTime;
             defaultUserToApply.ChangedBy = updatedById;
+
+            defaultUserToApply.CustomAttributes = mapper.Map<List<UserCustomAttributeModel>>(defaultUser.CustomAttributes);
+            defaultUserToApply.CustomAttributes.ForEach(x => x.UserId = defaultUserToApply.Id);
 
             if (!string.IsNullOrEmpty(defaultUser.Avatar))
                 defaultUserToApply.Avatar = Convert.FromBase64String(defaultUser.Avatar);
@@ -957,7 +964,8 @@ namespace za.co.grindrodbank.a3s.Services
                     DeletedTime = user.DeletedTime,
                     LdapAuthenticationMode = user.LdapAuthenticationMode?.Name,
                     Avatar = user.Avatar == null ? null : Convert.ToBase64String(user.Avatar),
-                    Roles = new List<string>()
+                    Roles = new List<string>(),
+                    CustomAttributes = mapper.Map<List<UserCustomAttribute>>(user.CustomAttributes)
                 };
 
                 foreach (var role in user.UserRoles)

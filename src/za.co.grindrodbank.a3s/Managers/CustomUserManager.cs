@@ -47,6 +47,16 @@ namespace za.co.grindrodbank.a3s.Managers
             await store.AgreeToTermsOfServiceAsync(user.Id, termsOfServiceId);
         }
 
+        public override async Task<UserModel> FindByIdAsync(string userId)
+        {
+            ThrowIfDisposed();
+
+            var user = await store.FindByIdAsync(userId);
+            user.CustomAttributes = await store.GetCustomUserClaims(userId);
+
+            return user;
+        }
+
         private void ValidateTermsOfServiceParameters(UserModel user, Guid termsOfServiceId)
         {
             if (user == null)

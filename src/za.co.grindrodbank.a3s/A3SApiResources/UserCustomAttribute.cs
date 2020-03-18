@@ -27,33 +27,22 @@ using za.co.grindrodbank.a3s.Converters;
 namespace za.co.grindrodbank.a3s.A3SApiResources
 { 
     /// <summary>
-    /// Models an applications data policy. 
+    /// Model for user custom attribute. 
     /// </summary>
     [DataContract]
-    public partial class ApplicationDataPolicy : IEquatable<ApplicationDataPolicy>
+    public partial class UserCustomAttribute : IEquatable<UserCustomAttribute>
     { 
         /// <summary>
-        /// Gets or Sets Uuid
+        /// Gets or Sets Key
         /// </summary>
-        [Required]
-        [DataMember(Name="uuid", EmitDefaultValue=false)]
-        public Guid Uuid { get; set; }
+        [DataMember(Name="key", EmitDefaultValue=false)]
+        public string Key { get; set; }
 
         /// <summary>
-        /// The name of the application data policy.
+        /// Gets or Sets Value
         /// </summary>
-        /// <value>The name of the application data policy.</value>
-        [Required]
-        [DataMember(Name="name", EmitDefaultValue=false)]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// A description of the application data policy.
-        /// </summary>
-        /// <value>A description of the application data policy.</value>
-        [Required]
-        [DataMember(Name="description", EmitDefaultValue=false)]
-        public string Description { get; set; }
+        [DataMember(Name="value", EmitDefaultValue=false)]
+        public string Value { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -62,10 +51,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class ApplicationDataPolicy {\n");
-            sb.Append("  Uuid: ").Append(Uuid).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("class UserCustomAttribute {\n");
+            sb.Append("  Key: ").Append(Key).Append("\n");
+            sb.Append("  Value: ").Append(Value).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -88,34 +76,29 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((ApplicationDataPolicy)obj);
+            return obj.GetType() == GetType() && Equals((UserCustomAttribute)obj);
         }
 
         /// <summary>
-        /// Returns true if ApplicationDataPolicy instances are equal
+        /// Returns true if UserCustomAttribute instances are equal
         /// </summary>
-        /// <param name="other">Instance of ApplicationDataPolicy to be compared</param>
+        /// <param name="other">Instance of UserCustomAttribute to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(ApplicationDataPolicy other)
+        public bool Equals(UserCustomAttribute other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    Uuid == other.Uuid ||
-                    Uuid != null &&
-                    Uuid.Equals(other.Uuid)
+                    Key == other.Key ||
+                    Key != null &&
+                    Key.Equals(other.Key)
                 ) && 
                 (
-                    Name == other.Name ||
-                    Name != null &&
-                    Name.Equals(other.Name)
-                ) && 
-                (
-                    Description == other.Description ||
-                    Description != null &&
-                    Description.Equals(other.Description)
+                    Value == other.Value ||
+                    Value != null &&
+                    Value.Equals(other.Value)
                 );
         }
 
@@ -129,12 +112,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Uuid != null)
-                    hashCode = hashCode * 59 + Uuid.GetHashCode();
-                    if (Name != null)
-                    hashCode = hashCode * 59 + Name.GetHashCode();
-                    if (Description != null)
-                    hashCode = hashCode * 59 + Description.GetHashCode();
+                    if (Key != null)
+                    hashCode = hashCode * 59 + Key.GetHashCode();
+                    if (Value != null)
+                    hashCode = hashCode * 59 + Value.GetHashCode();
                 return hashCode;
             }
         }
@@ -142,12 +123,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(ApplicationDataPolicy left, ApplicationDataPolicy right)
+        public static bool operator ==(UserCustomAttribute left, UserCustomAttribute right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(ApplicationDataPolicy left, ApplicationDataPolicy right)
+        public static bool operator !=(UserCustomAttribute left, UserCustomAttribute right)
         {
             return !Equals(left, right);
         }
