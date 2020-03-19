@@ -54,6 +54,7 @@ namespace za.co.grindrodbank.a3s.tests.Services
                 cfg.AddProfile(new RoleResourceRoleModelProfile());
                 cfg.AddProfile(new RoleFunctionTransientResourceRoleFunctionTransientModelProfile());
                 cfg.AddProfile(new RoleRoleTransientResourceRoleRoleTransientModelProfile());
+                cfg.AddProfile(new FunctionResourceFunctionModelProfile());
             });
 
             mapper = config.CreateMapper();
