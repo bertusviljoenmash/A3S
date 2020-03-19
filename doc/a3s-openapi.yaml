@@ -3504,6 +3504,10 @@ components:
         action:
           type: string
         approvalCount:
+          description: The current approval count.
+          type: integer
+        requirerdApprovalCount:
+          description: The required approval count before this entity is released.
           type: integer
         changedBy:
           type: string
@@ -3538,6 +3542,8 @@ components:
           type: string
         approvalCount:
           type: integer
+        requirerdApprovalCount:
+          description: The required approval count before this entity is released.
         changedBy:
           type: string
           format: uuid
@@ -3579,6 +3585,8 @@ components:
           type: string
         approvalCount:
           type: integer
+        requirerdApprovalCount:
+          description: The required approval count before this entity is released.
         changedBy:
           type: string
           format: uuid
@@ -3600,6 +3608,8 @@ components:
           type: string
         approvalCount:
           type: integer
+        requirerdApprovalCount:
+          description: The required approval count before this entity is released.
         changedBy:
           type: string
           format: uuid

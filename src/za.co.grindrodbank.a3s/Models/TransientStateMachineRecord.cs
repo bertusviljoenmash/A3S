@@ -57,7 +57,7 @@ namespace za.co.grindrodbank.a3s.Models
 
         public int ApprovalCount { get; set; }
 
-        private int RequiredApprovalCount { get; set; }
+        public int RequiredApprovalCount { get; set; }
 
         [Required]
         [Column(TypeName = "text")]

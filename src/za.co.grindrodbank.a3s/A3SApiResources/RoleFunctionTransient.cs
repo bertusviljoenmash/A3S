@@ -70,6 +70,13 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public int ApprovalCount { get; set; }
 
         /// <summary>
+        /// The required approval count before this entity is released.
+        /// </summary>
+        /// <value>The required approval count before this entity is released.</value>
+        [DataMember(Name="requirerdApprovalCount", EmitDefaultValue=false)]
+        public Object RequirerdApprovalCount { get; set; }
+
+        /// <summary>
         /// Gets or Sets ChangedBy
         /// </summary>
         [DataMember(Name="changedBy", EmitDefaultValue=false)]
@@ -89,6 +96,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  RState: ").Append(RState).Append("\n");
             sb.Append("  Action: ").Append(Action).Append("\n");
             sb.Append("  ApprovalCount: ").Append(ApprovalCount).Append("\n");
+            sb.Append("  RequirerdApprovalCount: ").Append(RequirerdApprovalCount).Append("\n");
             sb.Append("  ChangedBy: ").Append(ChangedBy).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -157,6 +165,11 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     ApprovalCount.Equals(other.ApprovalCount)
                 ) && 
                 (
+                    RequirerdApprovalCount == other.RequirerdApprovalCount ||
+                    RequirerdApprovalCount != null &&
+                    RequirerdApprovalCount.Equals(other.RequirerdApprovalCount)
+                ) && 
+                (
                     ChangedBy == other.ChangedBy ||
                     ChangedBy != null &&
                     ChangedBy.Equals(other.ChangedBy)
@@ -185,6 +198,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + Action.GetHashCode();
                     
                     hashCode = hashCode * 59 + ApprovalCount.GetHashCode();
+                    if (RequirerdApprovalCount != null)
+                    hashCode = hashCode * 59 + RequirerdApprovalCount.GetHashCode();
                     if (ChangedBy != null)
                     hashCode = hashCode * 59 + ChangedBy.GetHashCode();
                 return hashCode;

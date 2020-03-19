@@ -70,10 +70,18 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public string Action { get; set; }
 
         /// <summary>
-        /// Gets or Sets ApprovalCount
+        /// The current approval count.
         /// </summary>
+        /// <value>The current approval count.</value>
         [DataMember(Name="approvalCount", EmitDefaultValue=false)]
         public int ApprovalCount { get; set; }
+
+        /// <summary>
+        /// The required approval count before this entity is released.
+        /// </summary>
+        /// <value>The required approval count before this entity is released.</value>
+        [DataMember(Name="requirerdApprovalCount", EmitDefaultValue=false)]
+        public int RequirerdApprovalCount { get; set; }
 
         /// <summary>
         /// Gets or Sets ChangedBy
@@ -110,6 +118,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  RState: ").Append(RState).Append("\n");
             sb.Append("  Action: ").Append(Action).Append("\n");
             sb.Append("  ApprovalCount: ").Append(ApprovalCount).Append("\n");
+            sb.Append("  RequirerdApprovalCount: ").Append(RequirerdApprovalCount).Append("\n");
             sb.Append("  ChangedBy: ").Append(ChangedBy).Append("\n");
             sb.Append("  LatestTransientRoleFunctions: ").Append(LatestTransientRoleFunctions).Append("\n");
             sb.Append("  LatestTransientRoleChildRoles: ").Append(LatestTransientRoleChildRoles).Append("\n");
@@ -185,6 +194,11 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     ApprovalCount.Equals(other.ApprovalCount)
                 ) && 
                 (
+                    RequirerdApprovalCount == other.RequirerdApprovalCount ||
+                    
+                    RequirerdApprovalCount.Equals(other.RequirerdApprovalCount)
+                ) && 
+                (
                     ChangedBy == other.ChangedBy ||
                     ChangedBy != null &&
                     ChangedBy.Equals(other.ChangedBy)
@@ -227,6 +241,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + Action.GetHashCode();
                     
                     hashCode = hashCode * 59 + ApprovalCount.GetHashCode();
+                    
+                    hashCode = hashCode * 59 + RequirerdApprovalCount.GetHashCode();
                     if (ChangedBy != null)
                     hashCode = hashCode * 59 + ChangedBy.GetHashCode();
                     if (LatestTransientRoleFunctions != null)
