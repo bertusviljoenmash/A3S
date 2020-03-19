@@ -80,8 +80,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         /// The required approval count before this entity is released.
         /// </summary>
         /// <value>The required approval count before this entity is released.</value>
-        [DataMember(Name="requirerdApprovalCount", EmitDefaultValue=false)]
-        public int RequirerdApprovalCount { get; set; }
+        [DataMember(Name="requiredApprovalCount", EmitDefaultValue=false)]
+        public int RequiredApprovalCount { get; set; }
 
         /// <summary>
         /// Gets or Sets ChangedBy
@@ -118,7 +118,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  RState: ").Append(RState).Append("\n");
             sb.Append("  Action: ").Append(Action).Append("\n");
             sb.Append("  ApprovalCount: ").Append(ApprovalCount).Append("\n");
-            sb.Append("  RequirerdApprovalCount: ").Append(RequirerdApprovalCount).Append("\n");
+            sb.Append("  RequiredApprovalCount: ").Append(RequiredApprovalCount).Append("\n");
             sb.Append("  ChangedBy: ").Append(ChangedBy).Append("\n");
             sb.Append("  LatestTransientRoleFunctions: ").Append(LatestTransientRoleFunctions).Append("\n");
             sb.Append("  LatestTransientRoleChildRoles: ").Append(LatestTransientRoleChildRoles).Append("\n");
@@ -194,9 +194,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     ApprovalCount.Equals(other.ApprovalCount)
                 ) && 
                 (
-                    RequirerdApprovalCount == other.RequirerdApprovalCount ||
+                    RequiredApprovalCount == other.RequiredApprovalCount ||
                     
-                    RequirerdApprovalCount.Equals(other.RequirerdApprovalCount)
+                    RequiredApprovalCount.Equals(other.RequiredApprovalCount)
                 ) && 
                 (
                     ChangedBy == other.ChangedBy ||
@@ -242,7 +242,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     
                     hashCode = hashCode * 59 + ApprovalCount.GetHashCode();
                     
-                    hashCode = hashCode * 59 + RequirerdApprovalCount.GetHashCode();
+                    hashCode = hashCode * 59 + RequiredApprovalCount.GetHashCode();
                     if (ChangedBy != null)
                     hashCode = hashCode * 59 + ChangedBy.GetHashCode();
                     if (LatestTransientRoleFunctions != null)

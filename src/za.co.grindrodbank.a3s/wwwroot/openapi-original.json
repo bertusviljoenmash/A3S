@@ -5356,9 +5356,9 @@
       "RoleTransient" : {
         "description" : "Represents a transient state of a role.\n",
         "example" : {
-          "requirerdApprovalCount" : 6,
+          "requiredApprovalCount" : 6,
           "latestTransientRoleChildRoles" : [ {
-            "requirerdApprovalCount" : "",
+            "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -5367,7 +5367,7 @@
             "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "approvalCount" : 5
           }, {
-            "requirerdApprovalCount" : "",
+            "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -5385,7 +5385,7 @@
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "latestTransientRoleFunctions" : [ {
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "requirerdApprovalCount" : "",
+            "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -5394,7 +5394,7 @@
             "approvalCount" : 1
           }, {
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "requirerdApprovalCount" : "",
+            "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -5430,7 +5430,7 @@
             "description" : "The current approval count.",
             "type" : "integer"
           },
-          "requirerdApprovalCount" : {
+          "requiredApprovalCount" : {
             "description" : "The required approval count before this entity is released.",
             "type" : "integer"
           },
@@ -5458,7 +5458,7 @@
       "RoleTransientsItem" : {
         "description" : "Represents a transient state of a role.\n",
         "example" : {
-          "requirerdApprovalCount" : "",
+          "requiredApprovalCount" : "",
           "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "name" : "name",
@@ -5493,7 +5493,7 @@
           "approvalCount" : {
             "type" : "integer"
           },
-          "requirerdApprovalCount" : {
+          "requiredApprovalCount" : {
             "description" : "The required approval count before this entity is released."
           },
           "changedBy" : {
@@ -5507,7 +5507,7 @@
         "description" : "Represents the current active transients for a role and it's relations.\n",
         "example" : {
           "latestTransientRoleChildRoles" : [ {
-            "requirerdApprovalCount" : "",
+            "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -5516,7 +5516,7 @@
             "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "approvalCount" : 5
           }, {
-            "requirerdApprovalCount" : "",
+            "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -5526,7 +5526,7 @@
             "approvalCount" : 5
           } ],
           "latestActiveRoleTransients" : [ {
-            "requirerdApprovalCount" : "",
+            "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "name" : "name",
@@ -5536,7 +5536,7 @@
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "approvalCount" : 0
           }, {
-            "requirerdApprovalCount" : "",
+            "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "name" : "name",
@@ -5548,7 +5548,7 @@
           } ],
           "latestTransientRoleFunctions" : [ {
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "requirerdApprovalCount" : "",
+            "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -5557,7 +5557,7 @@
             "approvalCount" : 1
           }, {
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "requirerdApprovalCount" : "",
+            "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -5594,7 +5594,7 @@
         "description" : "Represents a transient state of a role function assignment.\n",
         "example" : {
           "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-          "requirerdApprovalCount" : "",
+          "requiredApprovalCount" : "",
           "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "r_state" : "r_state",
@@ -5625,7 +5625,7 @@
           "approvalCount" : {
             "type" : "integer"
           },
-          "requirerdApprovalCount" : {
+          "requiredApprovalCount" : {
             "description" : "The required approval count before this entity is released."
           },
           "changedBy" : {
@@ -5638,7 +5638,7 @@
       "RoleChildRoleTransient" : {
         "description" : "Represents a transient state of a role - child role assignment.\n",
         "example" : {
-          "requirerdApprovalCount" : "",
+          "requiredApprovalCount" : "",
           "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "r_state" : "r_state",
@@ -5670,7 +5670,7 @@
           "approvalCount" : {
             "type" : "integer"
           },
-          "requirerdApprovalCount" : {
+          "requiredApprovalCount" : {
             "description" : "The required approval count before this entity is released."
           },
           "changedBy" : {

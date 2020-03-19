@@ -18,7 +18,7 @@ namespace za.co.grindrodbank.a3s.MappingProfiles
                                                           .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.RoleId))
                                                           .ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.Id))
                                                           .ForMember(dest => dest.ApprovalCount, opt => opt.MapFrom(src => src.ApprovalCount))
-                                                          .ForMember(dest => dest.RequirerdApprovalCount, opt => opt.MapFrom(src => src.RequiredApprovalCount));
+                                                          .ForMember(dest => dest.RequiredApprovalCount, opt => opt.MapFrom(src => src.RequiredApprovalCount));
             CreateMap<RoleTransient, RoleTransientModel>().ForMember(dest => dest.R_State, opt => opt.MapFrom(src => src.RState));
         }
     }

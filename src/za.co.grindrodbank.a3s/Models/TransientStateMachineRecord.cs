@@ -56,7 +56,7 @@ namespace za.co.grindrodbank.a3s.Models
         public Guid ChangedBy { get; set; }
 
         public int ApprovalCount { get; set; }
-
+        [NotMapped]
         public int RequiredApprovalCount { get; set; }
 
         [Required]
