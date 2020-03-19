@@ -3442,17 +3442,15 @@ components:
           type: string
         subRealmId:
           $ref: '#/components/schemas/SubRealmId'
-        functionIds:
+        functions:
           type: array
           items:
-            description: The UUIDS of the functions assigned to this role.
-            type: string
-            format: uuid
-        roleIds:
+            $ref: '#/components/schemas/Function'
+        roles:
           description: The UUIDs of the child roles attached to the role.
           type: array
           items:
-            $ref: '#/components/schemas/RoleId'
+            $ref: '#/components/schemas/Role'
           
     RoleSubmit:
       description: |

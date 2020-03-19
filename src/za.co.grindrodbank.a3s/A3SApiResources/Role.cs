@@ -58,17 +58,17 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public Guid SubRealmId { get; set; }
 
         /// <summary>
-        /// Gets or Sets FunctionIds
+        /// Gets or Sets Functions
         /// </summary>
-        [DataMember(Name="functionIds", EmitDefaultValue=false)]
-        public List<Guid> FunctionIds { get; set; }
+        [DataMember(Name="functions", EmitDefaultValue=false)]
+        public List<Function> Functions { get; set; }
 
         /// <summary>
         /// The UUIDs of the child roles attached to the role.
         /// </summary>
         /// <value>The UUIDs of the child roles attached to the role.</value>
-        [DataMember(Name="roleIds", EmitDefaultValue=false)]
-        public List<Guid> RoleIds { get; set; }
+        [DataMember(Name="roles", EmitDefaultValue=false)]
+        public List<Role> Roles { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -82,8 +82,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  SubRealmId: ").Append(SubRealmId).Append("\n");
-            sb.Append("  FunctionIds: ").Append(FunctionIds).Append("\n");
-            sb.Append("  RoleIds: ").Append(RoleIds).Append("\n");
+            sb.Append("  Functions: ").Append(Functions).Append("\n");
+            sb.Append("  Roles: ").Append(Roles).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -141,16 +141,16 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     SubRealmId.Equals(other.SubRealmId)
                 ) && 
                 (
-                    FunctionIds == other.FunctionIds ||
-                    FunctionIds != null &&
-                    other.FunctionIds != null &&
-                    FunctionIds.SequenceEqual(other.FunctionIds)
+                    Functions == other.Functions ||
+                    Functions != null &&
+                    other.Functions != null &&
+                    Functions.SequenceEqual(other.Functions)
                 ) && 
                 (
-                    RoleIds == other.RoleIds ||
-                    RoleIds != null &&
-                    other.RoleIds != null &&
-                    RoleIds.SequenceEqual(other.RoleIds)
+                    Roles == other.Roles ||
+                    Roles != null &&
+                    other.Roles != null &&
+                    Roles.SequenceEqual(other.Roles)
                 );
         }
 
@@ -172,10 +172,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + Description.GetHashCode();
                     if (SubRealmId != null)
                     hashCode = hashCode * 59 + SubRealmId.GetHashCode();
-                    if (FunctionIds != null)
-                    hashCode = hashCode * 59 + FunctionIds.GetHashCode();
-                    if (RoleIds != null)
-                    hashCode = hashCode * 59 + RoleIds.GetHashCode();
+                    if (Functions != null)
+                    hashCode = hashCode * 59 + Functions.GetHashCode();
+                    if (Roles != null)
+                    hashCode = hashCode * 59 + Roles.GetHashCode();
                 return hashCode;
             }
         }
