@@ -1,6 +1,6 @@
 /**
  * *************************************************
- * Copyright (c) 2019, Grindrod Bank Limited
+ * Copyright (c) 2020, Grindrod Bank Limited
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
@@ -126,7 +126,9 @@ namespace za.co.grindrodbank.a3s.Repositories
                         .ThenInclude(rf => rf.Function)
                     .Include(r => r.ChildRoles)
                         .ThenInclude(cr => cr.ChildRole)
-                    .Include(r => r.SubRealm);
+                    .Include(r => r.SubRealm)
+                    .Include(r => r.ParentRoles)
+                        .ThenInclude(pr => pr.ParentRole);
         }
     }
 }

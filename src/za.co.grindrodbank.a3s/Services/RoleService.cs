@@ -1,6 +1,6 @@
 /**
  * *************************************************
- * Copyright (c) 2019, Grindrod Bank Limited
+ * Copyright (c) 2020, Grindrod Bank Limited
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
@@ -122,7 +122,7 @@ namespace za.co.grindrodbank.a3s.Services
                     continue;
                 }
 
-                var transientChildRole = await CaptureChildRoleAssignmentChange(roleId, childRoleId, createdBy, subRealmId, TransientAction.Create);
+                var transientChildRole = await CaptureChildRoleAssignmentChange(role, roleId, childRoleId, createdBy, subRealmId, TransientAction.Create);
                 CheckForAndProcessReleasedChildRoleTransientRecord(role, transientChildRole);
                 latestRoleChildRoleTransients.Add(transientChildRole);
             }
@@ -145,9 +145,9 @@ namespace za.co.grindrodbank.a3s.Services
                     continue;
                 }
 
-                // If this portion of the execution is reached, we have a child this is currently assigned to the role, but no longer
+                // If this portion of the execution is reached, we have a child that is currently assigned to the role, but no longer
                 // appears within the newly declared associated child roles list within the role submit. Capture a deletion of the currently aassigned child role.
-                var removeCapturedTransientChildRole = await CaptureChildRoleAssignmentChange(roleId, assignedChildRoleId, capturedBy, subRealmId, TransientAction.Delete);
+                var removeCapturedTransientChildRole = await CaptureChildRoleAssignmentChange(roleModel, roleId, assignedChildRoleId, capturedBy, subRealmId, TransientAction.Delete);
                 CheckForAndProcessReleasedChildRoleTransientRecord(roleModel, removeCapturedTransientChildRole);
                 latestRoleChildRoleTransients.Add(removeCapturedTransientChildRole);
             }
@@ -186,7 +186,7 @@ namespace za.co.grindrodbank.a3s.Services
         }
 
 
-        private async Task<RoleRoleTransientModel> CaptureChildRoleAssignmentChange(Guid roleId, Guid childRoleId, Guid capturedBy, Guid subRealmId, TransientAction action)
+        private async Task<RoleRoleTransientModel> CaptureChildRoleAssignmentChange(RoleModel role, Guid roleId, Guid childRoleId, Guid capturedBy, Guid subRealmId, TransientAction action)
         {
             RoleModel childRole = await roleRepository.GetByIdAsync(childRoleId);
 
@@ -201,6 +201,11 @@ namespace za.co.grindrodbank.a3s.Services
                 throw new ItemNotProcessableException($"Cannot assign a role with ID '{childRoleId}' as a child of role with ID '{roleId}', as the child role already has it's own child roles assigned.");
             }
 
+            if (role != null && role.ParentRoles != null && role.ParentRoles.Any())
+            {
+                throw new ItemNotProcessableException($"This role is already part of a compound role, and as such, cannot become a compound role itself.");
+            }
+               
             ConfirmSubRealmAssociation(subRealmId, childRole);
 
             var childRoleTransientRecords = await roleRoleTransientRepository.GetTransientChildRoleRelationsForRoleAsync(roleId, childRoleId);
