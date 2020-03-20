@@ -124,6 +124,8 @@ namespace za.co.grindrodbank.a3s.Repositories
                         .ThenInclude(ur => ur.User)
                     .Include(r => r.RoleFunctions)
                         .ThenInclude(rf => rf.Function)
+                           .ThenInclude(rf => rf.FunctionPermissions)
+                             .ThenInclude(rfp => rfp.Permission)
                     .Include(r => r.ChildRoles)
                         .ThenInclude(cr => cr.ChildRole)
                     .Include(r => r.SubRealm)
