@@ -1,6 +1,6 @@
 /**
  * *************************************************
- * Copyright (c) 2019, Grindrod Bank Limited
+ * Copyright (c) 2020, Grindrod Bank Limited
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
@@ -67,6 +67,7 @@ namespace za.co.grindrodbank.a3sidentityserver.Services
 
                 // Generate the user Identity related claims, which are independent of user or user-profile claims.
                 GenerateBaseUserClaimsMap(user, claims);
+                GenerateCustomAttributeClaimsMap(user, claims);
                 
                 context.IssuedClaims = claims;
                 context.LogIssuedClaims(Logger);
@@ -123,6 +124,12 @@ namespace za.co.grindrodbank.a3sidentityserver.Services
             {
                 claims.Add(new Claim("family_name", user.Surname));
             }
+        }
+
+        private void GenerateCustomAttributeClaimsMap(UserModel user, List<Claim> claims)
+        {
+            foreach (UserCustomAttributeModel attribute in user.CustomAttributes)
+                claims.Add(new Claim(attribute.Key, attribute.Value));
         }
 
         /// <summary>

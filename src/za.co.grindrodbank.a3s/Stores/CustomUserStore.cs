@@ -1,6 +1,6 @@
 /**
  * *************************************************
- * Copyright (c) 2019, Grindrod Bank Limited
+ * Copyright (c) 2020, Grindrod Bank Limited
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
@@ -209,6 +209,11 @@ namespace za.co.grindrodbank.a3s.Stores
             }
         }
 
+        public async Task<List<UserCustomAttributeModel>> GetCustomUserClaims(string userId)
+        {
+            return await a3SContext.UserCustomAttribute.Where(x => x.UserId == userId).ToListAsync();
+        }
+
         private void CheckTermsOfServiceAgreementParameters(string userId, Guid termsOfServiceId)
         {
             if (string.IsNullOrWhiteSpace(userId))
@@ -236,6 +241,5 @@ namespace za.co.grindrodbank.a3s.Stores
             var mergedCodes = string.Join(";", recoveryCodes);
             return SetTokenAsync(user, tokenOptions.GetAspNetUserStoreProviderName(), tokenOptions.GetRecoverCodesName(), mergedCodes, cancellationToken);
         }
-
     }
 }

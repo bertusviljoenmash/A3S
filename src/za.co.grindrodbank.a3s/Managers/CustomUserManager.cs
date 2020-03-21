@@ -1,6 +1,6 @@
 /**
  * *************************************************
- * Copyright (c) 2019, Grindrod Bank Limited
+ * Copyright (c) 2020, Grindrod Bank Limited
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
@@ -45,6 +45,16 @@ namespace za.co.grindrodbank.a3s.Managers
 
             ValidateTermsOfServiceParameters(user, termsOfServiceId);
             await store.AgreeToTermsOfServiceAsync(user.Id, termsOfServiceId);
+        }
+
+        public override async Task<UserModel> FindByIdAsync(string userId)
+        {
+            ThrowIfDisposed();
+
+            var user = await store.FindByIdAsync(userId);
+            user.CustomAttributes = await store.GetCustomUserClaims(userId);
+
+            return user;
         }
 
         private void ValidateTermsOfServiceParameters(UserModel user, Guid termsOfServiceId)

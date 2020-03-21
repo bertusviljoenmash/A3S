@@ -1,6 +1,6 @@
 /**
  * *************************************************
- * Copyright (c) 2019, Grindrod Bank Limited
+ * Copyright (c) 2020, Grindrod Bank Limited
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
@@ -19,7 +19,7 @@ namespace za.co.grindrodbank.a3sidentityserver.Quickstart.UI
         public static readonly TimeSpan RememberMeLoginDuration = TimeSpan.FromDays(30);
 
         public static readonly bool ShowLogoutPrompt = true;
-        public static readonly bool AutomaticRedirectAfterSignOut = false;
+        public static readonly bool AutomaticRedirectAfterSignOut = true;
 
         // specify the Windows authentication scheme being used
         public static readonly string WindowsAuthenticationSchemeName = Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme;

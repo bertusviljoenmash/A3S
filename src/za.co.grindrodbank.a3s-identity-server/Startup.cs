@@ -1,10 +1,9 @@
 /**
  * *************************************************
- * Copyright (c) 2019, Grindrod Bank Limited
+ * Copyright (c) 2020, Grindrod Bank Limited
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
-
 using za.co.grindrodbank.a3sidentityserver.Extensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
@@ -28,6 +27,7 @@ using Newtonsoft.Json.Serialization;
 using System;
 using Microsoft.AspNetCore.Http;
 using za.co.grindrodbank.a3s.ConnectionClients;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace za.co.grindrodbank.a3sidentityserver
 {
@@ -83,6 +83,16 @@ namespace za.co.grindrodbank.a3sidentityserver
                 iis.AutomaticAuthentication = false;
             });
 
+            // Configure the Identity Server to run behind a reverse proxy if configured.
+            if (Configuration.GetValue<bool>("RunningBehindReverseProxy"))
+            {
+                services.Configure<ForwardedHeadersOptions>(options =>
+                {
+                    options.ForwardedHeaders =
+                        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                });
+            }
+
             services.AddIdentityServer(options =>
             {
                 options.Events.RaiseErrorEvents = true;
@@ -128,6 +138,22 @@ namespace za.co.grindrodbank.a3sidentityserver
         {
             // Configure cookie policy to cater for older user agents that do not support the new SameSite cookie property functionality
             app.UseCookiePolicy();
+
+            // Configure the Identity Server to run behind a reverse proxy if configured.
+            if (Configuration.GetValue<bool>("RunningBehindReverseProxy"))
+            {
+                app.UseForwardedHeaders();
+            }
+
+            // Configure the Identity Server to use HTTPS schema as it is running behind a TLS terminated Ingress.
+            if (Configuration.GetValue<bool>("RunningBehindTlsTermintedIngress"))
+            {
+                app.Use((context, next) =>
+                {
+                    context.Request.Scheme = "https";
+                    return next();
+                });
+            }
 
             if (Environment.IsDevelopment())
             {

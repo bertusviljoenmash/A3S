@@ -1,6 +1,6 @@
 /**
  * *************************************************
- * Copyright (c) 2019, Grindrod Bank Limited
+ * Copyright (c) 2020, Grindrod Bank Limited
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
@@ -53,7 +53,7 @@ namespace za.co.grindrodbank.a3s.Repositories
         {
             // This will use the indentity user store to create the user. However, this user manager is unaware of roles.
             // Ensure that roles get assigned to the new user.
-            IdentityResult result = null;
+            IdentityResult result;
 
             // Always treat email as confirmed
             user.EmailConfirmed = true;
@@ -144,7 +144,6 @@ namespace za.co.grindrodbank.a3s.Repositories
 
         public async Task<UserModel> UpdateAsync(UserModel user)
         {
-
             a3SContext.Entry(user).State = EntityState.Modified;
             await a3SContext.SaveChangesAsync();
 
@@ -216,7 +215,8 @@ namespace za.co.grindrodbank.a3s.Repositories
                          .Include(u => u.UserTeams)
                             .ThenInclude(ut => ut.Team)
                          .Include(u => u.UserTokens)
-                         .Include(u => u.Profiles);
+                         .Include(u => u.Profiles)
+                         .Include(u => u.CustomAttributes);  
         }
     }
 }

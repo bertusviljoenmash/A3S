@@ -1,6 +1,6 @@
 /**
  * *************************************************
- * Copyright (c) 2019, Grindrod Bank Limited
+ * Copyright (c) 2020, Grindrod Bank Limited
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
@@ -12,6 +12,7 @@ using za.co.grindrodbank.a3s.Models;
 using za.co.grindrodbank.a3s.Repositories;
 using AutoMapper;
 using za.co.grindrodbank.a3s.A3SApiResources;
+using System.Linq;
 
 namespace za.co.grindrodbank.a3s.Services
 {
@@ -96,6 +97,10 @@ namespace za.co.grindrodbank.a3s.Services
                     if (checkExistingNameModel != null)
                         throw new ItemNotProcessableException($"Role with name '{roleSubmit.Name}' already exists.");
                 }
+
+                // Confirm this role isn't becoming a compound role while already part of a compound role
+                if (roleSubmit.RoleIds.Any() && role.ParentRoles != null && role.ParentRoles.Any())
+                    throw new ItemNotProcessableException($"This role is already part of a compound role, and as such, cannot become a compound role itself.");
 
                 role.Name = roleSubmit.Name;
                 role.Description = roleSubmit.Description;

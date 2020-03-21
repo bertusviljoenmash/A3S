@@ -1,6 +1,6 @@
 /**
  * *************************************************
- * Copyright (c) 2019, Grindrod Bank Limited
+ * Copyright (c) 2020, Grindrod Bank Limited
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
@@ -122,7 +122,9 @@ namespace za.co.grindrodbank.a3s.Repositories
                           .ThenInclude(ct => ct.ChildTeam)
                         .Include(t => t.ApplicationDataPolicies)
                           .ThenInclude(adp => adp.ApplicationDataPolicy)
-                        .Include(t => t.SubRealm);
+                        .Include(t => t.SubRealm)
+                        .Include(r => r.ParentTeams)
+                            .ThenInclude(pt => pt.ParentTeam);
         }
 
         public async Task<PaginatedResult<TeamModel>> GetPaginatedListAsync(int page, int pageSize, bool includeRelations, string filterName, List<KeyValuePair<string, string>> orderBy)

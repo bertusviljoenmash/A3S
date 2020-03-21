@@ -1,6 +1,6 @@
 /**
  * *************************************************
- * Copyright (c) 2019, Grindrod Bank Limited
+ * Copyright (c) 2020, Grindrod Bank Limited
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
@@ -86,6 +86,7 @@ namespace za.co.grindrodbank.a3s.Services
 
                 await AssignRolesToUserFromRoleIdList(createdUser, userSubmit.RoleIds);
                 await AssignTeamsToUserFromTeamIdList(createdUser, userSubmit.TeamIds);
+
                 createdUser = await userRepository.UpdateAsync(createdUser);
 
                 // All successful
@@ -149,6 +150,9 @@ namespace za.co.grindrodbank.a3s.Services
                 userModel.UserName = userSubmit.Username;
                 userModel.NormalizedUserName = userSubmit.Username.ToUpper();
                 userModel.ChangedBy = updatedById;
+
+                userModel.CustomAttributes = mapper.Map<List<UserCustomAttributeModel>>(userSubmit.CustomAttributes);
+                userModel.CustomAttributes.ForEach(x => x.UserId = userModel.Id);
 
                 await AssignRolesToUserFromRoleIdList(userModel, userSubmit.RoleIds);
                 await AssignTeamsToUserFromTeamIdList(userModel, userSubmit.TeamIds);

@@ -1,6 +1,6 @@
 /**
  * *************************************************
- * Copyright (c) 2019, Grindrod Bank Limited
+ * Copyright (c) 2020, Grindrod Bank Limited
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
@@ -106,7 +106,8 @@ namespace za.co.grindrodbank.a3sidentityserver.tests.Services
                 Id = id,
                 Email = "temp@local",
                 FirstName = "Temp",
-                Surname = "User"
+                Surname = "User",
+                CustomAttributes = new List<UserCustomAttributeModel>()
             };
         }
 
