@@ -16,7 +16,8 @@
     <button class="spoon-btn-primary" name="btnReturn" id="btnReturn" value="btnReturn">Return</button>
     <input type="hidden" name="ReturnTo2FAUrl" id="ReturnTo2FAUrl" value="@Url.Action("Register2FA", new { redirectUrl = Model.RedirectUrl })" />
     <br />&nbsp;<br />
+</div>
 
-    @section scripts {
-        <script type="text/javascript" src="~/js/reset-recovery-codes.js"></script>
-    }
+@section scripts {
+    <script type="text/javascript" src="~/js/reset-recovery-codes.js"></script>
+}
