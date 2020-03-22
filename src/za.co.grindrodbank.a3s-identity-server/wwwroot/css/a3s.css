@@ -340,3 +340,17 @@ ul {
 .underline-anchor {
     text-decoration: underline;
 }
+
+.lock-image {
+    width: 37px;
+    height: 37px;
+}
+
+.plain-text-box {
+    height: 53px;
+    width: 471px;
+    margin: 20px auto;
+    text-align: left;
+    box-shadow: none;
+    border: 1px solid black;
+}
