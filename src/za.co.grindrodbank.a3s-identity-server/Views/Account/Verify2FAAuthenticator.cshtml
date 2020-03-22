@@ -1,47 +1,53 @@
 ﻿@model TwoFactorViewModel
 
-    <div class="login-page">
-        <div class="page-header">
-            <h1>Login</h1>
-        </div>
+    <div class="float-inner login-float-inner fifty-percent-alpha-background">
+        <br />&nbsp;<br />
 
-        <partial name="_ValidationSummary" />
 
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Your two-factor code is required:</h3>
-                    </div>
-                    <div class="panel-body">
+        <div><img src="~/img/additional-logo.svg" class="additional-logo" /></div>
+        <br />
+        <div><img src="~/img/a3s.png" class="a3s-big-logo" /></div>
+        <div class="a3s-title">Powered by <span>A3S</span></div>
+        <br />&nbsp;<br />
 
-                        <form asp-action="Verify2FAAuthenticator">
-                            <input type="hidden" asp-for="RedirectUrl" />
-                            <input type="hidden" asp-for="Username" />
-
-                            <fieldset>
-                                <div class="form-group">
-                                    <label asp-for="OTP"></label>
-                                    <input class="form-control" placeholder="OTP" asp-for="OTP" autofocus>
-                                </div>
-
-                                <div class="form-group login-remember">
-                                    <label asp-for="IsRecoveryCode">
-                                        <input asp-for="IsRecoveryCode">
-                                        <strong>Use Recovery Code</strong>
-                                    </label>
-                                </div>
-
-                                <div class="form-group">
-                                    <button class="btn btn-primary" name="button" value="validate">Validate OTP</button>
-                                    <button class="btn btn-default" name="button" value="cancel">Cancel</button>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
+        @if (ViewContext.ModelState.IsValid == false)
+        {
+            <div class="alert alert-danger alert-dismissible login-screen-control show">
+                <button type="button" class="close" aria-label="Close">
+                    <img class="icons-general-blue-add" src="~/img/add_blue.svg" />
+                </button>
+                <div class="a3s-row">
+                    <div class="alert-box-icon"><img src="~/img/alert.svg" /></div>
+                    <div class="alert-text" asp-validation-summary="All"></div>
                 </div>
             </div>
-        </div>
+        }
+
+        <h3>Your two-factor code is required:</h3>
+
+        <form asp-action="Verify2FAAuthenticator">
+            <input type="hidden" asp-for="RedirectUrl" />
+            <input type="hidden" asp-for="Username" />
+
+            <fieldset>
+                <div class="form-group">
+                    <input class="form-control login-screen-control" placeholder="OTP" asp-for="OTP" autofocus>
+                </div>
+
+                <div class="form-group login-remember">
+                    <label asp-for="IsRecoveryCode">
+                        <input asp-for="IsRecoveryCode">
+                        <strong>Use Recovery Code</strong>
+                    </label>
+                </div>
+
+                <button class="spoon-btn-primary" name="button" value="validate">Validate OTP</button>
+            </fieldset>
+            <br />
+            <button class="spoon-btn" name="button" value="cancel">Cancel</button>
+        </form>
+
+        <br />&nbsp;<br />
     </div>
 
 @section scripts {
