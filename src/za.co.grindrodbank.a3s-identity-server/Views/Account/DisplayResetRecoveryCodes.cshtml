@@ -1,33 +1,22 @@
 ﻿@model ResetRecoveryCodesModel
 
-    <div class="login-page">
-        <div class="page-header">
-            <h1>Register Two Factor Authentication</h1>
-        </div>
+<div class="float-inner login-float-inner white-background">
+    <br />&nbsp;<br />
+    <div><img src="~/img/a3s.svg" class="a3s-small-logo" /></div>
+    <h2>
+        Recovery Codes Regenerated
+    </h2>
+    <p>Your one-time recovery codes have been regenerated.</p>
+    <br />
+    <partial name="_2FABackupCodesDisplay" model="Model.RecoveryCodes" />
 
-        <partial name="_ValidationSummary" />
+    <br />
 
-        <div class="row">
-        <div class="col-md-6 col-sm-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Recovery Codes Regenerated</h3>
-                </div>
-                <div class="panel-body">
-                    <p>Your one-time recovery codes have been regenerated.</p>
+    <input type="hidden" name="RedirectUrl" id="RedirectUrl" value="@Model.RedirectUrl" />
+    <button class="spoon-btn-primary" name="btnReturn" id="btnReturn" value="btnReturn">Return</button>
+    <input type="hidden" name="ReturnTo2FAUrl" id="ReturnTo2FAUrl" value="@Url.Action("Register2FA", new { redirectUrl = Model.RedirectUrl })" />
+    <br />&nbsp;<br />
 
-                    <partial name="_2FABackupCodesDisplay" model="Model.RecoveryCodes" />
-
-                </div>
-            </div>
-
-            <input type="hidden" name="RedirectUrl" id="RedirectUrl" value="@Model.RedirectUrl" />
-            <button class="btn btn-default" name="btnReturn" id="btnReturn" value="btnReturn">Return</button>
-            <input type="hidden" name="ReturnTo2FAUrl" id="ReturnTo2FAUrl" value="@Url.Action("Register2FA", new { redirectUrl = Model.RedirectUrl })" />
-        </div>
-
-    </div>
-
-@section scripts {
-    <script type="text/javascript" src="~/js/reset-recovery-codes.js"></script>
-}
+    @section scripts {
+        <script type="text/javascript" src="~/js/reset-recovery-codes.js"></script>
+    }
