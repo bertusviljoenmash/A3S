@@ -86,6 +86,7 @@ h3 {
     left: 50%;
     margin-left: -325px;
     margin-top: -334px;
+    height: initial;
 }
 
 .login-float-inner-2 {
@@ -202,6 +203,13 @@ ul {
 
 .blue-box {
     border: 1px solid #7db7df;
+    border-radius: 7px;
+    margin: 30px 50px;
+    padding: 30px;
+}
+
+.white-box {
+    border: 1px solid #fff;
     border-radius: 7px;
     margin: 30px 50px;
     padding: 30px;
