@@ -12,29 +12,31 @@
 
         @if (Model.AllowRegisterAuthenticator)
         {
-            <div class="white-box">
-                @if (Model.HasAuthenticator)
-                {
-                    <h3>Manage Authenticator App</h3>
-                }
-                else
-                {
-                    <h3>Register an Authenticator App</h3>
-                }
-                <br />
-                <p>This allows you to register A3S with an authenticator app, like Google Authenticator, Microsoft Authenticator or FreeOTP Authenticator, that will generate one time passwords as a second security factor.</p>
+    <div class="white-box">
+        @if (Model.HasAuthenticator)
+        {
+            <h3>Manage Authenticator App</h3>
+        }
+        else
+        {
+            <h3>Register an Authenticator App</h3>
+        }
+        <br />
+        <p>This allows you to register A3S with an authenticator app, like Google Authenticator, Microsoft Authenticator or FreeOTP Authenticator, that will generate one time passwords as a second security factor.</p>
 
-                @if (Model.HasAuthenticator)
-                {
-                    <button class="spoon-btn-primary" name="btnAuthenticator" id="btnAuthenticator" value="btnAuthenticator">Register Additional Authenticator</button>
-                    <button class="spoon-btn" name="btnResetRecoveryCodes" id="btnResetRecoveryCodes" value="btnResetRecoveryCodes">Reset Recovery Codes</button>
-                    <button class="spoon-btn" name="btnDeregisterAuthenticator" id="btnDeregisterAuthenticator" value="btnDeregisterAuthenticator">Remove Authenticator</button>
-                }
-                else
-                {
-                    <button class="spoon-btn-primary" name="btnAuthenticator" id="btnAuthenticator" value="btnAuthenticator">Register Authenticator</button>
-                }
-            </div>
+        @if (Model.HasAuthenticator)
+        {
+            <button class="spoon-btn-primary" name="btnAuthenticator" id="btnAuthenticator" value="btnAuthenticator">Register Additional Authenticator</button>
+            <br />@Html.Raw("&nbsp;")<br />
+            <button class="spoon-btn" name="btnResetRecoveryCodes" id="btnResetRecoveryCodes" value="btnResetRecoveryCodes">Reset Recovery Codes</button>
+            <br />@Html.Raw("&nbsp;")<br />
+            <button class="spoon-btn" name="btnDeregisterAuthenticator" id="btnDeregisterAuthenticator" value="btnDeregisterAuthenticator">Remove Authenticator</button>
+        }
+        else
+        {
+            <button class="spoon-btn-primary" name="btnAuthenticator" id="btnAuthenticator" value="btnAuthenticator">Register Authenticator</button>
+        }
+    </div>
 
             <input type="hidden" name="RegisterAuthenticatorUrl" id="RegisterAuthenticatorUrl" value="@Url.Action("Register2FAAuthenticator", new { redirectUrl = Model.RedirectUrl })" />
             <input type="hidden" name="ResetRecoveryCodesUrl" id="ResetRecoveryCodesUrl" value="@Url.Action("ResetRecoveryCodes", new { redirectUrl = Model.RedirectUrl })" />
