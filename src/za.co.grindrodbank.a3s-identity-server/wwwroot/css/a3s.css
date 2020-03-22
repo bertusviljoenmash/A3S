@@ -89,6 +89,15 @@ h3 {
     height: initial;
 }
 
+.terms-float-inner {
+    width: 650px;
+    top: 50%;
+    left: 50%;
+    margin-left: -325px;
+    margin-top: -334px;
+    height: initial;
+}
+
 .login-float-inner-2 {
     height: 738px;
     margin-top: -369px;
@@ -152,6 +161,10 @@ h3 {
     line-height: 23px;
     border-radius: 25px;
     padding: 0 40px;
+}
+
+.spoon-btn-primary:disabled {
+    opacity: 0.3;
 }
 
 .spoon-btn {
@@ -363,4 +376,48 @@ ul {
     text-align: left;
     width: 400px;
     margin-left: 80px;
+}
+
+.agreement-tile {
+    height: 5px;
+    width: 30px;
+    margin: 0 5px;
+    background-color: #E9EFF7;
+}
+
+.agreement-tile-active {
+    background-color: #93B1D6;
+}
+
+.print-icon {
+    width: 23px;
+    height: 24px;
+}
+
+.no-border {
+    border: none;
+}
+
+.terms-header {
+    height: 53px;
+    background-color: #E9EFF7;
+    border-top: 1px solid #93B1D6;
+}
+
+    .terms-header p {
+        font-family: "Source Sans Pro Bold";
+        font-size: 18px;
+        color: #001C44;
+        text-align: left;
+        margin: 15px;
+    }
+
+.terms-body {
+    text-align: left;
+    margin: 5px 30px;
+}
+
+.terms-footer {
+    height: 1px;
+    border-top: 1px solid #93B1D6;
 }
