@@ -98,12 +98,17 @@ h3 {
 }
 
 .a3s-title {
-    font-family: "Catalunyademo", Helvetica, Arial, serif;
-    font-size: 6em;
-    letter-spacing: 3.38px;
-    line-height: 47.0px;
+    font-family: "Source Sans Pro", Helvetica, Arial, serif;
     vertical-align: middle;
+    color: #fff
 }
+
+    .a3s-title span {
+        font-family: "Catalunyademo", Helvetica, Arial, serif;
+        font-size: 24px;
+        vertical-align: middle;
+        color: #fff
+    }
 
 .form-control {
     padding: 12px 13px;
@@ -167,8 +172,8 @@ ul {
 }
 
 .a3s-big-logo {
-    height: 115px;
-    width: 115px;
+    height: 58px;
+    width: 58px;
 }
 
 .a3s-small-logo {
@@ -177,8 +182,8 @@ ul {
 }
 
 .additional-logo {
-    height: 28px;
-    width: 138px;
+    height: 91px;
+    width: 449px;
 }
 
 .blue-box {

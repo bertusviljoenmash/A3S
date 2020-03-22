@@ -42,6 +42,7 @@
     <Content Remove="Views\Device\Success.cshtml" />
     <Content Remove="wwwroot\fonts\SourceSansPro-Italic.ttf" />
     <Content Remove="wwwroot\img\a3s.png" />
+    <Content Remove="wwwroot\img\Grindrod_Bank_logo_logotype Copy.svg" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="nlog.config">
