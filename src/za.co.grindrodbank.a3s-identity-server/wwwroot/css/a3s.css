@@ -69,16 +69,23 @@ h3 {
     bottom: 0;
 }
 
+.float-inner {
+    width: 90%;
+    height: 90%;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    text-align: center;
+    border-radius: 7px;
+    box-shadow: 1px 1px 50px 10px rgba(0,37,80,0.2);
+}
+
 .login-float-inner {
     width: 650px;
-    position: absolute;
     top: 50%;
     left: 50%;
     margin-left: -325px;
     margin-top: -334px;
-    text-align: center;
-    border-radius: 7px;
-    box-shadow: 1px 1px 50px 10px rgba(0,37,80,0.2);
 }
 
 .login-float-inner-2 {
@@ -163,6 +170,15 @@ h3 {
 .right-align {
     text-align: right;
     margin-right: 85px;
+}
+
+.left-align {
+    text-align: left;
+    margin-left: 85px;
+}
+
+.black-border {
+    border-color: black;
 }
 
 ul {
@@ -311,4 +327,8 @@ ul {
     height: 20px;
     width: 19.51px;
     transform: rotate(-45deg);
+}
+
+.underline-anchor {
+    text-decoration: underline;
 }
