@@ -413,8 +413,11 @@ ul {
     }
 
 .terms-body {
-    text-align: left;
-    margin: 5px 30px;
+    text-align: justify;
+    margin: 5px 6px 5px 30px;
+    padding-right: 29px;
+    height: 360px;
+    overflow: scroll;
 }
 
 .terms-footer {
