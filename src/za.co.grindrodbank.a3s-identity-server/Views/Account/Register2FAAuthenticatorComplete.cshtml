@@ -1,33 +1,24 @@
 ﻿@model RegisterTwoFactorAuthenticatorCompleteViewModel
 
-    <div class="login-page">
-        <div class="page-header">
-            <h1>Register Two Factor Authentication</h1>
-        </div>
+    <div class="float-inner login-float-inner white-background">
+        <br />&nbsp;<br />
+        <div><img src="~/img/a3s.svg" class="a3s-small-logo" /></div>
+        <h2>
+            Authenticator App Registration<br />Complete
+        </h2>
 
-        <partial name="_ValidationSummary" />
+        <div class="white-box">
+            <p>Your two-factor authenticator app has now successfully been registered, and two-factor authentication has been switched on for your profile.</p>
+            <br />
+            <partial name="_2FABackupCodesDisplay" model="Model.RecoveryCodes" />
 
-        <div class="row">
-            <div class="col-md-6 col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Authenticator App Registration Complete</h3>
-                    </div>
-                    <div class="panel-body">
-                        <p>Your two-factor authenticator app has now successfully been registered, and two-factor authentication has been switched on for your profile.</p>
+            <input type="hidden" name="RedirectUrl" id="RedirectUrl" value="@Model.RedirectUrl" />
 
-                        <partial name="_2FABackupCodesDisplay" model="Model.RecoveryCodes" />
-
-                    </div>
-                </div>
-
-                <input type="hidden" name="RedirectUrl" id="RedirectUrl" value="@Model.RedirectUrl" />
-                <button class="btn btn-default" name="btnContinueWithRedirect" id="btnContinueWithRedirect" value="btnContinueWithRedirect">Continue with Redirect</button>
-            </div>
+            <br />
+            <button class="spoon-btn" name="btnContinueWithRedirect" id="btnContinueWithRedirect" value="btnContinueWithRedirect">Continue with Redirect</button>
         </div>
     </div>
 
-
-@section scripts {
-    <script type="text/javascript" src="~/js/register-2fa-authenticator-complete.js"></script>
-}
+    @section scripts {
+        <script type="text/javascript" src="~/js/register-2fa-authenticator-complete.js"></script>
+    }

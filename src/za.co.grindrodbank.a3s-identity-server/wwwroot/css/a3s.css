@@ -354,3 +354,13 @@ ul {
     box-shadow: none;
     border: 1px solid black;
 }
+
+#recoveryCodeList {
+    columns: 2;
+    -webkit-columns: 2;
+    -moz-columns: 2;
+    list-style: disc;
+    text-align: left;
+    width: 400px;
+    margin-left: 80px;
+}
