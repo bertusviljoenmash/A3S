@@ -74,7 +74,8 @@ namespace za.co.grindrodbank.a3sidentityserver
                {
                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-               });
+               })
+               .AddRazorRuntimeCompilation();
 
             services.Configure<IISOptions>(iis =>
             {
@@ -225,10 +226,13 @@ namespace za.co.grindrodbank.a3sidentityserver
 
                 if (DisallowsSameSiteNone(userAgent))
                     options.SameSite = SameSiteMode.Unspecified;
+
+                if (SaveCookiesAsSecure(userAgent))
+                    options.Secure = true;
             }
         }
 
-        public bool DisallowsSameSiteNone(string userAgent)
+        private bool DisallowsSameSiteNone(string userAgent)
         {
             // Cover all iOS based browsers here. This includes:
             // - Safari on iOS 12 for iPhone, iPod Touch, iPad
@@ -255,6 +259,45 @@ namespace za.co.grindrodbank.a3sidentityserver
                 return true;
 
             return false;
+        }
+
+        private bool SaveCookiesAsSecure(string userAgent)
+        {
+            Version agentVersion = GetAgentVersion(userAgent);
+
+            if (agentVersion == null)
+                return false;
+
+            // Cover Chrome 80, where SameSite=None must now be set with Secure.
+            if (userAgent.Contains("Chrome/") && agentVersion.Major >= 80)
+                return true;
+            
+            return false;
+        }
+
+        private Version GetAgentVersion(string userAgent)
+        {
+            string agentName = string.Empty;
+
+            if (userAgent.Contains("Chrome"))
+                agentName = "Chrome";
+
+            int versionTextStart = userAgent.IndexOf($"{agentName}/") + agentName.Length + 1;
+            int versionTextEnd = userAgent.IndexOf(' ', versionTextStart);
+            if (versionTextEnd == -1)
+                versionTextEnd = userAgent.Length - 1;
+
+            string versionText = userAgent.Substring(versionTextStart, (versionTextEnd - versionTextStart));
+
+            if (versionText.Length > 0)
+            {
+                if (Version.TryParse(versionText, out Version agentVersion))
+                    return agentVersion;
+                else
+                    return null;
+            }
+
+            return null;
         }
     }
 }

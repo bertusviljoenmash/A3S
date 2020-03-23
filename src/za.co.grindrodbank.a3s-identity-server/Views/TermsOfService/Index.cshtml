@@ -1,34 +1,71 @@
 ﻿@model TermsOfServiceViewModel
 
-<h1>Terms of Service Agreements (@(Model.InitialAgreementCount - Model.AgreementCount + 1) of @Model.InitialAgreementCount)</h1>
-<p>
-    <button class="btn btn-default" name="btnPrint" id="btnPrint" value="btnPrint" title="Print">Print Agreement</button>
-</p>
+    <div class="float-inner terms-float-inner white-background">
+        <br />&nbsp;<br />
+        <div><img src="~/img/a3s.svg" class="a3s-small-logo" /></div>
+        <h2>
+            Terms of Service Agreement
+        </h2>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">@Model.AgreementName</h3>
-    </div>
 
-    <div class="panel-body" id="terms-body">
-        <div id="section-to-print">
-            @Html.Raw($"<style>{Model.CssContents}</style>")
-            @Html.Raw(Model.HtmlContents)
+        <p>@(Model.InitialAgreementCount - Model.AgreementCount + 1) of @Model.InitialAgreementCount</p>
+
+        <div class="a3s-row">
+            @for (int i = 0; i < Model.InitialAgreementCount; i++)
+            {
+                if (i == (Model.InitialAgreementCount - Model.AgreementCount))
+                {
+                    <div class="agreement-tile agreement-tile-active"></div>
+                }
+                else
+                {
+                    <div class="agreement-tile"></div>
+                }
+            }
         </div>
+
+        <div class="a3s-row">
+            <div class="a3s-col-full right-align">
+                <button class="no-border" name="btnPrint" id="btnPrint" value="btnPrint" title="Print">
+                    <img src="~/img/print_blue.svg" class="print-icon" />&nbsp;&nbsp;&nbsp;Print
+                </button>
+                &nbsp;&nbsp;&nbsp;
+            </div>
+        </div>
+
+        <br />
+
+        <div class="terms-header">
+            <p>@Model.AgreementName</p>
+        </div>
+
+        <div class="terms-body" id="terms-body">
+            <div id="section-to-print">
+                @Html.Raw($"<style>{Model.CssContents}</style>")
+                @Html.Raw(Model.HtmlContents)
+            </div>
+        </div>
+
+        <div class="terms-footer"></div>
+        <br />
+
+        <form asp-route="Index">
+            <p class="left-align">
+                @Html.CheckBoxFor(x => x.Accepted)&nbsp; @Html.LabelFor(x => x.Accepted)
+            </p>
+            <button class="spoon-btn-primary" name="button" id="btnAccept" value="accept" disabled="disabled">Accept</button>
+            <button class="spoon-btn" name="button" id="btnReject" value="reject">Reject</button>
+            
+            <input type="hidden" name="ReturnUrl" id="ReturnUrl" value="@Model.ReturnUrl" />
+            <input type="hidden" name="TermsOfServiceId" id="TermsOfServiceId" value="@Model.TermsOfServiceId" />
+            <input type="hidden" name="InitialAgreementCount" id="InitialAgreementCount" value="@Model.InitialAgreementCount" />
+        </form>
+
+        <br />
+
+        @section scripts {
+            <script src="~/js/terms-of-service.js"></script>
+        }
     </div>
-</div>
 
-<form asp-route="Index">
-    <p>
-        @Html.CheckBoxFor(x => x.Accepted)&nbsp; @Html.LabelFor(x => x.Accepted) 
-    </p>
-    <button class="btn btn-default" name="button" id="btnAccept" value="accept" disabled="disabled">Accept</button>
-    <button class="btn btn-default" name="button" id="btnReject" value="reject">Reject</button>
-
-    <input type="hidden" name="ReturnUrl" id="ReturnUrl" value="@Model.ReturnUrl" />
-    <input type="hidden" name="TermsOfServiceId" id="TermsOfServiceId" value="@Model.TermsOfServiceId" />
-    <input type="hidden" name="InitialAgreementCount" id="InitialAgreementCount" value="@Model.InitialAgreementCount" />
-</form>
-@section scripts {
-    <script src="~/js/terms-of-service.js"></script>
-}
+<br />&nbsp;<br />

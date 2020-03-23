@@ -2,36 +2,39 @@
     var version = typeof(IdentityServer4.Hosting.IdentityServerMiddleware).Assembly.GetName().Version.ToString();
 }
 
-<div class="welcome-page">
-    <div class="row page-header">
-        <div class="col-sm-10">
-            <h1>
-                <img class="icon" src="~/icon.jpg">
-                Welcome to IdentityServer4
-                <small>(version @version) </small>
-                <small><i>used and customized by A3S</i></small>
-            </h1>
+<div class="float-inner white-background">
+    <div class="welcome-page">
+        <br />&nbsp;<br />
+        <div class="row">
+            <div class="col-sm-10">
+                <h1>
+                    <img class="icon" src="~/icon.jpg">
+                    Welcome to IdentityServer4
+                    <small>(version @version) </small>
+                    <small><i>used and customized by A3S</i></small>
+                </h1>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-sm-8">
-            <p>
-                IdentityServer publishes a
-                <a href="~/.well-known/openid-configuration">discovery document</a>
-                where you can find metadata and links to all the endpoints, key material, etc.
-            </p>
-        </div>
-        <div class="col-sm-8">
-            <p>
-                Click <a href="~/grants">here</a> to manage your stored grants.
-            </p>
-        </div>    </div>
-    <div class="row">
-        <div class="col-sm-8">
-            <p>
-                Access the A3S documentation <a href="https://github.com/GrindrodBank/A3S/blob/master/README.md">here</a>.
-            </p>
+        <hr class="black-border" />
+
+        <div class="row">
+            <div class="left-align">
+                <h2>Discovery document</h2>
+                <p>
+                    IdentityServer publishes a
+                    <a href="~/.well-known/openid-configuration" class="underline-anchor">discovery document</a>
+                    where you can find metadata and links to all the endpoints, key material, etc.
+                </p>
+                <h2>Grants</h2>
+                <p>
+                    Click <a href="~/grants" class="underline-anchor">here</a> to manage your stored grants.
+                </p>
+                <h2>Further documentation</h2>
+                <p>
+                    Access the A3S documentation <a href="https://github.com/GrindrodBank/A3S/blob/master/README.md" class="underline-anchor">here</a>.
+                </p>
+            </div>
         </div>
     </div>
 </div>

@@ -1,56 +1,76 @@
 ﻿@model RegisterTwoFactorAuthenticatorViewModel
 
-    <div class="login-page">
-        <div class="page-header">
-            <h1>Register Two Factor Authentication</h1>
+    <div class="float-inner login-float-inner white-background">
+        <br />&nbsp;<br />
+        <div><img src="~/img/a3s.svg" class="a3s-small-logo" /></div>
+        <h2>Register Two-Factor Authentication</h2>
+
+        <div class="white-box">
+            <h3>
+                <img src="~/img/lockcircle_navy.svg" class="lock-image" /><br />
+                Step One
+            </h3>
+            <p>Please scan the QR code</p>
+            <div id="qrCode"></div>
+            <input type="hidden" id="qrCodeData" value="@Model.QrCode" />
+            <br />
+
+            <p>Alternatively, enter this key into your two-factor authenticator app. Spaces and casing do not matter.</p>
+            <br />
+            <p><kbd>@Model.SharedKey</kbd></p>
+
+
+            <br />
+            <h3>
+                <img src="~/img/lockcircle_navy.svg" class="lock-image" /><br />
+                Step Two
+            </h3>
+            <p>
+                Enter the authenticator OTP and validate to complete the
+                registration process.
+            </p>
+
+            @if (!ViewContext.ModelState.IsValid)
+            {
+                <div class="alert alert-danger alert-dismissible login-screen-control show">
+                    <button type="button" class="close" aria-label="Close">
+                        <img class="icons-general-blue-add" src="~/img/add_blue.svg" />
+                    </button>
+                    <div class="a3s-row">
+                        <div class="alert-box-icon"><img src="~/img/alert.svg" /></div>
+                        <div class="alert-text" asp-validation-summary="All"></div>
+                    </div>
+                </div>
+            }
+
+            <form asp-route="Register2FAAuthenticator">
+                <input type="hidden" asp-for="RedirectUrl" />
+                <fieldset>
+                    <div class="form-group">
+                        <input type="text" class="form-control plain-text-box" placeholder="OTP" asp-for="OTP" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <button class="spoon-btn-primary" name="button" value="validate">Validate</button>
+                    </div>
+                </fieldset>
+            </form>
+
+
+            @if (Model.TwoFACompulsary)
+            {
+                <input type="hidden" name="RedirectUrl" id="RedirectUrl" value="@Model.RedirectUrl" />
+                <button class="spoon-btn" name="btnCancel" id="btnCancel" value="btnCancel">Cancel</button>
+            }
+            else
+            {
+                <input type="hidden" name="RedirectUrl" id="RedirectUrl" value="@Model.RedirectUrl" />
+                <button class="spoon-btn" name="btnContinueWithout" id="btnContinueWithout" value="btnContinueWithout">Skip</button>
+            }
+
         </div>
-
-        <partial name="_ValidationSummary" />
-
-        <div class="row">
-        <div class="col-md-6 col-sm-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Register Authenticator App</h3>
-                </div>
-                <div class="panel-body">
-                    <p>Please scan the QR Code or enter this key <kbd>@Model.SharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
-                    <div id="qrCode"></div>
-                    <input type="hidden" id="qrCodeData" value="@Model.QrCode" />
-                </div>
-                <div class="panel-body">
-                    <p>Enter the authenticator OTP and submit to complete the registration process.</p>
-                    <form asp-route="Register2FAAuthenticator">
-                        <input type="hidden" asp-for="RedirectUrl" />
-                        <fieldset>
-                            <div class="form-group">
-                                <label asp-for="OTP"></label>
-                                <input type="text" class="form-control" placeholder="OTP" asp-for="OTP" autocomplete="off">
-                            </div>
-                            <div class="form-group">
-                                <button class="btn btn-primary" name="button" value="validate">Validate</button>
-                            </div>
-                        </fieldset>
-                    </form>
-                </div>
-            </div>
-
-        @if (Model.TwoFACompulsary)
-        {
-            <input type="hidden" name="RedirectUrl" id="RedirectUrl" value="@Model.RedirectUrl" />
-            <button class="btn btn-default" name="btnCancel" id="btnCancel" value="btnCancel">Cancel</button>
-        }
-        else
-        {
-            <input type="hidden" name="RedirectUrl" id="RedirectUrl" value="@Model.RedirectUrl" />
-            <button class="btn btn-default" name="btnContinueWithout" id="btnContinueWithout" value="btnContinueWithout">Continue with Redirect</button>
-        }
-
-        </div>
-
     </div>
 
-@section scripts {
-    <script type="text/javascript" src="~/lib/qrcodejs/qrcode.js"></script>
-    <script type="text/javascript" src="~/js/register-2fa-authenticator.js"></script>
-}
+    @section scripts {
+        <script type="text/javascript" src="~/lib/qrcodejs/qrcode.js"></script>
+        <script type="text/javascript" src="~/js/register-2fa-authenticator.js"></script>
+    }
