@@ -3116,7 +3116,7 @@ paths:
           schema:
             type: integer
             minimum: 1
-            maximum: 20
+            maximum: 1000
             format: int32
             default: 10
         - name: includeRelations
@@ -3405,7 +3405,102 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+                
   # End Region - Sub Realms
+  # Region - Transients
+  '/transients':
+    get:
+      tags:
+        - Transients
+      summary: Gets a list of all the entities that are currently being changed within the system.
+      description: Gets a list of all the entities that are currently being changed within the system. The requested entity types can be filtered with query params.
+      operationId: getTransients
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: The page to view.
+          schema:
+            type: integer
+            minimum: 1
+            format: int32
+            default: 1
+        - name: size
+          in: query
+          required: false
+          description: The size of a page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            format: int32
+            default: 10
+        - name: includeRoles
+          in: query
+          required: false
+          description: A flag controlling whether to include all role type records within the returned response.
+          schema:
+            type: boolean
+            default: false
+        - name: includeFunctions
+          in: query
+          description: A flag controlling whether to include all function type records within the returned response.
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: includeAuthModes
+          in: query
+          description: A flag controlling whether to include all authentication model type records within the returned response.
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: includeUsers
+          in: query
+          description: A flag controlling whether to include all user type records within the returned response.
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':    
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemTransients'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to read Sub-Realms.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Sub-Realm not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  # End Region - Transients
     
 components:
   schemas:
@@ -3612,7 +3707,19 @@ components:
           type: string
           format: uuid
         
-    # End Region - Roles 
+    # End Region - Roles
+    SystemTransients:
+      description: |
+        Represents a collection of all the entities within the system that are currently being modified. Response may include only the transients for certain requested entity types.
+      type: object
+      properties:
+        roles:
+          type: array
+          items: 
+            $ref: '#/components/schemas/RoleTransient'
+    # Begin Region - Transients
+    
+    # End Region - Transients
 
     # Region - Application
     ApplicationId:
