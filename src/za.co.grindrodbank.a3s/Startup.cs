@@ -226,6 +226,7 @@ namespace za.co.grindrodbank.a3s
             services.AddScoped<IClientService, ClientService>();
             services.AddScoped<ISubRealmService, SubRealmService>();
             services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<ISystemTransientsService, SystemTransientsService>();
 
             // Register Helpers
             services.AddScoped<IArchiveHelper, ArchiveHelper>();

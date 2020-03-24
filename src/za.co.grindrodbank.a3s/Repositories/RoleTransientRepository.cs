@@ -54,5 +54,14 @@ namespace za.co.grindrodbank.a3s.Repositories
             if (a3SContext.Database.CurrentTransaction != null)
                 a3SContext.Database.CurrentTransaction.Rollback();
         }
+
+        public async Task<List<RoleTransientModel>> GetTransientsForAllRolesAsync()
+        {
+            return await a3SContext.RoleTransient
+                .FromSqlRaw("SELECT \"RoleTransient\".* " +
+                            "FROM (SELECT DISTINCT ON (role_id) * FROM _a3s.role_transient ORDER BY role_id, created_at desc) AS \"RoleTransient\"" +
+                            "WHERE r_state != 'Released' OR r_state != 'Declined';")
+                            .ToListAsync();
+        }
     }
 }

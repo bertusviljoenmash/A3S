@@ -5854,7 +5854,6 @@
         "description" : "Represents a collection of all the entities within the system that are currently being modified. Response may include only the transients for certain requested entity types.\n",
         "example" : {
           "roles" : [ {
-            "requiredApprovalCount" : 6,
             "latestTransientRoleChildRoles" : [ {
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5874,12 +5873,17 @@
               "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "approvalCount" : 5
             } ],
-            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "name" : "name",
-            "description" : "description",
-            "r_state" : "r_state",
-            "action" : "action",
+            "latestActiveRoleTransient" : {
+              "requiredApprovalCount" : "",
+              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "name" : "name",
+              "description" : "description",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 0
+            },
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "latestTransientRoleFunctions" : [ {
               "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5899,10 +5903,8 @@
               "action" : "action",
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "approvalCount" : 1
-            } ],
-            "approvalCount" : 0
+            } ]
           }, {
-            "requiredApprovalCount" : 6,
             "latestTransientRoleChildRoles" : [ {
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5922,12 +5924,17 @@
               "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "approvalCount" : 5
             } ],
-            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "name" : "name",
-            "description" : "description",
-            "r_state" : "r_state",
-            "action" : "action",
+            "latestActiveRoleTransient" : {
+              "requiredApprovalCount" : "",
+              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "name" : "name",
+              "description" : "description",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 0
+            },
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "latestTransientRoleFunctions" : [ {
               "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5947,14 +5954,92 @@
               "action" : "action",
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "approvalCount" : 1
-            } ],
-            "approvalCount" : 0
+            } ]
           } ]
         },
         "properties" : {
           "roles" : {
             "items" : {
-              "$ref" : "#/components/schemas/RoleTransient"
+              "$ref" : "#/components/schemas/SystemTransientsRole"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "SystemTransientsRole" : {
+        "description" : "Represents a collection of all the latest transients for roles with transie.\n",
+        "example" : {
+          "latestTransientRoleChildRoles" : [ {
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          }, {
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          } ],
+          "latestActiveRoleTransient" : {
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "name" : "name",
+            "description" : "description",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 0
+          },
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "latestTransientRoleFunctions" : [ {
+            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          }, {
+            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          } ]
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "latestActiveRoleTransient" : {
+            "$ref" : "#/components/schemas/RoleTransientsItem"
+          },
+          "latestTransientRoleFunctions" : {
+            "description" : "A list of the latest transient role function assignments for this transient role.",
+            "items" : {
+              "$ref" : "#/components/schemas/RoleFunctionTransient"
+            },
+            "type" : "array"
+          },
+          "latestTransientRoleChildRoles" : {
+            "description" : "A list of the latest transient role - child role assignments for this transient role.",
+            "items" : {
+              "$ref" : "#/components/schemas/RoleChildRoleTransient"
             },
             "type" : "array"
           }

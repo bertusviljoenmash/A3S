@@ -36,7 +36,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         /// Gets or Sets Roles
         /// </summary>
         [DataMember(Name="roles", EmitDefaultValue=false)]
-        public List<RoleTransient> Roles { get; set; }
+        public List<SystemTransientsRole> Roles { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

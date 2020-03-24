@@ -3716,7 +3716,27 @@ components:
         roles:
           type: array
           items: 
-            $ref: '#/components/schemas/RoleTransient'
+            $ref: '#/components/schemas/SystemTransientsRole'
+            
+    SystemTransientsRole:
+      description: |
+        Represents a collection of all the latest transients for roles with transie.
+      type: object
+      properties:
+        uuid : 
+          $ref: '#/components/schemas/RoleId'
+        latestActiveRoleTransient:
+            $ref: '#/components/schemas/RoleTransientsItem'
+        latestTransientRoleFunctions:
+          description: A list of the latest transient role function assignments for this transient role.
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleFunctionTransient'
+        latestTransientRoleChildRoles:
+          description: A list of the latest transient role - child role assignments for this transient role.
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleChildRoleTransient'
     # Begin Region - Transients
     
     # End Region - Transients

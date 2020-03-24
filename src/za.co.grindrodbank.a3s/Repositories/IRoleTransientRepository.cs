@@ -15,6 +15,7 @@ namespace za.co.grindrodbank.a3s.Repositories
     public interface IRoleTransientRepository : ITransactableRepository
     {
         Task<List<RoleTransientModel>> GetTransientsForRoleAsync(Guid roleId);
+        Task<List<RoleTransientModel>> GetTransientsForAllRolesAsync();
         Task<RoleTransientModel> CreateAsync(RoleTransientModel roleTransient);
     }
 }
