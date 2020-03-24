@@ -383,6 +383,7 @@ ul {
     width: 30px;
     margin: 0 5px;
     background-color: #E9EFF7;
+    border-radius: 2.5px;
 }
 
 .agreement-tile-active {
