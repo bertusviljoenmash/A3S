@@ -18,8 +18,10 @@ namespace za.co.grindrodbank.a3s.MappingProfiles
         {
             CreateMap<SystemTransientsModel, SystemTransients>().ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.TransientRoles));
             CreateMap<SystemTransientsRoleModel, SystemTransientsRole>().ForMember(dest => dest.LatestActiveRoleTransient , opt => opt.MapFrom(src => src.LatestActiveRoleTransient))
+                                                                        .ForMember(dest => dest.LatestTransientRoleFunctions, opt => opt.MapFrom(src => src.LatestActiveRoleFunctionTransients))
                                                                         .ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.LatestActiveRoleTransient.Id));
             CreateMap<RoleTransientModel, RoleTransientsItem>().ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+            CreateMap<RoleFunctionTransientModel, RoleFunctionTransient>().ForMember(dest => dest.FunctionId, opt => opt.MapFrom(src => src.FunctionId));
         }
     }
 }

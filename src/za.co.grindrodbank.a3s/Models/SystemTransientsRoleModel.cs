@@ -12,8 +12,8 @@ namespace za.co.grindrodbank.a3s.Models
     public class SystemTransientsRoleModel
     {
         public RoleTransientModel LatestActiveRoleTransient { get; set; }
-        public RoleFunctionTransientModel LatestActiveRoleFunctionTransient { get; set; }
-        public RoleRoleTransientModel LatestActiveChildRoleTransient { get; set; }
+        public List<RoleFunctionTransientModel> LatestActiveRoleFunctionTransients { get; set; }
+        public List<RoleRoleTransientModel> LatestActiveChildRoleTransients { get; set; }
         public Guid RoleId { get; set; }
     }
 }
