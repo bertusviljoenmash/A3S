@@ -80,7 +80,7 @@ namespace za.co.grindrodbank.a3sidentityserver.Quickstart.UI
                 {
                     // if the client is PKCE then we assume it's native, so this change in how to
                     // return the response is for better UX for the end user.
-                    return View("Redirect", new RedirectViewModel { RedirectUrl = result.RedirectUri });
+                    return this.LoadingPage("Redirect", result.RedirectUri);
                 }
 
                 return Redirect(result.RedirectUri);
