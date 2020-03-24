@@ -52,7 +52,9 @@ namespace za.co.grindrodbank.a3s.Managers
             ThrowIfDisposed();
 
             var user = await store.FindByIdAsync(userId);
-            user.CustomAttributes = await store.GetCustomUserClaims(userId);
+
+            if (user != null)
+                user.CustomAttributes = await store.GetCustomUserClaims(userId);
 
             return user;
         }

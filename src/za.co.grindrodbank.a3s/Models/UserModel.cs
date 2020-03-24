@@ -38,5 +38,10 @@ namespace za.co.grindrodbank.a3s.Models
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public NpgsqlRange<DateTime> SysPeriod { get; set; }
+
+        public UserModel()
+        {
+            CustomAttributes = new List<UserCustomAttributeModel>();
+        }
     }
 }
