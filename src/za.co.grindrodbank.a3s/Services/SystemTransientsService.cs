@@ -4,7 +4,7 @@
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -38,10 +38,10 @@ namespace za.co.grindrodbank.a3s.Services
 
         private async Task GetAllLatestTransientRoles(SystemTransientsModel allSystemTransients)
         {
-            var allBaseRoleTransients = await roleTransientRepository.GetTransientsForAllRolesAsync();
+            var allBaseRoleTransients = await roleTransientRepository.GetLatestActiveTransientsForAllRolesAsync();
 
             // Start building the overall system transients map.
-            foreach(var baseRoleActiveTransient in allBaseRoleTransients)
+            foreach (var baseRoleActiveTransient in allBaseRoleTransients)
             {
                 allSystemTransients.TransientRoles.Add(new SystemTransientsRoleModel
                 {
@@ -52,16 +52,15 @@ namespace za.co.grindrodbank.a3s.Services
                 });
             }
 
-            var allRoleFunctionTransients = await roleFunctionTransientRepository.GetTransientsForAllRolesAsync();
+            var allRoleFunctionTransients = await roleFunctionTransientRepository.GetLatestActiveTransientsForAllRolesAsync();
 
-            foreach(var roleFunctionTransient in allRoleFunctionTransients)
+            foreach (var roleFunctionTransient in allRoleFunctionTransients)
             {
                 // Determine if the parent TransientRoles container object exists, create it if it doesn't.
                 var existingTransientRoleContainerObject = allSystemTransients.TransientRoles.Where(tr => tr.RoleId == roleFunctionTransient.RoleId).FirstOrDefault();
 
-                if(existingTransientRoleContainerObject == null)
+                if (existingTransientRoleContainerObject == null)
                 {
-                    Console.WriteLine($"ADDING a completely new parent!");
                     allSystemTransients.TransientRoles.Add(new SystemTransientsRoleModel
                     {
                         RoleId = roleFunctionTransient.RoleId,
@@ -74,18 +73,14 @@ namespace za.co.grindrodbank.a3s.Services
                 }
                 else // Parent may have been created by another transient.
                 {
-                    Console.WriteLine($"ADDING a role function to the  parent!");
                     if (existingTransientRoleContainerObject.LatestActiveRoleFunctionTransients == null)
                     {
-                        Console.WriteLine($"ROLEFUNCTION is NULL - ADDING!");
                         existingTransientRoleContainerObject.LatestActiveRoleFunctionTransients = new List<RoleFunctionTransientModel>();
                     }
-                    Console.WriteLine($"ADDING ROLEFUNCTION TO  CONTAINER!");
+
                     existingTransientRoleContainerObject.LatestActiveRoleFunctionTransients.Add(roleFunctionTransient);
                 }
             }
-
-
-}
+        }
     }
 }

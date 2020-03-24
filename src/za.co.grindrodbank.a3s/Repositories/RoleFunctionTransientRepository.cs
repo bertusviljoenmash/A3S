@@ -63,7 +63,7 @@ namespace za.co.grindrodbank.a3s.Repositories
                 a3SContext.Database.CurrentTransaction.Rollback();
         }
 
-        public async Task<List<RoleFunctionTransientModel>> GetTransientsForAllRolesAsync()
+        public async Task<List<RoleFunctionTransientModel>> GetLatestActiveTransientsForAllRolesAsync()
         {
             return await a3SContext.RoleFunctionTransient
                 .FromSqlRaw("SELECT \"RoleFunctionTransient\".* " +
