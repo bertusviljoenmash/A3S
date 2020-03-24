@@ -16,7 +16,18 @@
             Uncheck the permissions you do not wish to grant.
         </p>
 
-        <partial name="_ValidationSummary" />
+        @if (!ViewContext.ModelState.IsValid)
+        {
+            <div class="alert alert-danger alert-dismissible login-screen-control show">
+                <button type="button" class="close" aria-label="Close">
+                    <img class="icons-general-blue-add" src="~/img/add_blue.svg" />
+                </button>
+                <div class="a3s-row">
+                    <div class="alert-box-icon"><img src="~/img/alert.svg" /></div>
+                    <div class="alert-text" asp-validation-summary="All"></div>
+                </div>
+            </div>
+        }
 
         <form asp-action="Index" class="consent-form">
             <input type="hidden" asp-for="ReturnUrl" />
@@ -60,10 +71,10 @@
                 </div>
                 <br />
             }
-            
+
             <div class="consent-buttons">
                 <button name="button" value="yes" class="spoon-btn-primary" autofocus>&nbsp;&nbsp;&nbsp;&nbsp;Yes&nbsp;&nbsp;&nbsp;&nbsp;</button>
-                &nbsp; 
+                &nbsp;
                 <button name="button" value="no" class="spoon-btn">&nbsp;&nbsp;&nbsp;&nbsp;No&nbsp;&nbsp;&nbsp;&nbsp;</button>
                 @if (Model.ClientUrl != null)
                 {
