@@ -50,7 +50,7 @@ namespace za.co.grindrodbank.a3s.Services
             client.UpdateAccessTokenClaimsOnRefresh = true;
             client.AlwaysSendClientClaims = true;
             client.AlwaysIncludeUserClaimsInIdToken = true;
-            client.RequireConsent = false;
+            client.RequireConsent = true;
 
             if (oauth2ClientSubmit.AccessTokenLifetime > 0)
             {
