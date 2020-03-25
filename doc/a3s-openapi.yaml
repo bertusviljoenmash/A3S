@@ -3770,6 +3770,9 @@ components:
         identityTokenLifetime:
           description: The amount of time that ID tokens issued for this client will be valid (in seconds) for. Default is 3600.
           type: integer
+        requireConsent:
+          description: An indicator stating that this client needs to show the consent screen for users authenticating with the authorization code flow.
+          type: boolean
             
     Oauth2Client:
       description: |
