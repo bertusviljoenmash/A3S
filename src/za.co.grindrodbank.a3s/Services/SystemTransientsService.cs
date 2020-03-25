@@ -38,6 +38,13 @@ namespace za.co.grindrodbank.a3s.Services
 
         private async Task GetAllLatestTransientRoles(SystemTransientsModel allSystemTransients)
         {
+            await GetAllBaseRoleTransientsAndAddThemToTransientsResponse(allSystemTransients);
+            await GetAllRoleFunctionTransientsAndAddThemToTransientResponse(allSystemTransients);
+            await GetAllRoleChildRoleTransientsAndAddThemToTransientResponse(allSystemTransients);
+        }
+
+        private async Task GetAllBaseRoleTransientsAndAddThemToTransientsResponse(SystemTransientsModel allSystemTransients)
+        {
             var allBaseRoleTransients = await roleTransientRepository.GetLatestActiveTransientsForAllRolesAsync();
 
             // Start building the overall system transients map.
@@ -51,7 +58,10 @@ namespace za.co.grindrodbank.a3s.Services
                     LatestActiveChildRoleTransients = new List<RoleRoleTransientModel>()
                 });
             }
+        }
 
+        private async Task GetAllRoleFunctionTransientsAndAddThemToTransientResponse(SystemTransientsModel allSystemTransients)
+        {
             var allRoleFunctionTransients = await roleFunctionTransientRepository.GetLatestActiveTransientsForAllRolesAsync();
 
             foreach (var roleFunctionTransient in allRoleFunctionTransients)
@@ -71,7 +81,7 @@ namespace za.co.grindrodbank.a3s.Services
                         LatestActiveChildRoleTransients = new List<RoleRoleTransientModel>()
                     });
                 }
-                else // Parent may have been created by another transient.
+                else // Parent may have been created by another transient component of roles.
                 {
                     if (existingTransientRoleContainerObject.LatestActiveRoleFunctionTransients == null)
                     {
@@ -79,6 +89,40 @@ namespace za.co.grindrodbank.a3s.Services
                     }
 
                     existingTransientRoleContainerObject.LatestActiveRoleFunctionTransients.Add(roleFunctionTransient);
+                }
+            }
+        }
+
+        private async Task GetAllRoleChildRoleTransientsAndAddThemToTransientResponse(SystemTransientsModel allSystemTransients)
+        {
+            var allRoleRoleTransients = await roleRoleTransientRepository.GetLatestActiveTransientsForAllRolesAsync();
+
+            foreach (var roleRoleTransient in allRoleRoleTransients)
+            {
+                // Determine if the parent TransientRoles container object exists, create it if it doesn't.
+                var existingTransientRoleContainerObject = allSystemTransients.TransientRoles.Where(tr => tr.RoleId == roleRoleTransient.ParentRoleId).FirstOrDefault();
+
+                if (existingTransientRoleContainerObject == null)
+                {
+                    allSystemTransients.TransientRoles.Add(new SystemTransientsRoleModel
+                    {
+                        RoleId = roleRoleTransient.ParentRoleId,
+                        LatestActiveRoleTransient = new RoleTransientModel(),
+                        LatestActiveRoleFunctionTransients = new List<RoleFunctionTransientModel>(),
+                        LatestActiveChildRoleTransients = new List<RoleRoleTransientModel>
+                        {
+                            roleRoleTransient
+                        }
+                    });
+                }
+                else // Parent may have been created by another transient component of roles.
+                {
+                    if (existingTransientRoleContainerObject.LatestActiveChildRoleTransients == null)
+                    {
+                        existingTransientRoleContainerObject.LatestActiveChildRoleTransients = new List<RoleRoleTransientModel>();
+                    }
+
+                    existingTransientRoleContainerObject.LatestActiveChildRoleTransients.Add(roleRoleTransient);
                 }
             }
         }

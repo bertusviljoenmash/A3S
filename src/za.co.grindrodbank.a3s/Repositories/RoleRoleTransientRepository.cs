@@ -43,6 +43,15 @@ namespace za.co.grindrodbank.a3s.Repositories
                                    .OrderBy(rrt => rrt.CreatedAt).ToListAsync();
         }
 
+        public async Task<List<RoleRoleTransientModel>> GetLatestActiveTransientsForAllRolesAsync()
+        {
+            return await a3SContext.RoleRoleTransient
+                .FromSqlRaw("SELECT \"RoleRoleTransient\".* " +
+                            "FROM (SELECT DISTINCT ON (parent_role_id) * FROM _a3s.role_role_transient ORDER BY parent_role_id, created_at desc) AS \"RoleRoleTransient\"" +
+                            "WHERE r_state != 'Released' OR r_state != 'Declined';")
+                            .ToListAsync();
+        }
+
         public async Task<List<RoleRoleTransientModel>> GetTransientChildRoleRelationsForRoleAsync(Guid roleId, Guid childRoleId)
         {
             return await a3SContext.RoleRoleTransient

@@ -16,5 +16,6 @@ namespace za.co.grindrodbank.a3s.Repositories
         Task<List<RoleRoleTransientModel>> GetTransientChildRoleRelationsForRoleAsync(Guid roleId, Guid childRoleId);
         Task<List<RoleRoleTransientModel>> GetAllTransientChildRoleRelationsForRoleAsync(Guid roleId);
         Task<RoleRoleTransientModel> CreateNewTransientStateForRoleChildRoleAsync(RoleRoleTransientModel roleRoleTransient);
+        Task<List<RoleRoleTransientModel>> GetLatestActiveTransientsForAllRolesAsync();
     }
 }
