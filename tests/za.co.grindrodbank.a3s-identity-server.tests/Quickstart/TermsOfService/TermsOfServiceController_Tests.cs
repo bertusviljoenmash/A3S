@@ -27,7 +27,8 @@ using za.co.grindrodbank.a3s.Models;
 using za.co.grindrodbank.a3s.Repositories;
 using za.co.grindrodbank.a3s.Services;
 using za.co.grindrodbank.a3s.tests.Fakes;
-using za.co.grindrodbank.a3sidentityserver.Quickstart.UI;
+using za.co.grindrodbank.a3sidentityserver.Controllers;
+using za.co.grindrodbank.a3sidentityserver.ViewModels;
 
 namespace za.co.grindrodbank.a3sidentityserver.tests.Quickstart.TermsOfService
 {
