@@ -1,4 +1,11 @@
 --
+-- *************************************************
+-- Copyright (c) 2020, Grindrod Bank Limited
+-- License MIT: https://opensource.org/licenses/MIT
+-- **************************************************
+--
+
+--
 -- Name: DeviceCodes; Type: TABLE; Schema: _ids4; Owner: postgres
 --
 
