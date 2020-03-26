@@ -28,6 +28,9 @@ using System;
 using Microsoft.AspNetCore.Http;
 using za.co.grindrodbank.a3s.ConnectionClients;
 using Microsoft.AspNetCore.HttpOverrides;
+using IdentityServer4.Stores;
+using IdentityServer4.EntityFramework.Stores;
+using IdentityServer4.EntityFramework.Interfaces;
 
 namespace za.co.grindrodbank.a3sidentityserver
 {
@@ -102,6 +105,15 @@ namespace za.co.grindrodbank.a3sidentityserver
                 options.AccessTokenJwtType = "JWT";
             })
             .AddConfigurationStore(options =>
+            {
+                options.ConfigureDbContext = configurationBuilder =>
+                    configurationBuilder.UseNpgsql(
+                        Configuration.GetConnectionString("DefaultConnection")
+                        );
+
+                options.DefaultSchema = CONFIG_SCHEMA;
+            })
+            .AddOperationalStore(options =>
             {
                 options.ConfigureDbContext = configurationBuilder =>
                     configurationBuilder.UseNpgsql(
