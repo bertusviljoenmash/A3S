@@ -35,18 +35,18 @@
 
         <br />
 
-        <div class="terms-header">
+        <div class="content-grouping-header">
             <p>@Model.AgreementName</p>
         </div>
 
-        <div class="terms-body" id="terms-body">
+        <div class="scroll-content-grouping-body" id="terms-body">
             <div id="section-to-print">
                 @Html.Raw($"<style>{Model.CssContents}</style>")
                 @Html.Raw(Model.HtmlContents)
             </div>
         </div>
 
-        <div class="terms-footer"></div>
+        <div class="content-grouping-footer"></div>
         <br />
 
         <form asp-route="Index">

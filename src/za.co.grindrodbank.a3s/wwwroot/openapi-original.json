@@ -5821,17 +5821,18 @@
       "Oauth2ClientSubmit" : {
         "description" : "Models a client definition required to create or update an Oauth2 or OpenID Connect client.\n",
         "example" : {
-          "allowedOfflineAccess" : true,
-          "allowedGrantTypes" : [ "allowedGrantTypes", "allowedGrantTypes" ],
           "clientId" : "clientId",
           "clientSecrets" : [ "clientSecrets", "clientSecrets" ],
-          "allowedCorsOrigins" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
           "identityTokenLifetime" : 6,
-          "hashedClientSecrets" : [ "hashedClientSecrets", "hashedClientSecrets" ],
-          "postLogoutRedirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
-          "name" : "name",
           "redirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
           "allowedScopes" : [ "allowedScopes", "allowedScopes" ],
+          "allowedOfflineAccess" : true,
+          "allowedGrantTypes" : [ "allowedGrantTypes", "allowedGrantTypes" ],
+          "allowedCorsOrigins" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+          "hashedClientSecrets" : [ "hashedClientSecrets", "hashedClientSecrets" ],
+          "requireConsent" : true,
+          "postLogoutRedirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+          "name" : "name",
           "accessTokenLifetime" : 0
         },
         "properties" : {
@@ -5906,6 +5907,10 @@
           "identityTokenLifetime" : {
             "description" : "The amount of time that ID tokens issued for this client will be valid (in seconds) for. Default is 3600.",
             "type" : "integer"
+          },
+          "requireConsent" : {
+            "description" : "An indicator stating that this client needs to show the consent screen for users authenticating with the authorization code flow.",
+            "type" : "boolean"
           }
         },
         "required" : [ "allowedGrantTypes", "allowedOfflineAccess", "allowedScopes", "clientId", "name", "redirectUris" ],
@@ -6565,30 +6570,32 @@
         "description" : "Models a security contract definition.\n",
         "example" : {
           "clients" : [ {
-            "allowedOfflineAccess" : true,
-            "allowedGrantTypes" : [ "allowedGrantTypes", "allowedGrantTypes" ],
             "clientId" : "clientId",
             "clientSecrets" : [ "clientSecrets", "clientSecrets" ],
-            "allowedCorsOrigins" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
             "identityTokenLifetime" : 6,
-            "hashedClientSecrets" : [ "hashedClientSecrets", "hashedClientSecrets" ],
-            "postLogoutRedirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
-            "name" : "name",
             "redirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
             "allowedScopes" : [ "allowedScopes", "allowedScopes" ],
+            "allowedOfflineAccess" : true,
+            "allowedGrantTypes" : [ "allowedGrantTypes", "allowedGrantTypes" ],
+            "allowedCorsOrigins" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+            "hashedClientSecrets" : [ "hashedClientSecrets", "hashedClientSecrets" ],
+            "requireConsent" : true,
+            "postLogoutRedirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+            "name" : "name",
             "accessTokenLifetime" : 0
           }, {
-            "allowedOfflineAccess" : true,
-            "allowedGrantTypes" : [ "allowedGrantTypes", "allowedGrantTypes" ],
             "clientId" : "clientId",
             "clientSecrets" : [ "clientSecrets", "clientSecrets" ],
-            "allowedCorsOrigins" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
             "identityTokenLifetime" : 6,
-            "hashedClientSecrets" : [ "hashedClientSecrets", "hashedClientSecrets" ],
-            "postLogoutRedirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
-            "name" : "name",
             "redirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
             "allowedScopes" : [ "allowedScopes", "allowedScopes" ],
+            "allowedOfflineAccess" : true,
+            "allowedGrantTypes" : [ "allowedGrantTypes", "allowedGrantTypes" ],
+            "allowedCorsOrigins" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+            "hashedClientSecrets" : [ "hashedClientSecrets", "hashedClientSecrets" ],
+            "requireConsent" : true,
+            "postLogoutRedirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+            "name" : "name",
             "accessTokenLifetime" : 0
           } ],
           "defaultConfigurations" : [ {

@@ -191,6 +191,18 @@ h3 {
     margin-left: 85px;
 }
 
+.left-align-only {
+    text-align: left;
+}
+
+.padding-left-only-15 {
+    padding-left: 15px;
+}
+
+.padding-top-only-15 {
+    padding-top: 15px;
+}
+
 .black-border {
     border-color: black;
 }
@@ -383,6 +395,7 @@ ul {
     width: 30px;
     margin: 0 5px;
     background-color: #E9EFF7;
+    border-radius: 2.5px;
 }
 
 .agreement-tile-active {
@@ -398,13 +411,13 @@ ul {
     border: none;
 }
 
-.terms-header {
+.content-grouping-header {
     height: 53px;
     background-color: #E9EFF7;
     border-top: 1px solid #93B1D6;
 }
 
-    .terms-header p {
+    .content-grouping-header p {
         font-family: "Source Sans Pro Bold";
         font-size: 18px;
         color: #001C44;
@@ -412,7 +425,7 @@ ul {
         margin: 15px;
     }
 
-.terms-body {
+.scroll-content-grouping-body {
     text-align: justify;
     margin: 5px 6px 5px 30px;
     padding-right: 29px;
@@ -420,7 +433,7 @@ ul {
     overflow: scroll;
 }
 
-.terms-footer {
+.content-grouping-footer {
     height: 1px;
     border-top: 1px solid #93B1D6;
 }
