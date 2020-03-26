@@ -21,6 +21,11 @@ using System.Threading.Tasks;
 using za.co.grindrodbank.a3sidentityserver.FilterAttributes;
 using za.co.grindrodbank.a3sidentityserver.ViewModels;
 using za.co.grindrodbank.a3sidentityserver.Extensions;
+using System;
+using za.co.grindrodbank.a3s.Managers;
+using System.Security.Authentication;
+using System.Text;
+using za.co.grindrodbank.a3s.Models;
 
 namespace za.co.grindrodbank.a3sidentityserver.Controllers
 {
@@ -36,19 +41,22 @@ namespace za.co.grindrodbank.a3sidentityserver.Controllers
         private readonly IResourceStore _resourceStore;
         private readonly IEventService _events;
         private readonly ILogger<ConsentController> _logger;
+        private readonly CustomUserManager _userManager;
 
         public ConsentController(
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IResourceStore resourceStore,
             IEventService events,
-            ILogger<ConsentController> logger)
+            ILogger<ConsentController> logger,
+            CustomUserManager userManager)
         {
             _interaction = interaction;
             _clientStore = clientStore;
             _resourceStore = resourceStore;
             _events = events;
             _logger = logger;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -183,7 +191,7 @@ namespace za.co.grindrodbank.a3sidentityserver.Controllers
                     var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.ScopesRequested);
                     if (resources != null && (resources.IdentityResources.Any() || resources.ApiResources.Any()))
                     {
-                        return CreateConsentViewModel(model, returnUrl, request, client, resources);
+                        return await CreateConsentViewModel(model, returnUrl, request, client, resources);
                     }
                     else
                     {
@@ -203,7 +211,7 @@ namespace za.co.grindrodbank.a3sidentityserver.Controllers
             return null;
         }
 
-        private ConsentViewModel CreateConsentViewModel(
+        private async Task<ConsentViewModel> CreateConsentViewModel(
             ConsentInputModel model, string returnUrl,
             AuthorizationRequest request,
             Client client, Resources resources)
@@ -221,7 +229,11 @@ namespace za.co.grindrodbank.a3sidentityserver.Controllers
                 AllowRememberConsent = client.AllowRememberConsent
             };
 
-            vm.IdentityScopes = resources.IdentityResources.Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
+            UserModel user = await _userManager.GetUserAsync(HttpContext.User);
+            if (user == null)
+                throw new AuthenticationException("Invalid login info.");
+
+            vm.IdentityScopes = resources.IdentityResources.Select(x => CreateScopeViewModel(x, user, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
             vm.ResourceScopes = resources.ApiResources.SelectMany(x => x.Scopes).Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
             if (ConsentOptions.EnableOfflineAccess && resources.OfflineAccess)
             {
@@ -233,9 +245,9 @@ namespace za.co.grindrodbank.a3sidentityserver.Controllers
             return vm;
         }
 
-        private ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
+        private ScopeViewModel CreateScopeViewModel(IdentityResource identity, UserModel user, bool check)
         {
-            return new ScopeViewModel
+            var scopeViewModel = new ScopeViewModel
             {
                 Name = identity.Name,
                 DisplayName = identity.DisplayName,
@@ -244,6 +256,17 @@ namespace za.co.grindrodbank.a3sidentityserver.Controllers
                 Required = identity.Required,
                 Checked = check || identity.Required
             };
+
+            if (scopeViewModel.Name.Equals("profile", StringComparison.OrdinalIgnoreCase))
+            {
+                var descriptionSB = new StringBuilder("Personal Info: Given Name, Family Name, Username, Email");
+
+                foreach (var attribute in user.CustomAttributes)
+                    descriptionSB.Append(", ").Append(attribute.Key);
+
+                scopeViewModel.Description = descriptionSB.ToString();
+            }
+            return scopeViewModel;
         }
 
         public ScopeViewModel CreateScopeViewModel(Scope scope, bool check)
