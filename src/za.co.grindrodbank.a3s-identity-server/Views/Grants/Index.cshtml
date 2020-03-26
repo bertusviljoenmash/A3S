@@ -1,22 +1,19 @@
 ﻿@model GrantsViewModel
 
-<div class="grants">
-    <div class="row page-header">
-        <div class="col-sm-10">
-            <h1>
-                Client Application Access
-            </h1>
-            <div>Below is the list of applications you have given access to and the names of the resources they have access to.</div>
-        </div>
-    </div>
+<div class="float-inner white-background">
+    <br />&nbsp;<br />
+    <div><img src="~/img/a3s.svg" class="a3s-small-logo" /></div>
+    <h2>
+        Client Application Access
+    </h2>
+    <p>Below is the list of applications you have given access to and the names of the resources they have access to.</p>
 
     @if (Model.Grants.Any() == false)
     {
-        <div class="row">
-            <div class="col-sm-8">
-                <div class="alert alert-info">
-                    You have not given access to any applications
-                </div>
+        <div class="alert alert-danger login-screen-control show">
+            <div class="a3s-row">
+                <div class="alert-box-icon"><img src="~/img/alert.svg" /></div>
+                <div class="alert-text">&nbsp;&nbsp;&nbsp;&nbsp;You have not given access to any applications</div>
             </div>
         </div>
     }
@@ -24,6 +21,7 @@
     {
         foreach (var grant in Model.Grants)
         {
+            <hr />
             <div class="row grant">
                 <div class="col-sm-2">
                     @if (grant.ClientLogoUrl != null)
@@ -32,23 +30,24 @@
                     }
                 </div>
                 <div class="col-sm-8">
-                    <div class="clientname">@grant.ClientName</div>
-                    <div>
+                    <div class="clientname left-align">@grant.ClientName</div>
+                    <div class="left-align">
                         <span class="created">Created:</span> @grant.Created.ToString("yyyy-MM-dd")
                     </div>
                     @if (grant.Expires.HasValue)
                     {
-                        <div>
+                        <div class="left-align">
                             <span class="expires">Expires:</span> @grant.Expires.Value.ToString("yyyy-MM-dd")
                         </div>
                     }
+                    <br/>
                     @if (grant.IdentityGrantNames.Any())
                     {
                         <div>
-                            <div class="granttype">Identity Grants</div>
-                            <ul>
+                            <div class="granttype left-align"><b>Identity Grants</b></div>
+                            <ul class="left-align">
                                 @foreach (var name in grant.IdentityGrantNames)
-                        {
+                                {
                                     <li>@name</li>
                                 }
                             </ul>
@@ -57,8 +56,8 @@
                     @if (grant.ApiGrantNames.Any())
                     {
                         <div>
-                            <div class="granttype">API Grants</div>
-                            <ul>
+                            <div class="granttype left-align"><b>API Grants</b></div>
+                            <ul class="left-align">
                                 @foreach (var name in grant.ApiGrantNames)
                                 {
                                     <li>@name</li>
@@ -70,7 +69,7 @@
                 <div class="col-sm-2">
                     <form asp-action="Revoke">
                         <input type="hidden" name="clientId" value="@grant.ClientId">
-                        <button class="btn btn-danger">Revoke Access</button>
+                        <button class="spoon-btn-primary">Revoke Access</button>
                     </form>
                 </div>
             </div>
