@@ -34,8 +34,10 @@
     <Folder Include="Extensions\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Repositories\" />
-    <Folder Include="Quickstart\TermsOfService\" />
     <Folder Include="Views\TermsOfService\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="ViewModels\" />
+    <Folder Include="FilterAttributes\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="Views\Device\UserCodeCapture.cshtml" />

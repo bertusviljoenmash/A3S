@@ -4,12 +4,12 @@
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
-﻿using IdentityServer4.Services;
+using IdentityServer4.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Xunit;
-using za.co.grindrodbank.a3sidentityserver.Quickstart.UI;
+using za.co.grindrodbank.a3sidentityserver.Controllers;
 
 namespace za.co.grindrodbank.a3sidentityserver.tests.Quickstart.Home
 {
