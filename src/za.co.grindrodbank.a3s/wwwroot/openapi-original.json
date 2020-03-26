@@ -5412,6 +5412,11 @@
           "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "functions" : [ {
             "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "application" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
             "permissions" : [ {
               "name" : "name",
               "description" : "description",
@@ -5423,10 +5428,14 @@
             } ],
             "name" : "name",
             "description" : "description",
-            "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
           }, {
             "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "application" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
             "permissions" : [ {
               "name" : "name",
               "description" : "description",
@@ -5438,7 +5447,6 @@
             } ],
             "name" : "name",
             "description" : "description",
-            "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
           } ],
           "roles" : [ null, null ],
@@ -5469,7 +5477,6 @@
             "type" : "array"
           },
           "roles" : {
-            "description" : "The UUIDs of the child roles attached to the role.",
             "items" : {
               "$ref" : "#/components/schemas/Role"
             },
@@ -6056,6 +6063,11 @@
         "example" : {
           "functions" : [ {
             "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "application" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
             "permissions" : [ {
               "name" : "name",
               "description" : "description",
@@ -6067,10 +6079,14 @@
             } ],
             "name" : "name",
             "description" : "description",
-            "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
           }, {
             "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "application" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
             "permissions" : [ {
               "name" : "name",
               "description" : "description",
@@ -6082,7 +6098,6 @@
             } ],
             "name" : "name",
             "description" : "description",
-            "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
           } ],
           "name" : "name",
@@ -6121,6 +6136,28 @@
               "$ref" : "#/components/schemas/ApplicationDataPolicy"
             },
             "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "ApplicationSimple" : {
+        "description" : "A simpler model of an application, containing only the application's direct attributes, but none of it's relations.\n",
+        "example" : {
+          "name" : "name",
+          "description" : "description",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "description" : "The UUID of an application.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
           }
         },
         "type" : "object"
@@ -6284,6 +6321,11 @@
         "description" : "A Function - A collection of permissions to denote a piece of functionality in an application. Must be assigned to an application. May optionally be associated with a sub-realm by specifying a 'subRealmId'.\n",
         "example" : {
           "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "application" : {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          },
           "permissions" : [ {
             "name" : "name",
             "description" : "description",
@@ -6295,7 +6337,6 @@
           } ],
           "name" : "name",
           "description" : "description",
-          "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
         },
         "properties" : {
@@ -6309,10 +6350,8 @@
           "description" : {
             "type" : "string"
           },
-          "applicationId" : {
-            "description" : "The UUID of an application.",
-            "format" : "uuid",
-            "type" : "string"
+          "application" : {
+            "$ref" : "#/components/schemas/ApplicationSimple"
           },
           "subRealmId" : {
             "description" : "The UUID identifier for a sub-realm.",
@@ -6452,6 +6491,11 @@
             "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "functions" : [ {
               "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
               "permissions" : [ {
                 "name" : "name",
                 "description" : "description",
@@ -6463,10 +6507,14 @@
               } ],
               "name" : "name",
               "description" : "description",
-              "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
             }, {
               "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
               "permissions" : [ {
                 "name" : "name",
                 "description" : "description",
@@ -6478,7 +6526,6 @@
               } ],
               "name" : "name",
               "description" : "description",
-              "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
             } ],
             "roles" : [ null, null ],
@@ -6489,6 +6536,11 @@
             "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "functions" : [ {
               "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
               "permissions" : [ {
                 "name" : "name",
                 "description" : "description",
@@ -6500,10 +6552,14 @@
               } ],
               "name" : "name",
               "description" : "description",
-              "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
             }, {
               "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
               "permissions" : [ {
                 "name" : "name",
                 "description" : "description",
@@ -6515,7 +6571,6 @@
               } ],
               "name" : "name",
               "description" : "description",
-              "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
             } ],
             "roles" : [ null, null ],
@@ -6776,6 +6831,11 @@
             "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "functions" : [ {
               "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
               "permissions" : [ {
                 "name" : "name",
                 "description" : "description",
@@ -6787,10 +6847,14 @@
               } ],
               "name" : "name",
               "description" : "description",
-              "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
             }, {
               "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
               "permissions" : [ {
                 "name" : "name",
                 "description" : "description",
@@ -6802,7 +6866,6 @@
               } ],
               "name" : "name",
               "description" : "description",
-              "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
             } ],
             "roles" : [ null, null ],
@@ -6813,6 +6876,11 @@
             "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "functions" : [ {
               "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
               "permissions" : [ {
                 "name" : "name",
                 "description" : "description",
@@ -6824,10 +6892,14 @@
               } ],
               "name" : "name",
               "description" : "description",
-              "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
             }, {
               "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
               "permissions" : [ {
                 "name" : "name",
                 "description" : "description",
@@ -6839,7 +6911,6 @@
               } ],
               "name" : "name",
               "description" : "description",
-              "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
             } ],
             "roles" : [ null, null ],

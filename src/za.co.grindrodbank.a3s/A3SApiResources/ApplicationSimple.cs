@@ -27,51 +27,29 @@ using za.co.grindrodbank.a3s.Converters;
 namespace za.co.grindrodbank.a3s.A3SApiResources
 { 
     /// <summary>
-    /// A Function - A collection of permissions to denote a piece of functionality in an application. Must be assigned to an application. May optionally be associated with a sub-realm by specifying a &#39;subRealmId&#39;. 
+    /// A simpler model of an application, containing only the application&#39;s direct attributes, but none of it&#39;s relations. 
     /// </summary>
     [DataContract]
-    public partial class Function : IEquatable<Function>
+    public partial class ApplicationSimple : IEquatable<ApplicationSimple>
     { 
         /// <summary>
-        /// Gets or Sets Uuid
+        /// The UUID of an application.
         /// </summary>
-        [Required]
+        /// <value>The UUID of an application.</value>
         [DataMember(Name="uuid", EmitDefaultValue=false)]
         public Guid Uuid { get; set; }
 
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
-        [Required]
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
-        [Required]
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Application
-        /// </summary>
-        [DataMember(Name="application", EmitDefaultValue=false)]
-        public ApplicationSimple Application { get; set; }
-
-        /// <summary>
-        /// The UUID identifier for a sub-realm.
-        /// </summary>
-        /// <value>The UUID identifier for a sub-realm.</value>
-        [DataMember(Name="subRealmId", EmitDefaultValue=false)]
-        public Guid SubRealmId { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Permissions
-        /// </summary>
-        [Required]
-        [DataMember(Name="permissions", EmitDefaultValue=false)]
-        public List<Permission> Permissions { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -80,13 +58,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class Function {\n");
+            sb.Append("class ApplicationSimple {\n");
             sb.Append("  Uuid: ").Append(Uuid).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Application: ").Append(Application).Append("\n");
-            sb.Append("  SubRealmId: ").Append(SubRealmId).Append("\n");
-            sb.Append("  Permissions: ").Append(Permissions).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -109,15 +84,15 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Function)obj);
+            return obj.GetType() == GetType() && Equals((ApplicationSimple)obj);
         }
 
         /// <summary>
-        /// Returns true if Function instances are equal
+        /// Returns true if ApplicationSimple instances are equal
         /// </summary>
-        /// <param name="other">Instance of Function to be compared</param>
+        /// <param name="other">Instance of ApplicationSimple to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(Function other)
+        public bool Equals(ApplicationSimple other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -137,22 +112,6 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     Description == other.Description ||
                     Description != null &&
                     Description.Equals(other.Description)
-                ) && 
-                (
-                    Application == other.Application ||
-                    Application != null &&
-                    Application.Equals(other.Application)
-                ) && 
-                (
-                    SubRealmId == other.SubRealmId ||
-                    SubRealmId != null &&
-                    SubRealmId.Equals(other.SubRealmId)
-                ) && 
-                (
-                    Permissions == other.Permissions ||
-                    Permissions != null &&
-                    other.Permissions != null &&
-                    Permissions.SequenceEqual(other.Permissions)
                 );
         }
 
@@ -172,12 +131,6 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + Name.GetHashCode();
                     if (Description != null)
                     hashCode = hashCode * 59 + Description.GetHashCode();
-                    if (Application != null)
-                    hashCode = hashCode * 59 + Application.GetHashCode();
-                    if (SubRealmId != null)
-                    hashCode = hashCode * 59 + SubRealmId.GetHashCode();
-                    if (Permissions != null)
-                    hashCode = hashCode * 59 + Permissions.GetHashCode();
                 return hashCode;
             }
         }
@@ -185,12 +138,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(Function left, Function right)
+        public static bool operator ==(ApplicationSimple left, ApplicationSimple right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(Function left, Function right)
+        public static bool operator !=(ApplicationSimple left, ApplicationSimple right)
         {
             return !Equals(left, right);
         }

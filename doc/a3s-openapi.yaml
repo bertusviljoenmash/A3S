@@ -3542,7 +3542,6 @@ components:
           items:
             $ref: '#/components/schemas/Function'
         roles:
-          description: The UUIDs of the child roles attached to the role.
           type: array
           items:
             $ref: '#/components/schemas/Role'
@@ -3766,6 +3765,18 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ApplicationDataPolicy'
+            
+    ApplicationSimple:
+      description: |
+        A simpler model of an application, containing only the application's direct attributes, but none of it's relations.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/ApplicationId'
+        name:
+          type: string
+        description:
+          type: string
     #endregion
 
     # Region - Permissions
@@ -3887,8 +3898,8 @@ components:
           type: string
         description:
           type: string
-        applicationId:
-          $ref: '#/components/schemas/ApplicationId'
+        application:
+          $ref: '#/components/schemas/ApplicationSimple'
         subRealmId:
           $ref: '#/components/schemas/SubRealmId'
         permissions:

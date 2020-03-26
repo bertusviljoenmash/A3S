@@ -64,9 +64,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public List<Function> Functions { get; set; }
 
         /// <summary>
-        /// The UUIDs of the child roles attached to the role.
+        /// Gets or Sets Roles
         /// </summary>
-        /// <value>The UUIDs of the child roles attached to the role.</value>
         [DataMember(Name="roles", EmitDefaultValue=false)]
         public List<Role> Roles { get; set; }
 
