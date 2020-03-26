@@ -119,21 +119,19 @@ namespace za.co.grindrodbank.a3s.Repositories
         private IQueryable<RoleModel> IncludeRelations(IQueryable<RoleModel> query)
         {
             return query.Include(r => r.UserRoles)
-                        .ThenInclude(ur => ur.Role)
-                    .Include(r => r.UserRoles)
-                        .ThenInclude(ur => ur.User)
-                    .Include(r => r.RoleFunctions)
-                        .ThenInclude(rf => rf.Function)
-                           .ThenInclude(rf => rf.FunctionPermissions)
-                             .ThenInclude(rfp => rfp.Permission)
-                    .Include(r => r.RoleFunctions)
-                        .ThenInclude(rf => rf.Function)
-                           .ThenInclude(rf => rf.Application)
-                    .Include(r => r.ChildRoles)
-                        .ThenInclude(cr => cr.ChildRole)
-                    .Include(r => r.SubRealm)
-                    .Include(r => r.ParentRoles)
-                        .ThenInclude(pr => pr.ParentRole);
+                          .ThenInclude(ur => ur.User)
+                        .Include(r => r.RoleFunctions)
+                            .ThenInclude(rf => rf.Function)
+                               .ThenInclude(rf => rf.FunctionPermissions)
+                                 .ThenInclude(rfp => rfp.Permission)
+                        .Include(r => r.RoleFunctions)
+                            .ThenInclude(rf => rf.Function)
+                               .ThenInclude(rf => rf.Application)
+                        .Include(r => r.ChildRoles)
+                            .ThenInclude(cr => cr.ChildRole)
+                        .Include(r => r.SubRealm)
+                        .Include(r => r.ParentRoles)
+                            .ThenInclude(pr => pr.ParentRole);
         }
     }
 }
