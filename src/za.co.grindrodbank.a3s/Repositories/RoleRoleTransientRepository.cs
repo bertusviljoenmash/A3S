@@ -48,7 +48,7 @@ namespace za.co.grindrodbank.a3s.Repositories
             return await a3SContext.RoleRoleTransient
                 .FromSqlRaw("SELECT \"RoleRoleTransient\".* " +
                             "FROM (SELECT DISTINCT ON (parent_role_id) * FROM _a3s.role_role_transient ORDER BY parent_role_id, created_at desc) AS \"RoleRoleTransient\"" +
-                            "WHERE r_state != 'Released' OR r_state != 'Declined';")
+                            "WHERE r_state != 'Released' AND r_state != 'Declined';")
                             .ToListAsync();
         }
 

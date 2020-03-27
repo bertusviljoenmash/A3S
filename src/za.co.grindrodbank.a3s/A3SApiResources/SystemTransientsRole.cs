@@ -39,6 +39,24 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public Guid Uuid { get; set; }
 
         /// <summary>
+        /// Gets or Sets RoleName
+        /// </summary>
+        [DataMember(Name="roleName", EmitDefaultValue=false)]
+        public string RoleName { get; set; }
+
+        /// <summary>
+        /// Gets or Sets CapturerUuid
+        /// </summary>
+        [DataMember(Name="capturerUuid", EmitDefaultValue=false)]
+        public Guid CapturerUuid { get; set; }
+
+        /// <summary>
+        /// Gets or Sets CapturerName
+        /// </summary>
+        [DataMember(Name="capturerName", EmitDefaultValue=false)]
+        public string CapturerName { get; set; }
+
+        /// <summary>
         /// Gets or Sets LatestActiveRoleTransient
         /// </summary>
         [DataMember(Name="latestActiveRoleTransient", EmitDefaultValue=false)]
@@ -67,6 +85,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             var sb = new StringBuilder();
             sb.Append("class SystemTransientsRole {\n");
             sb.Append("  Uuid: ").Append(Uuid).Append("\n");
+            sb.Append("  RoleName: ").Append(RoleName).Append("\n");
+            sb.Append("  CapturerUuid: ").Append(CapturerUuid).Append("\n");
+            sb.Append("  CapturerName: ").Append(CapturerName).Append("\n");
             sb.Append("  LatestActiveRoleTransient: ").Append(LatestActiveRoleTransient).Append("\n");
             sb.Append("  LatestTransientRoleFunctions: ").Append(LatestTransientRoleFunctions).Append("\n");
             sb.Append("  LatestTransientRoleChildRoles: ").Append(LatestTransientRoleChildRoles).Append("\n");
@@ -112,6 +133,21 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     Uuid.Equals(other.Uuid)
                 ) && 
                 (
+                    RoleName == other.RoleName ||
+                    RoleName != null &&
+                    RoleName.Equals(other.RoleName)
+                ) && 
+                (
+                    CapturerUuid == other.CapturerUuid ||
+                    CapturerUuid != null &&
+                    CapturerUuid.Equals(other.CapturerUuid)
+                ) && 
+                (
+                    CapturerName == other.CapturerName ||
+                    CapturerName != null &&
+                    CapturerName.Equals(other.CapturerName)
+                ) && 
+                (
                     LatestActiveRoleTransient == other.LatestActiveRoleTransient ||
                     LatestActiveRoleTransient != null &&
                     LatestActiveRoleTransient.Equals(other.LatestActiveRoleTransient)
@@ -142,6 +178,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                 // Suitable nullity checks etc, of course :)
                     if (Uuid != null)
                     hashCode = hashCode * 59 + Uuid.GetHashCode();
+                    if (RoleName != null)
+                    hashCode = hashCode * 59 + RoleName.GetHashCode();
+                    if (CapturerUuid != null)
+                    hashCode = hashCode * 59 + CapturerUuid.GetHashCode();
+                    if (CapturerName != null)
+                    hashCode = hashCode * 59 + CapturerName.GetHashCode();
                     if (LatestActiveRoleTransient != null)
                     hashCode = hashCode * 59 + LatestActiveRoleTransient.GetHashCode();
                     if (LatestTransientRoleFunctions != null)

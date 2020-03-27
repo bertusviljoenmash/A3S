@@ -5861,6 +5861,8 @@
         "description" : "Represents a collection of all the entities within the system that are currently being modified. Response may include only the transients for certain requested entity types.\n",
         "example" : {
           "roles" : [ {
+            "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "capturerName" : "capturerName",
             "latestTransientRoleChildRoles" : [ {
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5891,6 +5893,7 @@
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "approvalCount" : 0
             },
+            "roleName" : "roleName",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "latestTransientRoleFunctions" : [ {
               "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5912,6 +5915,8 @@
               "approvalCount" : 1
             } ]
           }, {
+            "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "capturerName" : "capturerName",
             "latestTransientRoleChildRoles" : [ {
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5942,6 +5947,7 @@
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "approvalCount" : 0
             },
+            "roleName" : "roleName",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "latestTransientRoleFunctions" : [ {
               "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5977,6 +5983,8 @@
       "SystemTransientsRole" : {
         "description" : "Represents a collection of all the latest transients for roles with transie.\n",
         "example" : {
+          "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "capturerName" : "capturerName",
           "latestTransientRoleChildRoles" : [ {
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6007,6 +6015,7 @@
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "approvalCount" : 0
           },
+          "roleName" : "roleName",
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "latestTransientRoleFunctions" : [ {
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6031,6 +6040,16 @@
         "properties" : {
           "uuid" : {
             "format" : "uuid",
+            "type" : "string"
+          },
+          "roleName" : {
+            "type" : "string"
+          },
+          "capturerUuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "capturerName" : {
             "type" : "string"
           },
           "latestActiveRoleTransient" : {

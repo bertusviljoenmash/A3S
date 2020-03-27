@@ -3724,6 +3724,12 @@ components:
       properties:
         uuid : 
           $ref: '#/components/schemas/RoleId'
+        roleName: 
+          type: string
+        capturerUuid:
+          $ref: '#/components/schemas/UserId'
+        capturerName: 
+          type: string
         latestActiveRoleTransient:
             $ref: '#/components/schemas/RoleTransientsItem'
         latestTransientRoleFunctions:

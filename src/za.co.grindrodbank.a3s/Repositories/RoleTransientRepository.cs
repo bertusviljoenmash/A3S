@@ -59,9 +59,19 @@ namespace za.co.grindrodbank.a3s.Repositories
         {
             return await a3SContext.RoleTransient
                 .FromSqlRaw("SELECT \"RoleTransient\".* " +
-                            "FROM (SELECT DISTINCT ON (role_id) * FROM _a3s.role_transient ORDER BY role_id, created_at desc) AS \"RoleTransient\"" +
-                            "WHERE r_state != 'Released' OR r_state != 'Declined';")
+                            "FROM (SELECT DISTINCT ON (role_id) * FROM _a3s.role_transient WHERE r_state != 'Released' OR r_state != 'Declined' ORDER BY role_id, created_at desc) AS \"RoleTransient\" " +
+                            "WHERE r_state != 'Released' AND r_state != 'Declined';")
                             .ToListAsync();
+        }
+
+        public async Task<RoleTransientModel> GetLatestCapturedTransientForRoleAsync(Guid RoleId)
+        {
+            return await a3SContext.RoleTransient
+                .FromSqlRaw("SELECT \"RoleTransient\".* " +
+                            "FROM _a3s.role_transient AS \"RoleTransient\"  " +
+                            "WHERE r_state = 'Captured' AND role_id = {0} " +
+                            "ORDER BY created_at desc", RoleId)
+                            .FirstOrDefaultAsync();
         }
     }
 }
