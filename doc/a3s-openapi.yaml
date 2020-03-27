@@ -3730,6 +3730,9 @@ components:
           $ref: '#/components/schemas/UserId'
         capturerName: 
           type: string
+        capturedDate: 
+          type: string
+          format: date-time
         latestActiveRoleTransient:
             $ref: '#/components/schemas/RoleTransientsItem'
         latestTransientRoleFunctions:

@@ -57,6 +57,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public string CapturerName { get; set; }
 
         /// <summary>
+        /// Gets or Sets CapturedDate
+        /// </summary>
+        [DataMember(Name="capturedDate", EmitDefaultValue=false)]
+        public DateTime CapturedDate { get; set; }
+
+        /// <summary>
         /// Gets or Sets LatestActiveRoleTransient
         /// </summary>
         [DataMember(Name="latestActiveRoleTransient", EmitDefaultValue=false)]
@@ -88,6 +94,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  RoleName: ").Append(RoleName).Append("\n");
             sb.Append("  CapturerUuid: ").Append(CapturerUuid).Append("\n");
             sb.Append("  CapturerName: ").Append(CapturerName).Append("\n");
+            sb.Append("  CapturedDate: ").Append(CapturedDate).Append("\n");
             sb.Append("  LatestActiveRoleTransient: ").Append(LatestActiveRoleTransient).Append("\n");
             sb.Append("  LatestTransientRoleFunctions: ").Append(LatestTransientRoleFunctions).Append("\n");
             sb.Append("  LatestTransientRoleChildRoles: ").Append(LatestTransientRoleChildRoles).Append("\n");
@@ -148,6 +155,11 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     CapturerName.Equals(other.CapturerName)
                 ) && 
                 (
+                    CapturedDate == other.CapturedDate ||
+                    CapturedDate != null &&
+                    CapturedDate.Equals(other.CapturedDate)
+                ) && 
+                (
                     LatestActiveRoleTransient == other.LatestActiveRoleTransient ||
                     LatestActiveRoleTransient != null &&
                     LatestActiveRoleTransient.Equals(other.LatestActiveRoleTransient)
@@ -184,6 +196,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + CapturerUuid.GetHashCode();
                     if (CapturerName != null)
                     hashCode = hashCode * 59 + CapturerName.GetHashCode();
+                    if (CapturedDate != null)
+                    hashCode = hashCode * 59 + CapturedDate.GetHashCode();
                     if (LatestActiveRoleTransient != null)
                     hashCode = hashCode * 59 + LatestActiveRoleTransient.GetHashCode();
                     if (LatestTransientRoleFunctions != null)

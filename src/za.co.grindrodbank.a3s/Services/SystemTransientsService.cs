@@ -58,6 +58,7 @@ namespace za.co.grindrodbank.a3s.Services
             foreach (var baseRoleActiveTransient in allBaseRoleTransients)
             {
                 string roleName = "";
+                DateTime capturedDate;
 
                 // Recall, the role will not exists if it's creation has been captured.
                 if(baseRoleActiveTransient.Action != TransientStateMachineRecord.TransientAction.Create)
@@ -84,6 +85,8 @@ namespace za.co.grindrodbank.a3s.Services
                     {
                         roleName = baseRoleActiveTransient.Name;
                     }
+
+                    capturedDate = baseRoleActiveTransient.CreatedAt;
                 }
                 else // Find the most recent captured record for this transient.
                 {
@@ -94,10 +97,13 @@ namespace za.co.grindrodbank.a3s.Services
                     }
 
                     capturerGuid = mostRecentCapturedRoleTransient.ChangedBy;
+
                     if (string.IsNullOrEmpty(roleName))
                     {
                         roleName = baseRoleActiveTransient.Name;
                     }
+
+                    capturedDate = mostRecentCapturedRoleTransient.CreatedAt;
                 }
 
                 // Get the name of the user associated with the captured record.
@@ -110,6 +116,7 @@ namespace za.co.grindrodbank.a3s.Services
                     RoleName = roleName,
                     RequesterName = capturerName,
                     RequesterGuid = capturerGuid,
+                    RequestedDate = capturedDate,
                     LatestActiveRoleTransient = baseRoleActiveTransient,
                     LatestActiveRoleFunctionTransients = new List<RoleFunctionTransientModel>(),
                     LatestActiveChildRoleTransients = new List<RoleRoleTransientModel>()

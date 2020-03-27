@@ -5882,6 +5882,7 @@
               "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "approvalCount" : 5
             } ],
+            "capturedDate" : "2000-01-23T04:56:07.000+00:00",
             "latestActiveRoleTransient" : {
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5936,6 +5937,7 @@
               "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "approvalCount" : 5
             } ],
+            "capturedDate" : "2000-01-23T04:56:07.000+00:00",
             "latestActiveRoleTransient" : {
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6004,6 +6006,7 @@
             "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "approvalCount" : 5
           } ],
+          "capturedDate" : "2000-01-23T04:56:07.000+00:00",
           "latestActiveRoleTransient" : {
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6050,6 +6053,10 @@
             "type" : "string"
           },
           "capturerName" : {
+            "type" : "string"
+          },
+          "capturedDate" : {
+            "format" : "date-time",
             "type" : "string"
           },
           "latestActiveRoleTransient" : {
