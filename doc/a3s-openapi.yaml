@@ -3545,6 +3545,18 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Role'
+            
+    RoleSimple:
+      description: |
+        A Role within A3S, but without all the related entities associated with roles.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/RoleId'
+        name:
+          type: string
+        description:
+          type: string
           
     RoleSubmit:
       description: |
@@ -3653,12 +3665,12 @@ components:
           description: A list of the latest transient role function assignments for this transient role.
           type: array
           items:
-            $ref: '#/components/schemas/RoleFunctionTransient'
+            $ref: '#/components/schemas/RoleFunctionDetailedTransient'
         latestTransientRoleChildRoles:
           description: A list of the latest transient role - child role assignments for this transient role.
           type: array
           items:
-            $ref: '#/components/schemas/RoleChildRoleTransient'
+            $ref: '#/components/schemas/RoleChildRoleDetailedTransient'
           
     RoleFunctionTransient:
       description: |
@@ -3670,7 +3682,30 @@ components:
         roleId:
           $ref: '#/components/schemas/RoleId'
         functionId:
-          $ref: '#/components/schemas/FunctionId'
+          $ref: '#/components/schemas/RoleId'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+        changedBy:
+          type: string
+          format: uuid
+          
+    RoleFunctionDetailedTransient:
+      description: |
+        Represents a transient state of a role function assignment, but with more details pertaining to the function.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientRoleFunctionId'
+        roleId:
+          $ref: '#/components/schemas/RoleId'
+        function:
+          $ref: '#/components/schemas/FunctionSimple'
         r_state:
           type: string
         action:
@@ -3705,6 +3740,29 @@ components:
         changedBy:
           type: string
           format: uuid
+          
+    RoleChildRoleDetailedTransient:
+      description: |
+        Represents a transient state of a role - child role assignment, with additional basic details for the child role.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientRoleChildRoleId'
+        roleId:
+          $ref: '#/components/schemas/RoleId'
+        childRole:
+          $ref: '#/components/schemas/RoleSimple'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+        changedBy:
+          type: string
+          format: uuid
         
     # End Region - Roles
     SystemTransients:
@@ -3719,7 +3777,7 @@ components:
             
     SystemTransientsRole:
       description: |
-        Represents a collection of all the latest transients for roles with transie.
+        Represents a collection of all the latest transients for roles with any changes.
       type: object
       properties:
         uuid : 
@@ -3915,6 +3973,18 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Permission'
+            
+    FunctionSimple:
+      description: |
+        A model of a funtion, but without any of the function's relations.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/FunctionId'
+        name:
+          type: string
+        description:
+          type: string
 
     FunctionSubmit:
       description: |

@@ -43,14 +43,14 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         /// </summary>
         /// <value>A list of the latest transient role function assignments for this transient role.</value>
         [DataMember(Name="latestTransientRoleFunctions", EmitDefaultValue=false)]
-        public List<RoleFunctionTransient> LatestTransientRoleFunctions { get; set; }
+        public List<RoleFunctionDetailedTransient> LatestTransientRoleFunctions { get; set; }
 
         /// <summary>
         /// A list of the latest transient role - child role assignments for this transient role.
         /// </summary>
         /// <value>A list of the latest transient role - child role assignments for this transient role.</value>
         [DataMember(Name="latestTransientRoleChildRoles", EmitDefaultValue=false)]
-        public List<RoleChildRoleTransient> LatestTransientRoleChildRoles { get; set; }
+        public List<RoleChildRoleDetailedTransient> LatestTransientRoleChildRoles { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

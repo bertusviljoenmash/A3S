@@ -5485,6 +5485,27 @@
         },
         "type" : "object"
       },
+      "RoleSimple" : {
+        "description" : "A Role within A3S, but without all the related entities associated with roles.\n",
+        "example" : {
+          "name" : "name",
+          "description" : "description",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
       "RoleSubmit" : {
         "description" : "Model used to create or update a Role. The role can be optionally associated with a sub-realm by specifying the 'subRealmId' of the sub-realm.\n",
         "example" : {
@@ -5684,23 +5705,31 @@
         "description" : "Represents the current active transients for a role and it's relations.\n",
         "example" : {
           "latestTransientRoleChildRoles" : [ {
+            "childRole" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
             "action" : "action",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "approvalCount" : 5
+            "approvalCount" : 1
           }, {
+            "childRole" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
             "action" : "action",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "approvalCount" : 5
+            "approvalCount" : 1
           } ],
           "latestActiveRoleTransients" : [ {
             "requiredApprovalCount" : "",
@@ -5724,23 +5753,31 @@
             "approvalCount" : 0
           } ],
           "latestTransientRoleFunctions" : [ {
-            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "function" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
             "r_state" : "r_state",
             "action" : "action",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "approvalCount" : 1
+            "approvalCount" : 6
           }, {
-            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "function" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
             "r_state" : "r_state",
             "action" : "action",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "approvalCount" : 1
+            "approvalCount" : 6
           } ]
         },
         "properties" : {
@@ -5753,14 +5790,14 @@
           "latestTransientRoleFunctions" : {
             "description" : "A list of the latest transient role function assignments for this transient role.",
             "items" : {
-              "$ref" : "#/components/schemas/RoleFunctionTransient"
+              "$ref" : "#/components/schemas/RoleFunctionDetailedTransient"
             },
             "type" : "array"
           },
           "latestTransientRoleChildRoles" : {
             "description" : "A list of the latest transient role - child role assignments for this transient role.",
             "items" : {
-              "$ref" : "#/components/schemas/RoleChildRoleTransient"
+              "$ref" : "#/components/schemas/RoleChildRoleDetailedTransient"
             },
             "type" : "array"
           }
@@ -5812,6 +5849,54 @@
         },
         "type" : "object"
       },
+      "RoleFunctionDetailedTransient" : {
+        "description" : "Represents a transient state of a role function assignment, but with more details pertaining to the function.\n",
+        "example" : {
+          "requiredApprovalCount" : "",
+          "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "function" : {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          },
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 6
+        },
+        "properties" : {
+          "uuid" : {
+            "description" : "A unique ID for a transient role function assignment record.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "roleId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "function" : {
+            "$ref" : "#/components/schemas/FunctionSimple"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released."
+          },
+          "changedBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
       "RoleChildRoleTransient" : {
         "description" : "Represents a transient state of a role - child role assignment.\n",
         "example" : {
@@ -5837,6 +5922,54 @@
           "childRoleId" : {
             "format" : "uuid",
             "type" : "string"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released."
+          },
+          "changedBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "RoleChildRoleDetailedTransient" : {
+        "description" : "Represents a transient state of a role - child role assignment, with additional basic details for the child role.\n",
+        "example" : {
+          "childRole" : {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          },
+          "requiredApprovalCount" : "",
+          "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 1
+        },
+        "properties" : {
+          "uuid" : {
+            "description" : "A unique ID for a transient role function assignment record.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "roleId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "childRole" : {
+            "$ref" : "#/components/schemas/RoleSimple"
           },
           "r_state" : {
             "type" : "string"
@@ -5983,7 +6116,7 @@
         "type" : "object"
       },
       "SystemTransientsRole" : {
-        "description" : "Represents a collection of all the latest transients for roles with transie.\n",
+        "description" : "Represents a collection of all the latest transients for roles with any changes.\n",
         "example" : {
           "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "capturerName" : "capturerName",
@@ -6392,6 +6525,27 @@
           }
         },
         "required" : [ "applicationId", "description", "name", "permissions", "uuid" ],
+        "type" : "object"
+      },
+      "FunctionSimple" : {
+        "description" : "A model of a funtion, but without any of the function's relations.\n",
+        "example" : {
+          "name" : "name",
+          "description" : "description",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          }
+        },
         "type" : "object"
       },
       "FunctionSubmit" : {

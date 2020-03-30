@@ -1015,23 +1015,41 @@ namespace za.co.grindrodbank.a3s.Services
             return mapper.Map<RoleTransients>(latestActiveTransientsForRoleModel);
         }
 
-        private async Task<List<RoleFunctionTransientModel>> GetLatestActiveTransientRoleFunctionsSincePreviousReleasedState(Guid roleId)
+        private async Task<List<RoleFunctionTransientDetailModel>> GetLatestActiveTransientRoleFunctionsSincePreviousReleasedState(Guid roleId)
         {    
-            List<RoleFunctionTransientModel> affectedRoleFunctionTransientRecords = new List<RoleFunctionTransientModel>();
+            List<RoleFunctionTransientDetailModel> affectedRoleFunctionTransientRecords = new List<RoleFunctionTransientDetailModel>();
             var allTransientRoleFunctions = await roleFunctionTransientRepository.GetAllTransientFunctionRelationsForRoleAsync(roleId);
 
             // Extract a distinct list of function IDs from this all the role function transients records.
             var distinctFunctionIds = allTransientRoleFunctions.Select(trf => trf.FunctionId).Distinct();
 
-            // Iterate through all the distinc function IDs, find the latest transient record for each function, and process accordingly.
+            // Iterate through all the distinct function IDs, find the latest transient record for each function, and process accordingly.
             foreach (var functionId in distinctFunctionIds)
             {
                 var allTransientRoleFunctionRecordsForFunction = allTransientRoleFunctions.Where(trf => trf.FunctionId == functionId).ToList();
                 var latestActiveTransientRoleFunctionsForFunction = GetAllLatestActiveTransientRoleFunctionsForRoleFunctionAsync(allTransientRoleFunctionRecordsForFunction);
-                latestActiveTransientRoleFunctionsForFunction.ForEach(item => affectedRoleFunctionTransientRecords.Add(item));
+                // Get the function details so they can be sent back along with the more detailed transient records.
+                var function = await functionRepository.GetByIdAsync(functionId);
+                latestActiveTransientRoleFunctionsForFunction.ForEach(item => AddLatestTransientRoleFunctionsForFunctionsElement(item, function, affectedRoleFunctionTransientRecords));
             }
 
             return affectedRoleFunctionTransientRecords;
+        }
+
+        private void AddLatestTransientRoleFunctionsForFunctionsElement(RoleFunctionTransientModel roleFunctionTransientModel, FunctionModel functionDetails, List<RoleFunctionTransientDetailModel> affectedRoleFunctionTransientRecords)
+        {
+            affectedRoleFunctionTransientRecords.Add(new RoleFunctionTransientDetailModel
+            {
+                Id = roleFunctionTransientModel.Id,
+                RoleId = roleFunctionTransientModel.RoleId,
+                R_State = roleFunctionTransientModel.R_State,
+                Action = roleFunctionTransientModel.Action,
+                ApprovalCount = roleFunctionTransientModel.ApprovalCount,
+                RequiredApprovalCount = roleFunctionTransientModel.RequiredApprovalCount,
+                Function = functionDetails,
+                CreatedAt = roleFunctionTransientModel.CreatedAt,
+                ChangedBy = roleFunctionTransientModel.ChangedBy
+            });
         }
 
         private List<RoleFunctionTransientModel> GetAllLatestActiveTransientRoleFunctionsForRoleFunctionAsync(List<RoleFunctionTransientModel> allTransientRoleFuntionsForFunction)
@@ -1053,9 +1071,9 @@ namespace za.co.grindrodbank.a3s.Services
             return lastestActiveTransients;
         }
 
-        private async Task<List<RoleRoleTransientModel>> GetLatestActiveTransientChildRolesSincePreviousReleasedState(Guid roleId)
+        private async Task<List<RoleRoleTransientDetailModel>> GetLatestActiveTransientChildRolesSincePreviousReleasedState(Guid roleId)
         {
-            List<RoleRoleTransientModel> affectedChildRoleTransientRecords = new List<RoleRoleTransientModel>();
+            List<RoleRoleTransientDetailModel> affectedChildRoleTransientRecords = new List<RoleRoleTransientDetailModel>();
             var allTransientChildRoles = await roleRoleTransientRepository.GetAllTransientChildRoleRelationsForRoleAsync(roleId);
 
             // Extract a distinct list of function IDs from this all the role function transients records.
@@ -1064,12 +1082,29 @@ namespace za.co.grindrodbank.a3s.Services
             // Iterate through all the distinc function IDs, find the latest transient record for each function, and process accordingly.
             foreach (var childRoleId in distinctChildRoleIds)
             {
+                RoleModel childRole = await roleRepository.GetByIdAsync(childRoleId);
                 var allTransientChildRoleRecordsForChildRole = allTransientChildRoles.Where(trf => trf.ChildRoleId == childRoleId).ToList();
                 var latestActiveTransientChildRolesForChildRole = GetAllLatestActiveTransientChildRolesForChildRoleAsync(allTransientChildRoleRecordsForChildRole);
-                latestActiveTransientChildRolesForChildRole.ForEach(item => affectedChildRoleTransientRecords.Add(item));
+                latestActiveTransientChildRolesForChildRole.ForEach(item => AddLatestActiveTransientChildRoleToAffectedChildRoleTransientRecords(item, affectedChildRoleTransientRecords, childRole));
             }
 
             return affectedChildRoleTransientRecords;
+        }
+
+        private void AddLatestActiveTransientChildRoleToAffectedChildRoleTransientRecords(RoleRoleTransientModel roleRoleTransientModel, List<RoleRoleTransientDetailModel> affectedChildRoleTransientRecords, RoleModel childRole)
+        {
+            affectedChildRoleTransientRecords.Add(new RoleRoleTransientDetailModel
+            {
+                Id = roleRoleTransientModel.Id,
+                Action = roleRoleTransientModel.Action,
+                R_State = roleRoleTransientModel.R_State,
+                ApprovalCount = roleRoleTransientModel.ApprovalCount,
+                RequiredApprovalCount = roleRoleTransientModel.RequiredApprovalCount,
+                RoleId = roleRoleTransientModel.ParentRoleId,
+                ChangedBy = roleRoleTransientModel.ChangedBy,
+                CreatedAt = roleRoleTransientModel.CreatedAt,
+                ChildRole = childRole
+            });
         }
 
         private List<RoleRoleTransientModel> GetAllLatestActiveTransientChildRolesForChildRoleAsync(List<RoleRoleTransientModel> allTransientChildRolesForChildRole)
