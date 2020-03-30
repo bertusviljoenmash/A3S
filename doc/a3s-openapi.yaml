@@ -3651,6 +3651,9 @@ components:
         changedBy:
           type: string
           format: uuid
+        createdAt:
+          type: string
+          format: datetime
             
     RoleTransients:
       description: |
@@ -3717,6 +3720,9 @@ components:
         changedBy:
           type: string
           format: uuid
+        createdAt:
+          type: string
+          format: datetime
           
     RoleChildRoleTransient:
       description: |
@@ -3763,6 +3769,9 @@ components:
         changedBy:
           type: string
           format: uuid
+        createdAt:
+          type: string
+          format: datetime
         
     # End Region - Roles
     SystemTransients:

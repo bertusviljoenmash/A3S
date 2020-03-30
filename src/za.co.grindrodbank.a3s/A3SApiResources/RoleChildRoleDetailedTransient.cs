@@ -83,6 +83,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public Guid ChangedBy { get; set; }
 
         /// <summary>
+        /// Gets or Sets CreatedAt
+        /// </summary>
+        [DataMember(Name="createdAt", EmitDefaultValue=false)]
+        public string CreatedAt { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -98,6 +104,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  ApprovalCount: ").Append(ApprovalCount).Append("\n");
             sb.Append("  RequiredApprovalCount: ").Append(RequiredApprovalCount).Append("\n");
             sb.Append("  ChangedBy: ").Append(ChangedBy).Append("\n");
+            sb.Append("  CreatedAt: ").Append(CreatedAt).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -173,6 +180,11 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     ChangedBy == other.ChangedBy ||
                     ChangedBy != null &&
                     ChangedBy.Equals(other.ChangedBy)
+                ) && 
+                (
+                    CreatedAt == other.CreatedAt ||
+                    CreatedAt != null &&
+                    CreatedAt.Equals(other.CreatedAt)
                 );
         }
 
@@ -202,6 +214,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + RequiredApprovalCount.GetHashCode();
                     if (ChangedBy != null)
                     hashCode = hashCode * 59 + ChangedBy.GetHashCode();
+                    if (CreatedAt != null)
+                    hashCode = hashCode * 59 + CreatedAt.GetHashCode();
                 return hashCode;
             }
         }

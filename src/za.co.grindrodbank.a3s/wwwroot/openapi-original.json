@@ -5656,6 +5656,7 @@
       "RoleTransientsItem" : {
         "description" : "Represents a transient state of a role.\n",
         "example" : {
+          "createdAt" : "createdAt",
           "requiredApprovalCount" : "",
           "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5697,6 +5698,10 @@
           "changedBy" : {
             "format" : "uuid",
             "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "datetime",
+            "type" : "string"
           }
         },
         "type" : "object"
@@ -5710,6 +5715,7 @@
               "description" : "description",
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
             },
+            "createdAt" : "createdAt",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5723,6 +5729,7 @@
               "description" : "description",
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
             },
+            "createdAt" : "createdAt",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5732,6 +5739,7 @@
             "approvalCount" : 1
           } ],
           "latestActiveRoleTransients" : [ {
+            "createdAt" : "createdAt",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5742,6 +5750,7 @@
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "approvalCount" : 0
           }, {
+            "createdAt" : "createdAt",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5753,6 +5762,7 @@
             "approvalCount" : 0
           } ],
           "latestTransientRoleFunctions" : [ {
+            "createdAt" : "createdAt",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5766,6 +5776,7 @@
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "approvalCount" : 6
           }, {
+            "createdAt" : "createdAt",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5852,6 +5863,7 @@
       "RoleFunctionDetailedTransient" : {
         "description" : "Represents a transient state of a role function assignment, but with more details pertaining to the function.\n",
         "example" : {
+          "createdAt" : "createdAt",
           "requiredApprovalCount" : "",
           "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5892,6 +5904,10 @@
           },
           "changedBy" : {
             "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "datetime",
             "type" : "string"
           }
         },
@@ -5950,6 +5966,7 @@
             "description" : "description",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
           },
+          "createdAt" : "createdAt",
           "requiredApprovalCount" : "",
           "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5986,6 +6003,10 @@
           "changedBy" : {
             "format" : "uuid",
             "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "datetime",
+            "type" : "string"
           }
         },
         "type" : "object"
@@ -6017,6 +6038,7 @@
             } ],
             "capturedDate" : "2000-01-23T04:56:07.000+00:00",
             "latestActiveRoleTransient" : {
+              "createdAt" : "createdAt",
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6072,6 +6094,7 @@
             } ],
             "capturedDate" : "2000-01-23T04:56:07.000+00:00",
             "latestActiveRoleTransient" : {
+              "createdAt" : "createdAt",
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6141,6 +6164,7 @@
           } ],
           "capturedDate" : "2000-01-23T04:56:07.000+00:00",
           "latestActiveRoleTransient" : {
+            "createdAt" : "createdAt",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
