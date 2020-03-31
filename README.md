@@ -43,6 +43,7 @@ Classic AAA systems limits access-control to roles and the applications need to 
 * A3S has centralized management for users via a friendly API.
 * Two-factor authentication with Time-based One-time Password (TOTP) allows even more secure user authentication. *[Learn more](./doc/two-factor-auth.md)*
 * Terms of Service functionality allows agreement-based authentication. *[Learn more](./doc/terms-of-service.md)*
+* Client-level configurable end-user consent for grant share.
 
 ---
 
