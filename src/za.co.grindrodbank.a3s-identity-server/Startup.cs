@@ -231,15 +231,15 @@ namespace za.co.grindrodbank.a3sidentityserver
             {
                 var userAgent = httpContext.Request.Headers["User-Agent"].ToString();
 
-                if (DisallowsSameSiteNone(userAgent))
+                if (DisallowsSameSiteNone(userAgent, httpContext.Request.IsHttps))
                     options.SameSite = SameSiteMode.Unspecified;
 
-                if (SaveCookiesAsSecure(userAgent))
+                if (SaveCookiesAsSecure(userAgent, httpContext.Request.IsHttps))
                     options.Secure = true;
             }
         }
 
-        private bool DisallowsSameSiteNone(string userAgent)
+        private bool DisallowsSameSiteNone(string userAgent, bool isHttps)
         {
             // Cover all iOS based browsers here. This includes:
             // - Safari on iOS 12 for iPhone, iPod Touch, iPad
@@ -265,11 +265,23 @@ namespace za.co.grindrodbank.a3sidentityserver
             if (userAgent.Contains("Chrome/5") || userAgent.Contains("Chrome/6"))
                 return true;
 
+            // Cover Chrome 80+ with http only, to cater for quickstarts running A3S in http only mode.
+            if (userAgent.Contains("Chrome/"))
+            {
+                Version agentVersion = GetAgentVersion(userAgent);
+
+                if (agentVersion.Major >= 80 && !isHttps)
+                    return true;
+            }
+
             return false;
         }
 
-        private bool SaveCookiesAsSecure(string userAgent)
+        private bool SaveCookiesAsSecure(string userAgent, bool isHttps)
         {
+            if (!isHttps)
+                return false;
+
             Version agentVersion = GetAgentVersion(userAgent);
 
             if (agentVersion == null)
