@@ -28,9 +28,6 @@ using System;
 using Microsoft.AspNetCore.Http;
 using za.co.grindrodbank.a3s.ConnectionClients;
 using Microsoft.AspNetCore.HttpOverrides;
-using IdentityServer4.Stores;
-using IdentityServer4.EntityFramework.Stores;
-using IdentityServer4.EntityFramework.Interfaces;
 
 namespace za.co.grindrodbank.a3sidentityserver
 {
@@ -191,8 +188,6 @@ namespace za.co.grindrodbank.a3sidentityserver
             {
                 endpoints.MapDefaultControllerRoute().RequireAuthorization();
             });
-
-
         }
 
         private void InitializeConfigurationDatabase(IApplicationBuilder app)
