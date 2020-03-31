@@ -571,7 +571,7 @@ namespace za.co.grindrodbank.a3s.Services
             {
                 var latestTransientChildRole = allTransientChildRoles.Where(tcr => tcr.ChildRoleId == childRoleId).LastOrDefault();
 
-                if(latestTransientChildRole.R_State == DatabaseRecordState.Released)
+                if(latestTransientChildRole.R_State == DatabaseRecordState.Released || latestTransientChildRole.R_State == DatabaseRecordState.Declined)
                 {
                     // This must be a an old - already released transient child role, so ignore.
                     continue;
@@ -603,16 +603,16 @@ namespace za.co.grindrodbank.a3s.Services
             List<RoleRoleTransientModel> affectedTransientChildRoles = new List<RoleRoleTransientModel>();
             var allTransientChildRoles = await roleRoleTransientRepository.GetAllTransientChildRoleRelationsForRoleAsync(roleId);
 
-            // Extract a distinct list of child role IDs from this all the child rolee transients records.
+            // Extract a distinct list of child role IDs from this all the child role transients records.
             var distinctTransientChildRoleIds = allTransientChildRoles.Select(trf => trf.ChildRoleId).Distinct();
 
             foreach (var childRoleId in distinctTransientChildRoleIds)
             {
                 var latestTransientChildRole = allTransientChildRoles.Where(tcr => tcr.ChildRoleId == childRoleId).LastOrDefault();
 
-                if (latestTransientChildRole.R_State == DatabaseRecordState.Released)
+                if (latestTransientChildRole.R_State == DatabaseRecordState.Released || latestTransientChildRole.R_State == DatabaseRecordState.Declined)
                 {
-                    // This must be a an old - already released transient child role, so ignore.
+                    // This must be a an old - already released or previously declined transient child role, so ignore.
                     continue;
                 }
 
@@ -650,9 +650,9 @@ namespace za.co.grindrodbank.a3s.Services
             {
                 var latestTransientRoleFunctionRecord = allTransientRoleFunctions.Where(trf => trf.FunctionId == functionId).LastOrDefault();
 
-                if(latestTransientRoleFunctionRecord.R_State == DatabaseRecordState.Released)
+                if(latestTransientRoleFunctionRecord.R_State == DatabaseRecordState.Released || latestTransientRoleFunctionRecord.R_State == DatabaseRecordState.Declined)
                 {
-                    // This must be an old - already released transient, so ignore.
+                    // This must be an old - already released or declined transient, so ignore.
                     continue;
                 }
 
@@ -690,9 +690,9 @@ namespace za.co.grindrodbank.a3s.Services
             {
                 var latestTransientRoleFunctionRecord = allTransientRoleFunctions.Where(trf => trf.FunctionId == functionId).LastOrDefault();
 
-                if (latestTransientRoleFunctionRecord.R_State == DatabaseRecordState.Released)
+                if (latestTransientRoleFunctionRecord.R_State == DatabaseRecordState.Released || latestTransientRoleFunctionRecord.R_State == DatabaseRecordState.Declined)
                 {
-                    // This must be an old - already released transient, so ignore.
+                    // This must be an old - already released or declined transient, so ignore.
                     continue;
                 }
 
