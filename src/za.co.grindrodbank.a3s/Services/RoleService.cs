@@ -455,11 +455,12 @@ namespace za.co.grindrodbank.a3s.Services
         private async Task<RoleTransientModel> CaptureTransientRoleAsync(Guid roleId, string roleName, string roleDescription, Guid subRealmId, TransientAction action, Guid createdById)
         {
             RoleTransientModel latestTransientRole = null;
+            List<RoleTransientModel> transientRoles = new List<RoleTransientModel>();
 
             // Recall - there might not be a Guid for the role if we are creating it.
-            if(roleId != Guid.Empty)
+            if (roleId != Guid.Empty)
             {
-                var transientRoles = await roleTransientRepository.GetTransientsForRoleAsync(roleId);
+                transientRoles = await roleTransientRepository.GetTransientsForRoleAsync(roleId);
                 latestTransientRole = transientRoles.LastOrDefault();
             }
 
@@ -490,26 +491,28 @@ namespace za.co.grindrodbank.a3s.Services
                 throw new InvalidStateTransitionException($"Cannot capture role with ID '{roleId}'. Error: {e.Message}");
             }
 
-            // Only persist the new captured state of the role if it actually different.
-            return IsCapturedRoleDifferentFromLatestTransientRoleState(latestTransientRole, roleName, roleDescription, subRealmId, action) ? await roleTransientRepository.CreateAsync(newTransientRole) : latestTransientRole;
+            var latestReleasedRecord = transientRoles.Where(transientRole => transientRole.R_State == DatabaseRecordState.Released).LastOrDefault();
+
+            // Only persist the new captured state of the role if it actually different from the latest released state.
+            return IsCapturedRoleDifferentFromLatestReleasedTransientRoleState(latestReleasedRecord, roleName, roleDescription, subRealmId, action) ? await roleTransientRepository.CreateAsync(newTransientRole) : latestTransientRole;
         }
 
-        private bool IsCapturedRoleDifferentFromLatestTransientRoleState(RoleTransientModel latestTransientRoleState, string currentRoleName, string currentRoleDescription, Guid currentRoleSubRealmId, TransientAction action)
+        private bool IsCapturedRoleDifferentFromLatestReleasedTransientRoleState(RoleTransientModel latestReleasedTransientRole, string currentRoleName, string currentRoleDescription, Guid currentRoleSubRealmId, TransientAction action)
         {
-            if(latestTransientRoleState == null)
+            if(latestReleasedTransientRole == null)
             {
                 return true;
             }
 
-            if(latestTransientRoleState.Action != action)
+            // Always capture the intent to perform a deletion.
+            if(action == TransientAction.Delete)
             {
                 return true;
             }
 
-            return (latestTransientRoleState.Name != currentRoleName
-                   || latestTransientRoleState.Description != currentRoleDescription
-                   || latestTransientRoleState.SubRealmId != currentRoleSubRealmId
-                   || latestTransientRoleState.R_State == DatabaseRecordState.Declined);
+            return (latestReleasedTransientRole.Name != currentRoleName
+                   || latestReleasedTransientRole.Description != currentRoleDescription
+                   || latestReleasedTransientRole.SubRealmId != currentRoleSubRealmId);
         }
 
         public async Task<RoleTransient> DeclineRole(Guid roleId, Guid approvedBy)

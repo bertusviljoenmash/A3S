@@ -161,7 +161,7 @@ namespace za.co.grindrodbank.a3s.Services
                         RoleName = role.Name,
                         RequesterName = capturerName,
                         RequesterGuid = capturerGuid,
-                        LatestActiveRoleTransient = new RoleTransientModel(),
+                        LatestActiveRoleTransient = null,
                         LatestActiveRoleFunctionTransients = new List<RoleFunctionTransientModel> {
                             roleFunctionTransient
                         },
@@ -218,7 +218,7 @@ namespace za.co.grindrodbank.a3s.Services
                         RoleName = role.Name,
                         RequesterName = capturerName,
                         RequesterGuid = capturerGuid,
-                        LatestActiveRoleTransient = new RoleTransientModel(),
+                        LatestActiveRoleTransient = null,
                         LatestActiveRoleFunctionTransients = new List<RoleFunctionTransientModel>(),
                         LatestActiveChildRoleTransients = new List<RoleRoleTransientModel>
                         {
