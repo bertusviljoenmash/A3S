@@ -981,6 +981,21 @@ namespace za.co.grindrodbank.a3s.Services
                 {
                     throw new ItemNotFoundException($"Role with ID '{roleId}' not found.");
                 }
+                // Prior to capturing the deleted state, we must check that there are no active transient role functions or role child roles.
+                // Owing to the fact that the deletion is captured on the base role transient, if there are existing non-terminated base role transients
+                // capturing will be prevented by an invalid state when capturing the deletion on the base role transient. This does not apply to role functions or child role
+                // transients, so we need to check manually.
+                var activeRoleFunctionTransients = await GetLatestActiveTransientRoleFunctionsSincePreviousReleasedState(roleId);
+                if(activeRoleFunctionTransients != null || activeRoleFunctionTransients.Any())
+                {
+                    throw new ItemNotProcessableException($"Cannot delete role with ID '{roleId}' as there are still active changes for functions assigned to this role.");
+                }
+
+                var activeRoleChildRoleTransients = await GetLatestActiveTransientChildRolesSincePreviousReleasedState(roleId);
+                if (activeRoleChildRoleTransients != null || activeRoleChildRoleTransients.Any())
+                {
+                    throw new ItemNotProcessableException($"Cannot delete role with ID '{roleId}' as there are still active changes for child roles assigned to this role.");
+                }
 
                 RoleTransientModel newTransientRole = await CaptureTransientRoleAsync(roleId, existingRole.Name, existingRole.Description, existingRole.SubRealm == null ? Guid.Empty : existingRole.SubRealm.Id, TransientAction.Delete, deletedById);
                 // Even though we are creating/capturing the role here, it is possible that the configured approval count is 0,
