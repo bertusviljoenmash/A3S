@@ -96,8 +96,8 @@ namespace za.co.grindrodbank.a3s.Models
                 .OnEntryFrom(approveTrigger, OnApproved)
                 .PermitIf(DatabaseRecordTrigger.Release, DatabaseRecordState.Released, () => (ApprovalCount >= RequiredApprovalCount))
                 .PermitReentry(DatabaseRecordTrigger.Approve)
-                .Permit(DatabaseRecordTrigger.Decline, DatabaseRecordState.Declined)
-                .Permit(DatabaseRecordTrigger.Capture, DatabaseRecordState.Captured);
+                .Permit(DatabaseRecordTrigger.Decline, DatabaseRecordState.Declined);
+                //.Permit(DatabaseRecordTrigger.Capture, DatabaseRecordState.Captured);
                 //.Permit(DatabaseRecordTrigger.Pend, DatabaseRecordState.Pending);
 
             // Configure the Declined state
