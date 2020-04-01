@@ -3697,6 +3697,9 @@ components:
         changedBy:
           type: string
           format: uuid
+        createdAt:
+          type: string
+          format: date-time
           
     RoleFunctionDetailedTransient:
       description: |
@@ -3746,6 +3749,9 @@ components:
         changedBy:
           type: string
           format: uuid
+        createdAt:
+          type: string
+          format: date-time
           
     RoleChildRoleDetailedTransient:
       description: |

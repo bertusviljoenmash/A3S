@@ -127,6 +127,7 @@ namespace za.co.grindrodbank.a3s.Services
         private async Task GetAllRoleFunctionTransientsAndAddThemToTransientResponse(SystemTransientsModel allSystemTransients)
         {
             var allRoleFunctionTransients = await roleFunctionTransientRepository.GetLatestActiveTransientsForAllRolesAsync();
+            DateTime capturedDate;
 
             foreach (var roleFunctionTransient in allRoleFunctionTransients)
             {
@@ -144,11 +145,13 @@ namespace za.co.grindrodbank.a3s.Services
                     if (roleFunctionTransient.R_State == TransientStateMachineRecord.DatabaseRecordState.Captured)
                     {
                         capturerGuid = roleFunctionTransient.ChangedBy;
+                        capturedDate = roleFunctionTransient.CreatedAt;
                     }
                     else // Find the most recent captured record for this transient.
                     {
                         var mostRecentCapturedRoleTransient = await roleTransientRepository.GetLatestCapturedTransientForRoleAsync(roleFunctionTransient.RoleId);
                         capturerGuid = mostRecentCapturedRoleTransient.ChangedBy;
+                        capturedDate = mostRecentCapturedRoleTransient.CreatedAt;
                     }
 
                     // Get the name of the user associated with the captured record.
@@ -161,6 +164,7 @@ namespace za.co.grindrodbank.a3s.Services
                         RoleName = role.Name,
                         RequesterName = capturerName,
                         RequesterGuid = capturerGuid,
+                        RequestedDate = capturedDate,
                         LatestActiveRoleTransient = null,
                         LatestActiveRoleFunctionTransients = new List<RoleFunctionTransientModel> {
                             roleFunctionTransient
@@ -183,6 +187,7 @@ namespace za.co.grindrodbank.a3s.Services
         private async Task GetAllRoleChildRoleTransientsAndAddThemToTransientResponse(SystemTransientsModel allSystemTransients)
         {
             var allRoleRoleTransients = await roleRoleTransientRepository.GetLatestActiveTransientsForAllRolesAsync();
+            DateTime capturedDate;
 
             foreach (var roleRoleTransient in allRoleRoleTransients)
             {
@@ -200,11 +205,13 @@ namespace za.co.grindrodbank.a3s.Services
                     if (roleRoleTransient.R_State == TransientStateMachineRecord.DatabaseRecordState.Captured)
                     {
                         capturerGuid = roleRoleTransient.ChangedBy;
+                        capturedDate = roleRoleTransient.CreatedAt;
                     }
                     else // Find the most recent captured record for this transient.
                     {
                         var mostRecentCapturedRoleTransient = await roleTransientRepository.GetLatestCapturedTransientForRoleAsync(roleRoleTransient.ParentRoleId);
                         capturerGuid = mostRecentCapturedRoleTransient.ChangedBy;
+                        capturedDate = mostRecentCapturedRoleTransient.CreatedAt;
                     }
 
                     // Get the name of the user associated with the captured record.
@@ -218,6 +225,7 @@ namespace za.co.grindrodbank.a3s.Services
                         RoleName = role.Name,
                         RequesterName = capturerName,
                         RequesterGuid = capturerGuid,
+                        RequestedDate = capturedDate,
                         LatestActiveRoleTransient = null,
                         LatestActiveRoleFunctionTransients = new List<RoleFunctionTransientModel>(),
                         LatestActiveChildRoleTransients = new List<RoleRoleTransientModel>

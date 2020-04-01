@@ -5556,6 +5556,7 @@
         "example" : {
           "requiredApprovalCount" : 6,
           "latestTransientRoleChildRoles" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5565,6 +5566,7 @@
             "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "approvalCount" : 5
           }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5582,6 +5584,7 @@
           "action" : "action",
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "latestTransientRoleFunctions" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5591,6 +5594,7 @@
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "approvalCount" : 1
           }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5818,6 +5822,7 @@
       "RoleFunctionTransient" : {
         "description" : "Represents a transient state of a role function assignment.\n",
         "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
           "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "requiredApprovalCount" : "",
           "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5855,6 +5860,10 @@
           },
           "changedBy" : {
             "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
             "type" : "string"
           }
         },
@@ -5916,6 +5925,7 @@
       "RoleChildRoleTransient" : {
         "description" : "Represents a transient state of a role - child role assignment.\n",
         "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
           "requiredApprovalCount" : "",
           "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -5953,6 +5963,10 @@
           },
           "changedBy" : {
             "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
             "type" : "string"
           }
         },
@@ -6018,6 +6032,7 @@
             "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "capturerName" : "capturerName",
             "latestTransientRoleChildRoles" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6027,6 +6042,7 @@
               "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "approvalCount" : 5
             }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6052,6 +6068,7 @@
             "roleName" : "roleName",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "latestTransientRoleFunctions" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6061,6 +6078,7 @@
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "approvalCount" : 1
             }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6074,6 +6092,7 @@
             "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "capturerName" : "capturerName",
             "latestTransientRoleChildRoles" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6083,6 +6102,7 @@
               "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "approvalCount" : 5
             }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6108,6 +6128,7 @@
             "roleName" : "roleName",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "latestTransientRoleFunctions" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6117,6 +6138,7 @@
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "approvalCount" : 1
             }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "requiredApprovalCount" : "",
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6144,6 +6166,7 @@
           "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "capturerName" : "capturerName",
           "latestTransientRoleChildRoles" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6153,6 +6176,7 @@
             "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "approvalCount" : 5
           }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6178,6 +6202,7 @@
           "roleName" : "roleName",
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "latestTransientRoleFunctions" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6187,6 +6212,7 @@
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "approvalCount" : 1
           }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "requiredApprovalCount" : "",
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",

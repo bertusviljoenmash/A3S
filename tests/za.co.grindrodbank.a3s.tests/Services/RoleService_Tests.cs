@@ -392,7 +392,7 @@ namespace za.co.grindrodbank.a3s.tests.Services
 
             roleTransientRepository.CreateAsync(Arg.Any<RoleTransientModel>()).Returns(new RoleTransientModel
             {
-                Action = TransientAction.Create,
+                Action = TransientAction.Modify,
                 ChangedBy = changedByGuid,
                 ApprovalCount = 0,
                 // Pending is the initial state of the state machine for all transient records.
@@ -435,7 +435,7 @@ namespace za.co.grindrodbank.a3s.tests.Services
             Assert.NotNull(roleTransientResource);
             Assert.True(roleTransientResource.Name == mockedRoleSubmitModel.Name, $"Role Resource name: '{roleTransientResource.Name}' not the expected value: '{mockedRoleSubmitModel.Name}'");
             Assert.True(roleTransientResource is RoleTransient);
-            Assert.True(roleTransientResource.Action == "Modify");
+            Assert.True(roleTransientResource.Action == "Modify", $"Expected action to be 'Modify' but received '{roleTransientResource.Action}'");
         }
 
         [Fact]
