@@ -564,6 +564,7 @@ namespace za.co.grindrodbank.a3s.Services
 
         private async Task<List<RoleRoleTransientModel>> FindTransientChildRolesForRoleAndApproveThem(RoleModel role, Guid roleId, Guid approvedBy)
         {
+            await EnsureRoleChildRolesNotCapturedOrApprovedByUser(roleId, approvedBy);
             List<RoleRoleTransientModel> affectedTransientChildRoles = new List<RoleRoleTransientModel>();
             var allTransientChildRoles = await roleRoleTransientRepository.GetAllTransientChildRoleRelationsForRoleAsync(roleId);
 
@@ -603,6 +604,7 @@ namespace za.co.grindrodbank.a3s.Services
 
         private async Task<List<RoleRoleTransientModel>> FindTransientChildRolesForRoleAndDeclineThem(Guid roleId, Guid approvedBy)
         {
+            await EnsureRoleChildRolesNotCapturedOrApprovedByUser(roleId, approvedBy);
             List<RoleRoleTransientModel> affectedTransientChildRoles = new List<RoleRoleTransientModel>();
             var allTransientChildRoles = await roleRoleTransientRepository.GetAllTransientChildRoleRelationsForRoleAsync(roleId);
 
@@ -642,6 +644,8 @@ namespace za.co.grindrodbank.a3s.Services
 
         private async Task<List<RoleFunctionTransientModel>> FindTransientRoleFunctionsForRoleAndApproveThem(RoleModel role, Guid roleId, Guid approvedBy)
         {
+            await EnsureRoleFunctionsNotCapturedOrApprovedByUser(roleId, approvedBy);
+
             List<RoleFunctionTransientModel> affectedRoleFunctionTransientRecords = new List<RoleFunctionTransientModel>();
             var allTransientRoleFunctions = await roleFunctionTransientRepository.GetAllTransientFunctionRelationsForRoleAsync(roleId);
 
@@ -682,6 +686,8 @@ namespace za.co.grindrodbank.a3s.Services
 
         private async Task<List<RoleFunctionTransientModel>> FindTransientRoleFunctionsForRoleAndDeclineThem(Guid roleId, Guid approvedBy)
         {
+            await EnsureRoleFunctionsNotCapturedOrApprovedByUser(roleId, approvedBy);
+
             List<RoleFunctionTransientModel> affectedRoleFunctionTransientRecords = new List<RoleFunctionTransientModel>();
             var allTransientRoleFunctions = await roleFunctionTransientRepository.GetAllTransientFunctionRelationsForRoleAsync(roleId);
 
@@ -782,6 +788,51 @@ namespace za.co.grindrodbank.a3s.Services
             if(transientRoleWithApprover != null)
             {
                 throw new ItemNotProcessableException($"Cannot execute action. Role with ID '{transientRoleWithApprover.RoleId}' has already been approved by this user.");
+            }
+
+            var transientRoleWithCapturer = latestActiveTransientRoles.Where(rt => rt.ChangedBy == userId && rt.R_State == DatabaseRecordState.Captured).FirstOrDefault();
+
+            if (transientRoleWithCapturer != null)
+            {
+                throw new ItemNotProcessableException($"Cannot execute approve/decline. The changes to role with ID '{transientRoleWithCapturer.RoleId}' were captured by this user.");
+            }
+        }
+
+        private async Task EnsureRoleFunctionsNotCapturedOrApprovedByUser(Guid roleId, Guid userId)
+        {
+            var latestActiveRoleFunctionTransients = await GetLatestActiveTransientRoleFunctionsSincePreviousReleasedState(roleId);
+
+            var transientRoleFunctionWithApprover = latestActiveRoleFunctionTransients.Where(rt => rt.ChangedBy == userId && rt.R_State == DatabaseRecordState.Approved).FirstOrDefault();
+
+            if (transientRoleFunctionWithApprover != null)
+            {
+                throw new ItemNotProcessableException($"Cannot execute action. Role with ID '{roleId}' has already been approved by this user.");
+            }
+
+            var transientRoleFunctionWithCapturer = latestActiveRoleFunctionTransients.Where(rt => rt.ChangedBy == userId && rt.R_State == DatabaseRecordState.Captured).FirstOrDefault();
+
+            if (transientRoleFunctionWithApprover != null)
+            {
+                throw new ItemNotProcessableException($"Cannot execute approve/decline. The changes to role with ID '{roleId}' were captured by this user.");
+            }
+        }
+
+        private async Task EnsureRoleChildRolesNotCapturedOrApprovedByUser(Guid roleId, Guid userId)
+        {
+            var latestActiveRoleChildRoleTransients = await GetLatestActiveTransientChildRolesSincePreviousReleasedState(roleId);
+
+            var transientRoleChildRoleWithApprover = latestActiveRoleChildRoleTransients.Where(rt => rt.ChangedBy == userId && rt.R_State == DatabaseRecordState.Approved).FirstOrDefault();
+
+            if (transientRoleChildRoleWithApprover != null)
+            {
+                throw new ItemNotProcessableException($"Cannot execute action. Role with ID '{roleId}' has already been approved by this user.");
+            }
+
+            var transientRoleChildRoleWithCapturer = latestActiveRoleChildRoleTransients.Where(rt => rt.ChangedBy == userId && rt.R_State == DatabaseRecordState.Captured).FirstOrDefault();
+
+            if (transientRoleChildRoleWithCapturer != null)
+            {
+                throw new ItemNotProcessableException($"Cannot execute approve/decline action. The changes to role with ID '{roleId}' were captured by this user.");
             }
         }
 
