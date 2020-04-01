@@ -986,13 +986,13 @@ namespace za.co.grindrodbank.a3s.Services
                 // capturing will be prevented by an invalid state when capturing the deletion on the base role transient. This does not apply to role functions or child role
                 // transients, so we need to check manually.
                 var activeRoleFunctionTransients = await GetLatestActiveTransientRoleFunctionsSincePreviousReleasedState(roleId);
-                if(activeRoleFunctionTransients != null || activeRoleFunctionTransients.Any())
+                if(activeRoleFunctionTransients.Any())
                 {
                     throw new ItemNotProcessableException($"Cannot delete role with ID '{roleId}' as there are still active changes for functions assigned to this role.");
                 }
 
                 var activeRoleChildRoleTransients = await GetLatestActiveTransientChildRolesSincePreviousReleasedState(roleId);
-                if (activeRoleChildRoleTransients != null || activeRoleChildRoleTransients.Any())
+                if (activeRoleChildRoleTransients.Any())
                 {
                     throw new ItemNotProcessableException($"Cannot delete role with ID '{roleId}' as there are still active changes for child roles assigned to this role.");
                 }
