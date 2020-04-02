@@ -183,6 +183,19 @@ namespace za.co.grindrodbank.a3s
                 options.AddPolicy("permission:a3s.termsOfService.read", policy => policy.Requirements.Add(new PermissionRequirement("a3s.termsOfService.read")));
                 options.AddPolicy("permission:a3s.termsOfService.create", policy => policy.Requirements.Add(new PermissionRequirement("a3s.termsOfService.create")));
                 options.AddPolicy("permission:a3s.termsOfService.delete", policy => policy.Requirements.Add(new PermissionRequirement("a3s.termsOfService.delete")));
+                // Change managment permission policies
+                options.AddPolicy("permission:a3s.changeReview.approveRole", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.approveRole")));
+                options.AddPolicy("permission:a3s.changeReview.declineRole", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.declineRole")));
+                options.AddPolicy("permission:a3s.changeReview.approveFunction", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.approveFunction")));
+                options.AddPolicy("permission:a3s.changeReview.declineFunction", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.declineFunction")));
+                options.AddPolicy("permission:a3s.changeReview.approveUser", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.approveUser")));
+                options.AddPolicy("permission:a3s.changeReview.declineUser", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.declineUser")));
+                options.AddPolicy("permission:a3s.changeReview.approveAuthMode", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.approveAuthMode")));
+                options.AddPolicy("permission:a3s.changeReview.declineAuthMode", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.declineAuthMode")));
+                options.AddPolicy("permission:a3s.changeReview.approveTeam", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.approveTeam")));
+                options.AddPolicy("permission:a3s.changeReview.declineTeam", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.declineTeam")));
+                options.AddPolicy("permission:a3s.changeReview.approveTermsOfService", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.approveTermsOfService")));
+                options.AddPolicy("permission:a3s.changeReview.declineTermsOfService", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.declineTermsOfService")));
             });
 
             // Add policy handler services
