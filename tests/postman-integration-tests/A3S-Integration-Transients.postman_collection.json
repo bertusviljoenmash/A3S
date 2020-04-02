@@ -342,7 +342,7 @@
 									"",
 									"pm.test(\"Check that a list containing the three functions defined within the security contract was returned.\", function () {",
 									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData.length).to.equal(3);",
+									"    pm.expect(jsonData.length).to.equal(4);",
 									"});",
 									"",
 									"pm.test(\"Check that the first element of the list is a correctly structured function\", function () {",
