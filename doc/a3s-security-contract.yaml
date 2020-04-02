@@ -147,6 +147,10 @@ applications:
             description: The ability to approve changes captured for terms of service.
           - name: a3s.changeReview.declineTermsOfService
             description: The ability to decline changes captured for terms of service.
+          - name: a3s.changeReview.approveTeam
+            description: The ability to approve changes captured for teams.
+          - name: a3s.changeReview.declineTeam
+            description: The ability to decline changes captured for teams.
 
     dataPolicies:
       - name: a3s.viewYourTeamsOnly
@@ -231,6 +235,8 @@ defaultConfigurations:
               - a3s.changeReview.declineTeam
               - a3s.changeReview.approveTermsOfService
               - a3s.changeReview.declineTermsOfService
+              - a3s.changeReview.approveTeams
+              - a3s.changeReview.declineTeams
           - name: "a3s.userMaintenance"
             description: "A function that contains all user related permissions within the A3S micro-service."
             permissions:
@@ -268,6 +274,8 @@ defaultConfigurations:
               - a3s.changeReview.declineTeam
               - a3s.changeReview.approveTermsOfService
               - a3s.changeReview.declineTermsOfService
+              - a3s.changeReview.approveTeams
+              - a3s.changeReview.declineTeams
     # Default Roles to be created. Contains the functions that will be assigned to the Roles.
     roles:
       - name: "A3S Super Admin"
