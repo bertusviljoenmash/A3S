@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using za.co.grindrodbank.a3s.Models;
 using za.co.grindrodbank.a3s.Repositories;
 using za.co.grindrodbank.a3s.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace za.co.grindrodbank.a3s.Services
 {
@@ -31,18 +32,22 @@ namespace za.co.grindrodbank.a3s.Services
             this.userRepository = userRepository;
         }
 
-        public async Task<SystemTransientsModel> GetAllSystemTransients(bool includeRoles = false)
+        public async Task<SystemTransientsModel> GetAllSystemTransients(bool includeRoles = false, bool includeFunctions = false, bool includeAuthModes = false, bool includeUsers = false)
         {
             SystemTransientsModel allSystemTransients = new SystemTransientsModel
             {
                 TransientRoles = new List<SystemTransientsRoleModel>()
             };
 
-            await GetAllLatestTransientRoles(allSystemTransients);
+            if (includeUsers)
+            {
+                await GetAllLatestTransientRoles(allSystemTransients);
+            }
 
             return allSystemTransients;
         }
 
+        [Authorize(Policy = "permission:a3s.roles.read")]
         private async Task GetAllLatestTransientRoles(SystemTransientsModel allSystemTransients)
         {
             await GetAllBaseRoleTransientsAndAddThemToTransientsResponse(allSystemTransients);

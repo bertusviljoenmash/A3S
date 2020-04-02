@@ -12,6 +12,6 @@ namespace za.co.grindrodbank.a3s.Services
 {
     public interface ISystemTransientsService
     {
-        public Task<SystemTransientsModel> GetAllSystemTransients(bool includeRoles = false);
+        public Task<SystemTransientsModel> GetAllSystemTransients(bool includeRoles = false, bool includeFunctions = false, bool includeAuthModes = false, bool includeUsers = false);
     }
 }
