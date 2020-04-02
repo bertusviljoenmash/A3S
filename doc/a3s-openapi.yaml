@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   description: >-
     API Definition for A3S. This service allows authentication, authorisation and accounting.
-  version: 1.1.4
+  version: 1.1.6
   title: A3S
 paths:
   #region - User
@@ -4371,6 +4371,9 @@ components:
         identityTokenLifetime:
           description: The amount of time that ID tokens issued for this client will be valid (in seconds) for. Default is 3600.
           type: integer
+        requireConsent:
+          description: An indicator stating that this client needs to show the consent screen for users authenticating with the authorization code flow.
+          type: boolean
             
     Oauth2Client:
       description: |

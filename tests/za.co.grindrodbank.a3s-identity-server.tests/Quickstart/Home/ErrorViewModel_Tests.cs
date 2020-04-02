@@ -4,9 +4,8 @@
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
-﻿using System;
 using Xunit;
-using za.co.grindrodbank.a3sidentityserver.Quickstart.UI;
+using za.co.grindrodbank.a3sidentityserver.ViewModels;
 
 namespace za.co.grindrodbank.a3sidentityserver.tests.Quickstart.Home
 {

@@ -23,13 +23,13 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.WebEncoders.Testing;
 using NSubstitute;
 using Xunit;
-using za.co.grindrodbank.a3s.ConnectionClients;
 using za.co.grindrodbank.a3s.Models;
 using za.co.grindrodbank.a3s.Repositories;
 using za.co.grindrodbank.a3s.Services;
 using za.co.grindrodbank.a3s.tests.Fakes;
+using za.co.grindrodbank.a3sidentityserver.Controllers;
 using za.co.grindrodbank.a3sidentityserver.Exceptions;
-using za.co.grindrodbank.a3sidentityserver.Quickstart.UI;
+using za.co.grindrodbank.a3sidentityserver.ViewModels;
 
 namespace za.co.grindrodbank.a3sidentityserver.tests.Quickstart.Account
 {

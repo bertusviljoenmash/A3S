@@ -20,3 +20,8 @@ function downloadInMemoryTextFile(filename, text) {
 
     document.body.removeChild(element);
 }
+
+// Dismiss alerts
+$('body').on('click', '.close', function () {
+    $(this).closest('.alert').remove();
+});

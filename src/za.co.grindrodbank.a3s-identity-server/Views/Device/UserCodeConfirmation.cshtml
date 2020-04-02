@@ -1,4 +1,4 @@
-@model za.co.grindrodbank.a3sidentityserver.Quickstart.UI.Device.DeviceAuthorizationViewModel
+@model DeviceAuthorizationViewModel
 
 <div class="page-header">
     <div class="row page-header">
@@ -68,12 +68,7 @@
 
                 @if (Model.AllowRememberConsent)
                 {
-                    <div class="consent-remember">
-                        <label>
-                            <input class="consent-scopecheck" asp-for="RememberConsent" />
-                            <strong>Remember My Decision</strong>
-                        </label>
-                    </div>
+                    <input asp-for="RememberConsent" type="hidden" value="true" />
                 }
 
                 <div class="consent-buttons">

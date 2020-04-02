@@ -74,7 +74,8 @@ namespace za.co.grindrodbank.a3sidentityserver
                {
                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-               });
+               })
+               .AddRazorRuntimeCompilation();
 
             services.Configure<IISOptions>(iis =>
             {
@@ -101,6 +102,15 @@ namespace za.co.grindrodbank.a3sidentityserver
                 options.AccessTokenJwtType = "JWT";
             })
             .AddConfigurationStore(options =>
+            {
+                options.ConfigureDbContext = configurationBuilder =>
+                    configurationBuilder.UseNpgsql(
+                        Configuration.GetConnectionString("DefaultConnection")
+                        );
+
+                options.DefaultSchema = CONFIG_SCHEMA;
+            })
+            .AddOperationalStore(options =>
             {
                 options.ConfigureDbContext = configurationBuilder =>
                     configurationBuilder.UseNpgsql(
@@ -178,8 +188,6 @@ namespace za.co.grindrodbank.a3sidentityserver
             {
                 endpoints.MapDefaultControllerRoute().RequireAuthorization();
             });
-
-
         }
 
         private void InitializeConfigurationDatabase(IApplicationBuilder app)
@@ -223,12 +231,15 @@ namespace za.co.grindrodbank.a3sidentityserver
             {
                 var userAgent = httpContext.Request.Headers["User-Agent"].ToString();
 
-                if (DisallowsSameSiteNone(userAgent))
+                if (DisallowsSameSiteNone(userAgent, httpContext.Request.IsHttps))
                     options.SameSite = SameSiteMode.Unspecified;
+
+                if (SaveCookiesAsSecure(userAgent, httpContext.Request.IsHttps))
+                    options.Secure = true;
             }
         }
 
-        public bool DisallowsSameSiteNone(string userAgent)
+        private bool DisallowsSameSiteNone(string userAgent, bool isHttps)
         {
             // Cover all iOS based browsers here. This includes:
             // - Safari on iOS 12 for iPhone, iPod Touch, iPad
@@ -254,7 +265,58 @@ namespace za.co.grindrodbank.a3sidentityserver
             if (userAgent.Contains("Chrome/5") || userAgent.Contains("Chrome/6"))
                 return true;
 
+            // Cover Chrome 80+ with http only, to cater for quickstarts running A3S in http only mode.
+            if (userAgent.Contains("Chrome/"))
+            {
+                Version agentVersion = GetAgentVersion(userAgent);
+
+                if (agentVersion.Major >= 80 && !isHttps)
+                    return true;
+            }
+
             return false;
+        }
+
+        private bool SaveCookiesAsSecure(string userAgent, bool isHttps)
+        {
+            if (!isHttps)
+                return false;
+
+            Version agentVersion = GetAgentVersion(userAgent);
+
+            if (agentVersion == null)
+                return false;
+
+            // Cover Chrome 80, where SameSite=None must now be set with Secure.
+            if (userAgent.Contains("Chrome/") && agentVersion.Major >= 80)
+                return true;
+            
+            return false;
+        }
+
+        private Version GetAgentVersion(string userAgent)
+        {
+            string agentName = string.Empty;
+
+            if (userAgent.Contains("Chrome"))
+                agentName = "Chrome";
+
+            int versionTextStart = userAgent.IndexOf($"{agentName}/") + agentName.Length + 1;
+            int versionTextEnd = userAgent.IndexOf(' ', versionTextStart);
+            if (versionTextEnd == -1)
+                versionTextEnd = userAgent.Length - 1;
+
+            string versionText = userAgent.Substring(versionTextStart, (versionTextEnd - versionTextStart));
+
+            if (versionText.Length > 0)
+            {
+                if (Version.TryParse(versionText, out Version agentVersion))
+                    return agentVersion;
+                else
+                    return null;
+            }
+
+            return null;
         }
     }
 }
