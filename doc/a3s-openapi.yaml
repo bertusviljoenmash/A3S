@@ -3685,7 +3685,7 @@ components:
         roleId:
           $ref: '#/components/schemas/RoleId'
         functionId:
-          $ref: '#/components/schemas/RoleId'
+          $ref: '#/components/schemas/FunctionId'
         r_state:
           type: string
         action:
@@ -4302,6 +4302,112 @@ components:
             nullable: true
         subRealmId:
           $ref: '#/components/schemas/SubRealmId'
+          
+    TeamTransient:
+      description: |
+        Represents a transient state of a team.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientTeamId'
+        roleId:
+          $ref: '#/components/schemas/TeamId'
+        name:
+          type: string
+        description:
+          type: string
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          description: The current approval count.
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+          type: integer
+        createdBy:
+          description: The UUID of the user who created this transient state record.
+          type: string
+          format: uuid
+        createdAt:
+          description: The date that this transient state was created.
+          type: string
+          format: date-time
+        latestTransientTeamDataPolicies:
+          description: A list of the latest transient role function assignments for this transient role.
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamDataPolicyTransient'
+        latestTransientTeamChildTeams:
+          description: A list of the latest transient role - child role assignments for this transient role.
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamChildTeamTransient'
+            
+    TeamDataPolicyTransient:
+      description: |
+        Represents a transient state of a team data-polocy assignment.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientTeamDataPolicyId'
+        teamId:
+          $ref: '#/components/schemas/TeamId'
+        dataPolicyId:
+          $ref: '#/components/schemas/DataPolicyId'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+          
+    TeamChildTeamTransient:
+      description: |
+        Represents a transient state of a team child-team assignment.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientTeamDataPolicyId'
+        teamId:
+          $ref: '#/components/schemas/TeamId'
+        dataPolicyId:
+          $ref: '#/components/schemas/DataPolicyId'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+            
+    TransientTeamId:
+      type: string
+      format: uuid
+      
+    TransientTeamDataPolicyId:
+      type: string
+      format: uuid
+      
+    DataPolicyId:
+      type: string
+      format: uuid
         
     # End Region -Team
     
