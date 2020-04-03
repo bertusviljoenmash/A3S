@@ -16,8 +16,8 @@ namespace za.co.grindrodbank.a3s.MappingProfiles
         public RoleResourceRoleModelProfile()
         {
             CreateMap<RoleModel, Role>().ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.Id))
-                                        .ForMember(dest => dest.FunctionIds, opt => opt.MapFrom(src => src.RoleFunctions.Select(rf => rf.Function.Id)))
-                                        .ForMember(dest => dest.RoleIds, opt => opt.MapFrom(src => src.ChildRoles.Select(cr => cr.ChildRole.Id)));
+                                        .ForMember(dest => dest.Functions, opt => opt.MapFrom(src => src.RoleFunctions.Select(rf => rf.Function)))
+                                        .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.ChildRoles.Select(cr => cr.ChildRole)));
             CreateMap<Role, RoleModel>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Uuid));
         }
     }

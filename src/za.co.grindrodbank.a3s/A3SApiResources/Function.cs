@@ -54,12 +54,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public string Description { get; set; }
 
         /// <summary>
-        /// The UUID of an application.
+        /// Gets or Sets Application
         /// </summary>
-        /// <value>The UUID of an application.</value>
-        [Required]
-        [DataMember(Name="applicationId", EmitDefaultValue=false)]
-        public Guid ApplicationId { get; set; }
+        [DataMember(Name="application", EmitDefaultValue=false)]
+        public ApplicationSimple Application { get; set; }
 
         /// <summary>
         /// The UUID identifier for a sub-realm.
@@ -86,7 +84,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  Uuid: ").Append(Uuid).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  ApplicationId: ").Append(ApplicationId).Append("\n");
+            sb.Append("  Application: ").Append(Application).Append("\n");
             sb.Append("  SubRealmId: ").Append(SubRealmId).Append("\n");
             sb.Append("  Permissions: ").Append(Permissions).Append("\n");
             sb.Append("}\n");
@@ -141,9 +139,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     Description.Equals(other.Description)
                 ) && 
                 (
-                    ApplicationId == other.ApplicationId ||
-                    ApplicationId != null &&
-                    ApplicationId.Equals(other.ApplicationId)
+                    Application == other.Application ||
+                    Application != null &&
+                    Application.Equals(other.Application)
                 ) && 
                 (
                     SubRealmId == other.SubRealmId ||
@@ -174,8 +172,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + Name.GetHashCode();
                     if (Description != null)
                     hashCode = hashCode * 59 + Description.GetHashCode();
-                    if (ApplicationId != null)
-                    hashCode = hashCode * 59 + ApplicationId.GetHashCode();
+                    if (Application != null)
+                    hashCode = hashCode * 59 + Application.GetHashCode();
                     if (SubRealmId != null)
                     hashCode = hashCode * 59 + SubRealmId.GetHashCode();
                     if (Permissions != null)

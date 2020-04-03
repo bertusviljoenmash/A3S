@@ -20,6 +20,6 @@ namespace za.co.grindrodbank.a3s.Repositories
         Task<RoleModel> UpdateAsync(RoleModel role);
         Task DeleteAsync(RoleModel role);
         Task<List<RoleModel>> GetListAsync();
-        public Task<PaginatedResult<RoleModel>> GetPaginatedListAsync(int page, int pageSize, bool includeRelations, string filterName, List<KeyValuePair<string, string>> orderBy);
+        Task<PaginatedResult<RoleModel>> GetPaginatedListAsync(int page, int pageSize, bool includeRelations, string filterName, List<KeyValuePair<string, string>> orderBy);
     }
 }

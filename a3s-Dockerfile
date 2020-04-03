@@ -9,6 +9,7 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine AS build-env
 WORKDIR /app
 COPY src/za.co.grindrodbank.a3s/*.csproj ./
+COPY Directory.Build.props ./
 RUN dotnet restore
 
 COPY src/za.co.grindrodbank.a3s/ ./

@@ -166,12 +166,12 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
                 }
             };
 
-            roleService.UpdateAsync(inputModel, Arg.Any<Guid>())
-                .Returns(new Role()
+            roleService.UpdateAsync(inputModel, Arg.Any<Guid>(), Arg.Any<Guid>())
+                .Returns(new RoleTransient()
                 {
-                    Uuid = inputModel.Uuid,
-                    Name = inputModel.Name,
-                    FunctionIds = inputModel.FunctionIds
+                    Uuid = Guid.NewGuid(),
+                    RoleId = inputModel.Uuid,
+                    Name = inputModel.Name
                 }
                 );
 
@@ -184,12 +184,11 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
             var okResult = actionResult as OkObjectResult;
             Assert.NotNull(okResult);
 
-            var role = okResult.Value as Role;
-            Assert.NotNull(role);
-            Assert.True(role.Uuid == inputModel.Uuid, $"Retrieved Id {role.Uuid} not the same as sample id {inputModel.Uuid}.");
-            Assert.True(role.Name == inputModel.Name, $"Retrieved Name {role.Name} not the same as sample Name {inputModel.Name}.");
-            Assert.True(role.FunctionIds[0] == inputModel.FunctionIds[0], $"Retrieved function id {role.FunctionIds[0]} not the same as sample function id {inputModel.FunctionIds[0]}.");
-            Assert.True(role.FunctionIds[1] == inputModel.FunctionIds[1], $"Retrieved function id {role.FunctionIds[1]} not the same as sample function id {inputModel.FunctionIds[1]}.");
+            var roleTransient = okResult.Value as RoleTransient;
+            Assert.NotNull(roleTransient);
+            Assert.True(roleTransient.RoleId == inputModel.Uuid, $"Retrieved Id {roleTransient.Uuid} not the same as sample id {inputModel.Uuid}.");
+            Assert.True(roleTransient.Name == inputModel.Name, $"Retrieved Name {roleTransient.Name} not the same as sample Name {inputModel.Name}.");
+            Assert.True(roleTransient is RoleTransient);
         }
 
         [Fact]
@@ -201,6 +200,7 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
             {
                 Uuid = Guid.NewGuid(),
                 Name = "Test Role Name",
+                Description = "Test Role Description",
                 FunctionIds = new List<Guid>()
                 {
                     new Guid(),
@@ -209,11 +209,11 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
             };
 
             roleService.CreateAsync(inputModel, Arg.Any<Guid>())
-                .Returns(new Role()
+                .Returns(new RoleTransient()
                 {
                     Uuid = inputModel.Uuid,
                     Name = inputModel.Name,
-                    FunctionIds = inputModel.FunctionIds
+                    Description = inputModel.Description,
                 }
                 );
 
@@ -226,12 +226,10 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
             var okResult = actionResult as OkObjectResult;
             Assert.NotNull(okResult);
 
-            var role = okResult.Value as Role;
+            var role = okResult.Value as RoleTransient;
             Assert.NotNull(role);
             Assert.True(role.Uuid == inputModel.Uuid, $"Retrieved Id {role.Uuid} not the same as sample id {inputModel.Uuid}.");
             Assert.True(role.Name == inputModel.Name, $"Retrieved Name {role.Name} not the same as sample Name {inputModel.Name}.");
-            Assert.True(role.FunctionIds[0] == inputModel.FunctionIds[0], $"Retrieved function id {role.FunctionIds[0]} not the same as sample function id {inputModel.FunctionIds[0]}.");
-            Assert.True(role.FunctionIds[1] == inputModel.FunctionIds[1], $"Retrieved function id {role.FunctionIds[1]} not the same as sample function id {inputModel.FunctionIds[1]}.");
         }
     }
 }

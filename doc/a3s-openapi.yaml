@@ -910,7 +910,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RoleSubmit'
+                $ref: '#/components/schemas/RoleTransient'
         '400':
           description: Invalid parameters.
           content:
@@ -1001,7 +1001,7 @@ paths:
     put:
       tags:
         - Role
-      summary: Update a role.
+      summary: Captures an update to a role.
       description: Update a role by its UUID.
       operationId: updateRole
       parameters:
@@ -1049,6 +1049,223 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
           description: Non-Processible Entity. The request was correctly structured, but some business rules were violated, preventing the updating of the role.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+                
+    delete:
+      tags:
+        - Role
+      summary: Deletes a role.
+      description: Get a role by its UUID.
+      operationId: deleteRole
+      parameters:
+        - name: roleId
+          in: path
+          description: The UUID of the role.
+          required: true
+          schema:
+            $ref: '#/components/schemas/RoleId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleTransient'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access this role.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Role not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/roles/{roleId}/transients':
+    get:
+      tags:
+        - Role
+      summary: Get a role's transient states.
+      description: Get the transient records for a role by the role UUID.
+      operationId: getRoleTransients
+      parameters:
+        - name: roleId
+          in: path
+          description: The UUID of the role.
+          required: true
+          schema:
+            $ref: '#/components/schemas/RoleId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleTransients'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access this role.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Role not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+  '/roles/{roleId}/approve':
+    patch:
+      tags:
+        - Role
+      summary: Approves the creation of a role or change to a role.
+      description:  Approves a role by its Id.
+      operationId: approveRole
+      parameters:
+        - name: roleId
+          in: path
+          description: The Id of the role.
+          required: true
+          schema:
+            $ref: '#/components/schemas/RoleId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleTransient'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to approve a role.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Role related entity not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity. The request was correctly structured, but some business rules were violated, preventing the approval of the role.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/roles/{roleId}/decline':
+    patch:
+      tags:
+        - Role
+      summary: Declines the creation of role or a change to a role.
+      description:  Approves a role by its Id.
+      operationId: declineRole
+      parameters:
+        - name: roleId
+          in: path
+          description: The Id of the role.
+          required: true
+          schema:
+            $ref: '#/components/schemas/RoleId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleTransient'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to approve a role.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Role related entity not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity. The request was correctly structured, but some business rules were violated, preventing the approval of the role.
           content:
             application/json:
               schema:
@@ -1502,7 +1719,7 @@ paths:
           schema:
             type: integer
             minimum: 1
-            maximum: 20
+            maximum: 1000
             format: int32
             default: 10
         - name: filterName
@@ -1514,6 +1731,15 @@ paths:
             minLength: 0
             maxLength: 255
           example: FilterByEntityType
+        - name: filterFunctionName
+          in: query
+          required: false
+          description: A search query filter on the name of a function assigned to an application.
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 255
+          example: FilterByEntityTypeF
         - name: orderBy
           in: query
           required: false
@@ -2890,7 +3116,7 @@ paths:
           schema:
             type: integer
             minimum: 1
-            maximum: 20
+            maximum: 1000
             format: int32
             default: 10
         - name: includeRelations
@@ -3179,12 +3405,122 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+                
   # End Region - Sub Realms
+  # Region - Transients
+  '/transients':
+    get:
+      tags:
+        - Transients
+      summary: Gets a list of all the entities that are currently being changed within the system.
+      description: Gets a list of all the entities that are currently being changed within the system. The requested entity types can be filtered with query params.
+      operationId: getTransients
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: The page to view.
+          schema:
+            type: integer
+            minimum: 1
+            format: int32
+            default: 1
+        - name: size
+          in: query
+          required: false
+          description: The size of a page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            format: int32
+            default: 10
+        - name: includeRoles
+          in: query
+          required: false
+          description: A flag controlling whether to include all role type records within the returned response.
+          schema:
+            type: boolean
+            default: false
+        - name: includeFunctions
+          in: query
+          description: A flag controlling whether to include all function type records within the returned response.
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: includeAuthModes
+          in: query
+          description: A flag controlling whether to include all authentication model type records within the returned response.
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: includeUsers
+          in: query
+          description: A flag controlling whether to include all user type records within the returned response.
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':    
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemTransients'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to read Sub-Realms.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Sub-Realm not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  # End Region - Transients
     
 components:
   schemas:
     # Region - Roles
     RoleId:
+      type: string
+      format: uuid
+      
+    TransientRoleId:
+      description: A unique ID for a transient role record.
+      type: string
+      format: uuid
+      
+    TransientRoleFunctionId:
+      description: A unique ID for a transient role function assignment record.
+      type: string
+      format: uuid
+      
+    TransientRoleChildRoleId:
+      description: A unique ID for a transient role function assignment record.
       type: string
       format: uuid
 
@@ -3201,17 +3537,26 @@ components:
           type: string
         subRealmId:
           $ref: '#/components/schemas/SubRealmId'
-        functionIds:
+        functions:
           type: array
           items:
-            description: The UUIDS of the functions assigned to this role.
-            type: string
-            format: uuid
-        roleIds:
-          description: The UUIDs of the child roles attached to the role.
+            $ref: '#/components/schemas/Function'
+        roles:
           type: array
           items:
-            $ref: '#/components/schemas/RoleId'
+            $ref: '#/components/schemas/Role'
+            
+    RoleSimple:
+      description: |
+        A Role within A3S, but without all the related entities associated with roles.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/RoleId'
+        name:
+          type: string
+        description:
+          type: string
           
     RoleSubmit:
       description: |
@@ -3220,6 +3565,8 @@ components:
         - uuid
         - name
         - description
+        - roleIds
+        - functionIds
       type: object
       properties:
         uuid:
@@ -3242,8 +3589,238 @@ components:
             description: The UUIDS of the functions assigned to this role.
             type: string
             format: uuid
+            
+    RoleTransient:
+      description: |
+        Represents a transient state of a role.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientRoleId'
+        roleId:
+          $ref: '#/components/schemas/RoleId'
+        name:
+          type: string
+        description:
+          type: string
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          description: The current approval count.
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+          type: integer
+        changedBy:
+          type: string
+          format: uuid
+        latestTransientRoleFunctions:
+          description: A list of the latest transient role function assignments for this transient role.
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleFunctionTransient'
+        latestTransientRoleChildRoles:
+          description: A list of the latest transient role - child role assignments for this transient role.
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleChildRoleTransient'
+            
+    RoleTransientsItem:
+      description: |
+        Represents a transient state of a role.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientRoleId'
+        roleId:
+          $ref: '#/components/schemas/RoleId'
+        name:
+          type: string
+        description:
+          type: string
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+        changedBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: datetime
+            
+    RoleTransients:
+      description: |
+        Represents the current active transients for a role and it's relations.
+      type: object
+      properties:
+        latestActiveRoleTransients:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleTransientsItem'
+        latestTransientRoleFunctions:
+          description: A list of the latest transient role function assignments for this transient role.
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleFunctionDetailedTransient'
+        latestTransientRoleChildRoles:
+          description: A list of the latest transient role - child role assignments for this transient role.
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleChildRoleDetailedTransient'
+          
+    RoleFunctionTransient:
+      description: |
+        Represents a transient state of a role function assignment.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientRoleFunctionId'
+        roleId:
+          $ref: '#/components/schemas/RoleId'
+        functionId:
+          $ref: '#/components/schemas/RoleId'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+        changedBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+          
+    RoleFunctionDetailedTransient:
+      description: |
+        Represents a transient state of a role function assignment, but with more details pertaining to the function.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientRoleFunctionId'
+        roleId:
+          $ref: '#/components/schemas/RoleId'
+        function:
+          $ref: '#/components/schemas/FunctionSimple'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+        changedBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: datetime
+          
+    RoleChildRoleTransient:
+      description: |
+        Represents a transient state of a role - child role assignment.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientRoleChildRoleId'
+        roleId:
+          $ref: '#/components/schemas/RoleId'
+        childRoleId:
+          $ref: '#/components/schemas/RoleId'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+        changedBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+          
+    RoleChildRoleDetailedTransient:
+      description: |
+        Represents a transient state of a role - child role assignment, with additional basic details for the child role.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientRoleChildRoleId'
+        roleId:
+          $ref: '#/components/schemas/RoleId'
+        childRole:
+          $ref: '#/components/schemas/RoleSimple'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+        changedBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: datetime
         
-    # End Region - Roles 
+    # End Region - Roles
+    SystemTransients:
+      description: |
+        Represents a collection of all the entities within the system that are currently being modified. Response may include only the transients for certain requested entity types.
+      type: object
+      properties:
+        roles:
+          type: array
+          items: 
+            $ref: '#/components/schemas/SystemTransientsRole'
+            
+    SystemTransientsRole:
+      description: |
+        Represents a collection of all the latest transients for roles with any changes.
+      type: object
+      properties:
+        uuid : 
+          $ref: '#/components/schemas/RoleId'
+        roleName: 
+          type: string
+        capturerUuid:
+          $ref: '#/components/schemas/UserId'
+        capturerName: 
+          type: string
+        capturedDate: 
+          type: string
+          format: date-time
+        latestActiveRoleTransient:
+            $ref: '#/components/schemas/RoleTransientsItem'
+        latestTransientRoleFunctions:
+          description: A list of the latest transient role function assignments for this transient role.
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleFunctionTransient'
+        latestTransientRoleChildRoles:
+          description: A list of the latest transient role - child role assignments for this transient role.
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleChildRoleTransient'
+    # Begin Region - Transients
+    
+    # End Region - Transients
 
     # Region - Application
     ApplicationId:
@@ -3270,6 +3847,18 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ApplicationDataPolicy'
+            
+    ApplicationSimple:
+      description: |
+        A simpler model of an application, containing only the application's direct attributes, but none of it's relations.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/ApplicationId'
+        name:
+          type: string
+        description:
+          type: string
     #endregion
 
     # Region - Permissions
@@ -3391,14 +3980,26 @@ components:
           type: string
         description:
           type: string
-        applicationId:
-          $ref: '#/components/schemas/ApplicationId'
+        application:
+          $ref: '#/components/schemas/ApplicationSimple'
         subRealmId:
           $ref: '#/components/schemas/SubRealmId'
         permissions:
           type: array
           items:
             $ref: '#/components/schemas/Permission'
+            
+    FunctionSimple:
+      description: |
+        A model of a funtion, but without any of the function's relations.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/FunctionId'
+        name:
+          type: string
+        description:
+          type: string
 
     FunctionSubmit:
       description: |

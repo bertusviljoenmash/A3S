@@ -1400,7 +1400,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/RoleSubmit"
+                  "$ref" : "#/components/schemas/RoleTransient"
                 }
               }
             },
@@ -1472,6 +1472,85 @@
       }
     },
     "/roles/{roleId}" : {
+      "delete" : {
+        "description" : "Get a role by its UUID.",
+        "operationId" : "deleteRole",
+        "parameters" : [ {
+          "description" : "The UUID of the role.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "roleId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/RoleId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RoleTransient"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access this role."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Role not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred"
+          }
+        },
+        "summary" : "Deletes a role.",
+        "tags" : [ "Role" ]
+      },
       "get" : {
         "description" : "Get a role by its UUID.",
         "operationId" : "getRole",
@@ -1646,7 +1725,270 @@
             "description" : "An unexpected error occurred."
           }
         },
-        "summary" : "Update a role.",
+        "summary" : "Captures an update to a role.",
+        "tags" : [ "Role" ]
+      }
+    },
+    "/roles/{roleId}/transients" : {
+      "get" : {
+        "description" : "Get the transient records for a role by the role UUID.",
+        "operationId" : "getRoleTransients",
+        "parameters" : [ {
+          "description" : "The UUID of the role.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "roleId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/RoleId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RoleTransients"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access this role."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Role not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred"
+          }
+        },
+        "summary" : "Get a role's transient states.",
+        "tags" : [ "Role" ]
+      }
+    },
+    "/roles/{roleId}/approve" : {
+      "patch" : {
+        "description" : "Approves a role by its Id.",
+        "operationId" : "approveRole",
+        "parameters" : [ {
+          "description" : "The Id of the role.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "roleId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/RoleId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RoleTransient"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to approve a role."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Role related entity not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity. The request was correctly structured, but some business rules were violated, preventing the approval of the role."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Approves the creation of a role or change to a role.",
+        "tags" : [ "Role" ]
+      }
+    },
+    "/roles/{roleId}/decline" : {
+      "patch" : {
+        "description" : "Approves a role by its Id.",
+        "operationId" : "declineRole",
+        "parameters" : [ {
+          "description" : "The Id of the role.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "roleId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/RoleId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RoleTransient"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to approve a role."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Role related entity not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity. The request was correctly structured, but some business rules were violated, preventing the approval of the role."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Declines the creation of role or a change to a role.",
         "tags" : [ "Role" ]
       }
     },
@@ -2314,7 +2656,7 @@
           "schema" : {
             "default" : 10,
             "format" : "int32",
-            "maximum" : 20,
+            "maximum" : 1000,
             "minimum" : 1,
             "type" : "integer"
           },
@@ -2325,6 +2667,19 @@
           "explode" : true,
           "in" : "query",
           "name" : "filterName",
+          "required" : false,
+          "schema" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A search query filter on the name of a function assigned to an application.",
+          "example" : "FilterByEntityTypeF",
+          "explode" : true,
+          "in" : "query",
+          "name" : "filterFunctionName",
           "required" : false,
           "schema" : {
             "maxLength" : 255,
@@ -4427,7 +4782,7 @@
           "schema" : {
             "default" : 10,
             "format" : "int32",
-            "maximum" : 20,
+            "maximum" : 1000,
             "minimum" : 1,
             "type" : "integer"
           },
@@ -4886,6 +5241,148 @@
         "summary" : "Update a Sub-Realm.",
         "tags" : [ "SubRealm" ]
       }
+    },
+    "/transients" : {
+      "get" : {
+        "description" : "Gets a list of all the entities that are currently being changed within the system. The requested entity types can be filtered with query params.",
+        "operationId" : "getTransients",
+        "parameters" : [ {
+          "description" : "The page to view.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "page",
+          "required" : false,
+          "schema" : {
+            "default" : 1,
+            "format" : "int32",
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The size of a page.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "size",
+          "required" : false,
+          "schema" : {
+            "default" : 10,
+            "format" : "int32",
+            "maximum" : 1000,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A flag controlling whether to include all role type records within the returned response.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "includeRoles",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A flag controlling whether to include all function type records within the returned response.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "includeFunctions",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A flag controlling whether to include all authentication model type records within the returned response.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "includeAuthModes",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A flag controlling whether to include all user type records within the returned response.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "includeUsers",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SystemTransients"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to read Sub-Realms."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Sub-Realm not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Gets a list of all the entities that are currently being changed within the system.",
+        "tags" : [ "Transients" ]
+      }
     }
   },
   "components" : {
@@ -4894,14 +5391,67 @@
         "format" : "uuid",
         "type" : "string"
       },
+      "TransientRoleId" : {
+        "description" : "A unique ID for a transient role record.",
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "TransientRoleFunctionId" : {
+        "description" : "A unique ID for a transient role function assignment record.",
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "TransientRoleChildRoleId" : {
+        "description" : "A unique ID for a transient role function assignment record.",
+        "format" : "uuid",
+        "type" : "string"
+      },
       "Role" : {
         "description" : "A Role within A3S. Roles can have functions assigned to them. Roles can be assigned to users.\n",
         "example" : {
           "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-          "roleIds" : [ null, null ],
+          "functions" : [ {
+            "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "application" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
+            "permissions" : [ {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            }, {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            } ],
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          }, {
+            "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "application" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
+            "permissions" : [ {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            }, {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            } ],
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          } ],
+          "roles" : [ null, null ],
           "name" : "name",
           "description" : "description",
-          "functionIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
         },
         "properties" : {
@@ -4920,20 +5470,38 @@
             "format" : "uuid",
             "type" : "string"
           },
-          "functionIds" : {
+          "functions" : {
             "items" : {
-              "description" : "The UUIDS of the functions assigned to this role.",
-              "format" : "uuid",
-              "type" : "string"
+              "$ref" : "#/components/schemas/Function"
             },
             "type" : "array"
           },
-          "roleIds" : {
-            "description" : "The UUIDs of the child roles attached to the role.",
+          "roles" : {
             "items" : {
-              "$ref" : "#/components/schemas/RoleId"
+              "$ref" : "#/components/schemas/Role"
             },
             "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "RoleSimple" : {
+        "description" : "A Role within A3S, but without all the related entities associated with roles.\n",
+        "example" : {
+          "name" : "name",
+          "description" : "description",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
           }
         },
         "type" : "object"
@@ -4980,7 +5548,718 @@
             "type" : "array"
           }
         },
-        "required" : [ "description", "name", "uuid" ],
+        "required" : [ "description", "functionIds", "name", "roleIds", "uuid" ],
+        "type" : "object"
+      },
+      "RoleTransient" : {
+        "description" : "Represents a transient state of a role.\n",
+        "example" : {
+          "requiredApprovalCount" : 6,
+          "latestTransientRoleChildRoles" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          } ],
+          "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "name" : "name",
+          "description" : "description",
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "latestTransientRoleFunctions" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          } ],
+          "approvalCount" : 0
+        },
+        "properties" : {
+          "uuid" : {
+            "description" : "A unique ID for a transient role record.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "roleId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current approval count.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "changedBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "latestTransientRoleFunctions" : {
+            "description" : "A list of the latest transient role function assignments for this transient role.",
+            "items" : {
+              "$ref" : "#/components/schemas/RoleFunctionTransient"
+            },
+            "type" : "array"
+          },
+          "latestTransientRoleChildRoles" : {
+            "description" : "A list of the latest transient role - child role assignments for this transient role.",
+            "items" : {
+              "$ref" : "#/components/schemas/RoleChildRoleTransient"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "RoleTransientsItem" : {
+        "description" : "Represents a transient state of a role.\n",
+        "example" : {
+          "createdAt" : "createdAt",
+          "requiredApprovalCount" : "",
+          "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "name" : "name",
+          "description" : "description",
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 0
+        },
+        "properties" : {
+          "uuid" : {
+            "description" : "A unique ID for a transient role record.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "roleId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released."
+          },
+          "changedBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "datetime",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "RoleTransients" : {
+        "description" : "Represents the current active transients for a role and it's relations.\n",
+        "example" : {
+          "latestTransientRoleChildRoles" : [ {
+            "childRole" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
+            "createdAt" : "createdAt",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          }, {
+            "childRole" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
+            "createdAt" : "createdAt",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          } ],
+          "latestActiveRoleTransients" : [ {
+            "createdAt" : "createdAt",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "name" : "name",
+            "description" : "description",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 0
+          }, {
+            "createdAt" : "createdAt",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "name" : "name",
+            "description" : "description",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 0
+          } ],
+          "latestTransientRoleFunctions" : [ {
+            "createdAt" : "createdAt",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "function" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 6
+          }, {
+            "createdAt" : "createdAt",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "function" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 6
+          } ]
+        },
+        "properties" : {
+          "latestActiveRoleTransients" : {
+            "items" : {
+              "$ref" : "#/components/schemas/RoleTransientsItem"
+            },
+            "type" : "array"
+          },
+          "latestTransientRoleFunctions" : {
+            "description" : "A list of the latest transient role function assignments for this transient role.",
+            "items" : {
+              "$ref" : "#/components/schemas/RoleFunctionDetailedTransient"
+            },
+            "type" : "array"
+          },
+          "latestTransientRoleChildRoles" : {
+            "description" : "A list of the latest transient role - child role assignments for this transient role.",
+            "items" : {
+              "$ref" : "#/components/schemas/RoleChildRoleDetailedTransient"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "RoleFunctionTransient" : {
+        "description" : "Represents a transient state of a role function assignment.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "requiredApprovalCount" : "",
+          "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 1
+        },
+        "properties" : {
+          "uuid" : {
+            "description" : "A unique ID for a transient role function assignment record.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "roleId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "functionId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released."
+          },
+          "changedBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "RoleFunctionDetailedTransient" : {
+        "description" : "Represents a transient state of a role function assignment, but with more details pertaining to the function.\n",
+        "example" : {
+          "createdAt" : "createdAt",
+          "requiredApprovalCount" : "",
+          "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "function" : {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          },
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 6
+        },
+        "properties" : {
+          "uuid" : {
+            "description" : "A unique ID for a transient role function assignment record.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "roleId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "function" : {
+            "$ref" : "#/components/schemas/FunctionSimple"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released."
+          },
+          "changedBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "datetime",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "RoleChildRoleTransient" : {
+        "description" : "Represents a transient state of a role - child role assignment.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "requiredApprovalCount" : "",
+          "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 5
+        },
+        "properties" : {
+          "uuid" : {
+            "description" : "A unique ID for a transient role function assignment record.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "roleId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "childRoleId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released."
+          },
+          "changedBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "RoleChildRoleDetailedTransient" : {
+        "description" : "Represents a transient state of a role - child role assignment, with additional basic details for the child role.\n",
+        "example" : {
+          "childRole" : {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          },
+          "createdAt" : "createdAt",
+          "requiredApprovalCount" : "",
+          "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 1
+        },
+        "properties" : {
+          "uuid" : {
+            "description" : "A unique ID for a transient role function assignment record.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "roleId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "childRole" : {
+            "$ref" : "#/components/schemas/RoleSimple"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released."
+          },
+          "changedBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "datetime",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "SystemTransients" : {
+        "description" : "Represents a collection of all the entities within the system that are currently being modified. Response may include only the transients for certain requested entity types.\n",
+        "example" : {
+          "roles" : [ {
+            "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "capturerName" : "capturerName",
+            "latestTransientRoleChildRoles" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : "",
+              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 5
+            }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : "",
+              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 5
+            } ],
+            "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+            "latestActiveRoleTransient" : {
+              "createdAt" : "createdAt",
+              "requiredApprovalCount" : "",
+              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "name" : "name",
+              "description" : "description",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 0
+            },
+            "roleName" : "roleName",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "latestTransientRoleFunctions" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "requiredApprovalCount" : "",
+              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "requiredApprovalCount" : "",
+              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            } ]
+          }, {
+            "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "capturerName" : "capturerName",
+            "latestTransientRoleChildRoles" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : "",
+              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 5
+            }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : "",
+              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 5
+            } ],
+            "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+            "latestActiveRoleTransient" : {
+              "createdAt" : "createdAt",
+              "requiredApprovalCount" : "",
+              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "name" : "name",
+              "description" : "description",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 0
+            },
+            "roleName" : "roleName",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "latestTransientRoleFunctions" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "requiredApprovalCount" : "",
+              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "requiredApprovalCount" : "",
+              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            } ]
+          } ]
+        },
+        "properties" : {
+          "roles" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SystemTransientsRole"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "SystemTransientsRole" : {
+        "description" : "Represents a collection of all the latest transients for roles with any changes.\n",
+        "example" : {
+          "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "capturerName" : "capturerName",
+          "latestTransientRoleChildRoles" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "childRoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          } ],
+          "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+          "latestActiveRoleTransient" : {
+            "createdAt" : "createdAt",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "name" : "name",
+            "description" : "description",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 0
+          },
+          "roleName" : "roleName",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "latestTransientRoleFunctions" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : "",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          } ]
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "roleName" : {
+            "type" : "string"
+          },
+          "capturerUuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "capturerName" : {
+            "type" : "string"
+          },
+          "capturedDate" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "latestActiveRoleTransient" : {
+            "$ref" : "#/components/schemas/RoleTransientsItem"
+          },
+          "latestTransientRoleFunctions" : {
+            "description" : "A list of the latest transient role function assignments for this transient role.",
+            "items" : {
+              "$ref" : "#/components/schemas/RoleFunctionTransient"
+            },
+            "type" : "array"
+          },
+          "latestTransientRoleChildRoles" : {
+            "description" : "A list of the latest transient role - child role assignments for this transient role.",
+            "items" : {
+              "$ref" : "#/components/schemas/RoleChildRoleTransient"
+            },
+            "type" : "array"
+          }
+        },
         "type" : "object"
       },
       "ApplicationId" : {
@@ -4993,6 +6272,11 @@
         "example" : {
           "functions" : [ {
             "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "application" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
             "permissions" : [ {
               "name" : "name",
               "description" : "description",
@@ -5004,10 +6288,14 @@
             } ],
             "name" : "name",
             "description" : "description",
-            "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
           }, {
             "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "application" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
             "permissions" : [ {
               "name" : "name",
               "description" : "description",
@@ -5019,7 +6307,6 @@
             } ],
             "name" : "name",
             "description" : "description",
-            "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
           } ],
           "name" : "name",
@@ -5058,6 +6345,28 @@
               "$ref" : "#/components/schemas/ApplicationDataPolicy"
             },
             "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "ApplicationSimple" : {
+        "description" : "A simpler model of an application, containing only the application's direct attributes, but none of it's relations.\n",
+        "example" : {
+          "name" : "name",
+          "description" : "description",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "description" : "The UUID of an application.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
           }
         },
         "type" : "object"
@@ -5221,6 +6530,11 @@
         "description" : "A Function - A collection of permissions to denote a piece of functionality in an application. Must be assigned to an application. May optionally be associated with a sub-realm by specifying a 'subRealmId'.\n",
         "example" : {
           "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "application" : {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          },
           "permissions" : [ {
             "name" : "name",
             "description" : "description",
@@ -5232,7 +6546,6 @@
           } ],
           "name" : "name",
           "description" : "description",
-          "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
         },
         "properties" : {
@@ -5246,10 +6559,8 @@
           "description" : {
             "type" : "string"
           },
-          "applicationId" : {
-            "description" : "The UUID of an application.",
-            "format" : "uuid",
-            "type" : "string"
+          "application" : {
+            "$ref" : "#/components/schemas/ApplicationSimple"
           },
           "subRealmId" : {
             "description" : "The UUID identifier for a sub-realm.",
@@ -5264,6 +6575,27 @@
           }
         },
         "required" : [ "applicationId", "description", "name", "permissions", "uuid" ],
+        "type" : "object"
+      },
+      "FunctionSimple" : {
+        "description" : "A model of a funtion, but without any of the function's relations.\n",
+        "example" : {
+          "name" : "name",
+          "description" : "description",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          }
+        },
         "type" : "object"
       },
       "FunctionSubmit" : {
@@ -5387,17 +6719,93 @@
           "surname" : "surname",
           "roles" : [ {
             "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "roleIds" : [ null, null ],
+            "functions" : [ {
+              "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
+              "permissions" : [ {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              }, {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              } ],
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            }, {
+              "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
+              "permissions" : [ {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              }, {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              } ],
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            } ],
+            "roles" : [ null, null ],
             "name" : "name",
             "description" : "description",
-            "functionIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
           }, {
             "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "roleIds" : [ null, null ],
+            "functions" : [ {
+              "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
+              "permissions" : [ {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              }, {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              } ],
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            }, {
+              "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
+              "permissions" : [ {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              }, {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              } ],
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            } ],
+            "roles" : [ null, null ],
             "name" : "name",
             "description" : "description",
-            "functionIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
           } ],
           "name" : "name",
@@ -5651,17 +7059,93 @@
           } ],
           "roles" : [ {
             "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "roleIds" : [ null, null ],
+            "functions" : [ {
+              "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
+              "permissions" : [ {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              }, {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              } ],
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            }, {
+              "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
+              "permissions" : [ {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              }, {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              } ],
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            } ],
+            "roles" : [ null, null ],
             "name" : "name",
             "description" : "description",
-            "functionIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
           }, {
             "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "roleIds" : [ null, null ],
+            "functions" : [ {
+              "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
+              "permissions" : [ {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              }, {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              } ],
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            }, {
+              "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
+              "permissions" : [ {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              }, {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              } ],
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            } ],
+            "roles" : [ null, null ],
             "name" : "name",
             "description" : "description",
-            "functionIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
           } ],
           "name" : "name",

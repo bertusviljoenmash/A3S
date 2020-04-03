@@ -292,7 +292,6 @@ namespace za.co.grindrodbank.a3s.Services
             // Overwrite any assigned functions with the new list. If the list is empty, we still want to clear any assigned functions.
             defaultRoleToApply.Name = defaultRole.Name;
             defaultRoleToApply.Description = defaultRole.Description;
-            defaultRoleToApply.ChangedBy = updatedById;
 
             await ApplyFunctionsToDefaultRole(defaultRole, defaultRoleToApply, updatedById, dryRun, securityContractDryRunResult, defaultConfigurationName);
             await ApplyChildRolesToDefaultRole(defaultRole, defaultRoleToApply, updatedById, dryRun, securityContractDryRunResult, defaultConfigurationName);
@@ -337,8 +336,7 @@ namespace za.co.grindrodbank.a3s.Services
                     defaultRoleToApply.RoleFunctions.Add(new RoleFunctionModel
                     {
                         Role = defaultRoleToApply,
-                        Function = existingFunction,
-                        ChangedBy = updatedById
+                        Function = existingFunction
                     });
                 }
             }
@@ -397,8 +395,7 @@ namespace za.co.grindrodbank.a3s.Services
             defaultRoleToApply.ChildRoles.Add(new RoleRoleModel
             {
                 ParentRole = defaultRoleToApply,
-                ChildRole = existingChildRole,
-                ChangedBy = updatedById
+                ChildRole = existingChildRole
             });
         }
 
@@ -915,11 +912,11 @@ namespace za.co.grindrodbank.a3s.Services
             List<RoleModel> roles = await roleRepository.GetListAsync();
 
             // First retrieve simple roles
-            foreach (var role in roles.Where(x => x.ChildRoles == null || x.ChildRoles.Count == 0).OrderBy(o => o.SysPeriod.LowerBound))
+            foreach (var role in roles.Where(x => x.ChildRoles == null || x.ChildRoles.Count == 0))
                 contractRoleList.Add(RetrieveIndividualDefaultConfigRole(role));
 
             // Next retrieve complex roles
-            foreach (var role in roles.Where(x => x.ChildRoles != null && x.ChildRoles.Count > 0).OrderBy(o => o.SysPeriod.LowerBound))
+            foreach (var role in roles.Where(x => x.ChildRoles != null && x.ChildRoles.Count > 0))
                 contractRoleList.Add(RetrieveIndividualDefaultConfigRole(role));
 
             return contractRoleList;
@@ -940,7 +937,7 @@ namespace za.co.grindrodbank.a3s.Services
             foreach (var function in role.RoleFunctions.OrderBy(o => o.Function.SysPeriod.LowerBound))
                 contractRole.Functions.Add(function.Function.Name);
 
-            foreach (var childRole in role.ChildRoles.OrderBy(o => o.ChildRole.SysPeriod.LowerBound))
+            foreach (var childRole in role.ChildRoles)
                 contractRole.Roles.Add(childRole.ChildRole.Name);
 
             return contractRole;
@@ -971,7 +968,7 @@ namespace za.co.grindrodbank.a3s.Services
                     CustomAttributes = mapper.Map<List<UserCustomAttribute>>(user.CustomAttributes)
                 };
 
-                foreach (var role in user.UserRoles.OrderBy(o => o.Role.SysPeriod.LowerBound))
+                foreach (var role in user.UserRoles)
                     contractUser.Roles.Add(role.Role.Name);
 
                 contractUserList.Add(contractUser);

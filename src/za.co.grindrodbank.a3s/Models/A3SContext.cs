@@ -41,6 +41,9 @@ namespace za.co.grindrodbank.a3s.Models
         public DbSet<TermsOfServiceUserAcceptanceModel> TermsOfServiceUserAcceptance { get; set; }
         public DbSet<SubRealmModel> SubRealm { get; set; }
         public DbSet<ProfileModel> Profile { get; set; }
+        public DbSet<RoleTransientModel> RoleTransient { get; set; }
+        public DbSet<RoleFunctionTransientModel> RoleFunctionTransient { get; set; }
+        public DbSet<RoleRoleTransientModel> RoleRoleTransient { get; set; }
         public DbSet<UserCustomAttributeModel> UserCustomAttribute { get; set; }
 
         // Identity specific database tables. We want to operate on these, but let them be managed by Identity.
@@ -298,6 +301,18 @@ namespace za.co.grindrodbank.a3s.Models
                 .HasOne(fp => fp.Team)
                 .WithMany(p => p.ProfileTeams)
                 .HasForeignKey(fp => fp.TeamId);
+
+            modelBuilder.Entity<RoleTransientModel>()
+                .Property(b => b.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<RoleFunctionTransientModel>()
+                .Property(b => b.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<RoleRoleTransientModel>()
+                .Property(b => b.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         }
 

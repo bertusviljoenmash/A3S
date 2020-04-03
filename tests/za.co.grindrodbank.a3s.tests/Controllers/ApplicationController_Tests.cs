@@ -57,12 +57,12 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
                 Results = inList
             };
 
-            applicationService.GetListAsync(1, 50, string.Empty, null).Returns(paginatedResult);
+            applicationService.GetListAsync(1, 50, string.Empty, null, null).Returns(paginatedResult);
 
             var controller = new ApplicationController(applicationService, mapper, paginationHelper, orderByHelper);
 
             // Act
-            IActionResult actionResult = await controller.ListApplicationsAsync(1, 50, string.Empty, null);
+            IActionResult actionResult = await controller.ListApplicationsAsync(1, 50, string.Empty, null, null);
 
             // Assert
             var okResult = actionResult as OkObjectResult;

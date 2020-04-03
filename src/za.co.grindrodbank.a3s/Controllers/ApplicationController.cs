@@ -35,16 +35,17 @@ namespace za.co.grindrodbank.a3s.Controllers
         }
 
         [Authorize(Policy = "permission:a3s.applications.read")]
-        public async override Task<IActionResult> ListApplicationsAsync([FromQuery] int page, [FromQuery, Range(1, 20)] int size, [FromQuery, StringLength(255, MinimumLength = 0)] string filterName, [FromQuery] string orderBy)
+        public async override Task<IActionResult> ListApplicationsAsync([FromQuery] int page, [FromQuery, Range(1, 1000)] int size, [FromQuery, StringLength(255, MinimumLength = 0)] string filterName, [FromQuery][StringLength(255, MinimumLength = 0)]string filterFunctionName, [FromQuery] string orderBy)
         {
             List<KeyValuePair<string, string>> orderByKeyValueList = orderByHelper.ConvertCommaSeparateOrderByStringToKeyValuePairList(orderBy);
             // Validate only correct order by components were supplied.
             orderByHelper.ValidateOrderByListOnlyContainsCertainElements(orderByKeyValueList, new List<string> { "name" });
-            PaginatedResult<ApplicationModel> paginatedResult = await applicationService.GetListAsync(page, size, filterName, orderByKeyValueList);
+            PaginatedResult<ApplicationModel> paginatedResult = await applicationService.GetListAsync(page, size, filterName, filterFunctionName, orderByKeyValueList);
             // Generate a K-V pair of all the current applied filters sent to the controller so that pagination header URLs can include them.
             List<KeyValuePair<string, string>> currrentFilters = new List<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("filterName", filterName)
+                new KeyValuePair<string, string>("filterName", filterName),
+                new KeyValuePair<string, string>("filterFunctionName", filterName),
             };
 
             paginationHelper.AddPaginationHeaderMetaDataToResponse(paginatedResult, currrentFilters, orderBy, "ListApplications", Url, Response);

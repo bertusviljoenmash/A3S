@@ -64,12 +64,14 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         /// The UUIDs of the child roles attached to the role.
         /// </summary>
         /// <value>The UUIDs of the child roles attached to the role.</value>
+        [Required]
         [DataMember(Name="roleIds", EmitDefaultValue=false)]
         public List<Guid> RoleIds { get; set; }
 
         /// <summary>
         /// Gets or Sets FunctionIds
         /// </summary>
+        [Required]
         [DataMember(Name="functionIds", EmitDefaultValue=false)]
         public List<Guid> FunctionIds { get; set; }
 

@@ -124,7 +124,7 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 404, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
-        public abstract Task<IActionResult> ListSubRealmsAsync([FromQuery]int page, [FromQuery][Range(1, 20)]int size, [FromQuery]bool includeRelations, [FromQuery][StringLength(255, MinimumLength=0)]string filterName, [FromQuery]string orderBy);
+        public abstract Task<IActionResult> ListSubRealmsAsync([FromQuery]int page, [FromQuery][Range(1, 1000)]int size, [FromQuery]bool includeRelations, [FromQuery][StringLength(255, MinimumLength=0)]string filterName, [FromQuery]string orderBy);
 
         /// <summary>
         /// Update a Sub-Realm.

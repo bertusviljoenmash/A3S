@@ -36,11 +36,29 @@ namespace za.co.grindrodbank.a3s.Controllers
             this.mapper = mapper;
         }
 
+        [Authorize(Policy = "permission:a3s.changeReview.approveRole")]
+        public async override Task<IActionResult> ApproveRoleAsync([FromRoute, Required] Guid roleId)
+        {
+            return Ok(await roleService.ApproveRole(roleId, ClaimsHelper.GetUserId(User)));
+        }
+
         [Authorize(Policy = "permission:a3s.roles.create")]
         public async override Task<IActionResult> CreateRoleAsync([FromBody] RoleSubmit roleSubmit)
         {
             var loggedOnUser = ClaimsHelper.GetScalarClaimValue<Guid>(User, ClaimTypes.NameIdentifier, Guid.Empty);
             return Ok(await roleService.CreateAsync(roleSubmit, loggedOnUser));
+        }
+
+        [Authorize(Policy = "permission:a3s.changeReview.declineRole")]
+        public async override Task<IActionResult> DeclineRoleAsync([FromRoute, Required] Guid roleId)
+        {
+            return Ok(await roleService.DeclineRole(roleId, ClaimsHelper.GetUserId(User)));
+        }
+
+        [Authorize(Policy = "permission:a3s.roles.delete")]
+        public async override Task<IActionResult> DeleteRoleAsync([FromRoute, Required] Guid roleId)
+        {
+            return Ok(await roleService.DeleteAsync(roleId, ClaimsHelper.GetUserId(User)));
         }
 
         [Authorize(Policy = "permission:a3s.roles.read")]
@@ -55,6 +73,12 @@ namespace za.co.grindrodbank.a3s.Controllers
                 return NotFound();
 
             return Ok(role);
+        }
+
+        [Authorize(Policy = "permission:a3s.roles.read")]
+        public async override Task<IActionResult> GetRoleTransientsAsync([FromRoute, Required] Guid roleId)
+        {
+            return Ok(await roleService.GetLatestRoleTransientsAsync(roleId));
         }
 
         [Authorize(Policy = "permission:a3s.roles.read")]
@@ -82,8 +106,7 @@ namespace za.co.grindrodbank.a3s.Controllers
             if (roleId == Guid.Empty || roleSubmit.Uuid == Guid.Empty)
                 return BadRequest();
 
-            var loggedOnUser = ClaimsHelper.GetScalarClaimValue<Guid>(User, ClaimTypes.NameIdentifier, Guid.Empty);
-            return Ok(await roleService.UpdateAsync(roleSubmit, loggedOnUser));
+            return Ok(await roleService.UpdateAsync(roleSubmit, roleId, ClaimsHelper.GetUserId(User)));
         }
     }
 }

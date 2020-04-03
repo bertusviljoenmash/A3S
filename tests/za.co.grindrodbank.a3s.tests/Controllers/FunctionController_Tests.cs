@@ -48,7 +48,7 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
                 Uuid = Guid.NewGuid(),
                 Name = "Test Function Name",
                 Description = "Test Function Description",
-                ApplicationId = new Guid(),
+                Application = new ApplicationSimple { Name = "Test Application", Uuid = Guid.NewGuid()},
                 Permissions = new List<Permission>()
                 {
                     new Permission() { Uuid = Guid.NewGuid() },
@@ -61,7 +61,7 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
                 Uuid = functionModel.Uuid,
                 Name = functionModel.Name,
                 Description = functionModel.Description,
-                ApplicationId = functionModel.ApplicationId,
+                ApplicationId = functionModel.Application.Uuid,
                 Permissions = new List<Guid>()
                 {
                     functionModel.Permissions[0].Uuid,
@@ -233,7 +233,7 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
             Assert.True(function.Uuid == functionSubmitModel.Uuid, $"Retrieved Id {function.Uuid} not the same as sample id {functionSubmitModel.Uuid}.");
             Assert.True(function.Name == functionSubmitModel.Name, $"Retrieved Name {function.Name} not the same as sample Name {functionSubmitModel.Name}.");
             Assert.True(function.Description == functionSubmitModel.Description, $"Retrieved Description {function.Description} not the same as sample Description {functionSubmitModel.Description}.");
-            Assert.True(function.ApplicationId == functionSubmitModel.ApplicationId, $"Retrieved ApplicationId {function.ApplicationId} not the same as sample ApplicationId {functionSubmitModel.ApplicationId}.");
+            Assert.True(function.Application.Uuid == functionSubmitModel.ApplicationId, $"Retrieved ApplicationId {function.Application.Uuid} not the same as sample ApplicationId {functionSubmitModel.ApplicationId}.");
             Assert.True(function.Permissions[0].Uuid == functionSubmitModel.Permissions[0], $"Retrieved Permissions id {function.Permissions[0].Uuid} not the same as sample Permissions id {functionSubmitModel.Permissions[0]}.");
             Assert.True(function.Permissions[1].Uuid == functionSubmitModel.Permissions[1], $"Retrieved Permissions id {function.Permissions[1].Uuid} not the same as sample Permissions id {functionSubmitModel.Permissions[1]}.");
         }

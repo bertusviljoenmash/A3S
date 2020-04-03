@@ -17,6 +17,8 @@ namespace za.co.grindrodbank.a3s.MappingProfiles
             CreateMap<Application, ApplicationModel>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Uuid));
             CreateMap<ApplicationModel, Application>().ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.Id))
                                                       .ForMember(dest => dest.DataPolicies, opt => opt.MapFrom(src => src.ApplicationDataPolicies));
+            // Create a mapper for the simlper applications that contain no relations.
+            CreateMap<ApplicationModel, ApplicationSimple>().ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.Id));
         }                                    
     }
 }
