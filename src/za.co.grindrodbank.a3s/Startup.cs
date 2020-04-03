@@ -196,8 +196,6 @@ namespace za.co.grindrodbank.a3s
                 options.AddPolicy("permission:a3s.changeReview.declineTeam", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.declineTeam")));
                 options.AddPolicy("permission:a3s.changeReview.approveTermsOfService", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.approveTermsOfService")));
                 options.AddPolicy("permission:a3s.changeReview.declineTermsOfService", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.declineTermsOfService")));
-                options.AddPolicy("permission:a3s.changeReview.approveTeam", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.approveTeam")));
-                options.AddPolicy("permission:a3s.changeReview.declineTeam", policy => policy.Requirements.Add(new PermissionRequirement("a3s.changeReview.declineTeam")));
             });
 
             // Add policy handler services
