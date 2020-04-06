@@ -12,7 +12,6 @@ only-tags: &only-tags
     branches:
       ignore: /.*/
 
-
 # Orbs need to be enabled as a security setting. Third party orb access needs to be enabled by a circle CI admin.
 version: 2.1
 jobs:
@@ -121,7 +120,7 @@ jobs:
     steps:
       - checkout
       - run: mkdir ~/repo/a3s-typescript-axios
-      - run: /usr/local/bin/docker-entrypoint.sh generate -i ~/repo/doc/a3s-openapi.yaml -g typescript-axios -o ~/repo/a3s-typescript-axios --model-package=model --api-package=api --additional-properties=withSeparateModelsAndApi=true,modelPropertyNaming=camelCase,npmName=@grindrodbank/a3s-api
+      - run: /usr/local/bin/docker-entrypoint.sh generate -i ~/repo/doc/a3s-openapi.yaml -g typescript-axios -o ~/repo/a3s-typescript-axios --model-package=model --api-package=api --additional-properties=withSeparateModelsAndApi=true,modelPropertyNaming=camelCase,npmName=@grindrodbank/a3s-api,npmVersion=$CIRCLE_TAG
       - persist_to_workspace:
           root: ~/repo
           paths:
