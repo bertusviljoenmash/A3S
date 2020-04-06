@@ -4018,6 +4018,10 @@ components:
           type: array
           items: 
             $ref: '#/components/schemas/SystemTransientsRole'
+        teams:
+          type: array
+          items: 
+            $ref: '#/components/schemas/SystemTransientsTeam'
             
     SystemTransientsRole:
       description: |
@@ -4038,15 +4042,44 @@ components:
         latestActiveRoleTransient:
             $ref: '#/components/schemas/RoleTransientsItem'
         latestTransientRoleFunctions:
-          description: A list of the latest transient role function assignments for this transient role.
+          description: A list of the latest (most recent only) transient role function assignments for this transient role.
           type: array
           items:
             $ref: '#/components/schemas/RoleFunctionTransient'
         latestTransientRoleChildRoles:
-          description: A list of the latest transient role - child role assignments for this transient role.
+          description: A list of the latest (most recent one per relation) transient role - child role assignments for this transient role.
           type: array
           items:
             $ref: '#/components/schemas/RoleChildRoleTransient'
+            
+    SystemTransientsTeam:
+      description: |
+        Represents a collection of all the latest transients for teams with any changes.
+      type: object
+      properties:
+        uuid : 
+          $ref: '#/components/schemas/TeamId'
+        teamName: 
+          type: string
+        capturerUuid:
+          $ref: '#/components/schemas/UserId'
+        capturerName: 
+          type: string
+        capturedDate: 
+          type: string
+          format: date-time
+        latestActiveTeamTransient:
+          $ref: '#/components/schemas/TeamBaseTeamTransient'
+        latestTransientTeamDataPolicies:
+          description: A list of the latest (most recent one per relation) transient team - data policy assignment changes for this transient role.
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamDataPolicyTransient'
+        latestTransientTeamChildTeams:
+          description: A list of the latest (most recent one per relation) transient team - child team assignment changes for this transient role.
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamChildTeamTransient'
     # Begin Region - Transients
     
     # End Region - Transients
