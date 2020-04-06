@@ -2225,6 +2225,95 @@
       }
     },
     "/teams/{teamId}" : {
+      "delete" : {
+        "description" : "Deletes a team by it's UUID.",
+        "operationId" : "deleteTeam",
+        "parameters" : [ {
+          "description" : "The UUID of the team.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "teamId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/TeamId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TeamTransient"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to update the team."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Teams not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Delete a team.",
+        "tags" : [ "Team" ]
+      },
       "get" : {
         "description" : "Get a team by its UUID.",
         "operationId" : "getTeam",
@@ -2400,6 +2489,269 @@
           }
         },
         "summary" : "Update a team.",
+        "tags" : [ "Team" ]
+      }
+    },
+    "/teams/{teamId}/transients" : {
+      "get" : {
+        "description" : "Get the latest transients for a team by the team's UUID.",
+        "operationId" : "getTeamTransients",
+        "parameters" : [ {
+          "description" : "team",
+          "explode" : false,
+          "in" : "path",
+          "name" : "teamId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/TeamId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TeamTransients"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the team."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Team not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Get the current active (all transients since last declined or released state) for a team and it's relations.",
+        "tags" : [ "Team" ]
+      }
+    },
+    "/teams/{teamId}/approve" : {
+      "patch" : {
+        "description" : "Approve all current transient states for a team, given the team's UUID.",
+        "operationId" : "approveTeam",
+        "parameters" : [ {
+          "description" : "The UUID of the team.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "teamId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/TeamId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TeamTransient"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to update the team."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Teams not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Approve all current transient states for a team.",
+        "tags" : [ "Team" ]
+      }
+    },
+    "/teams/{teamId}/decline" : {
+      "patch" : {
+        "description" : "Decline all current transient states for a team, given the team's UUID.",
+        "operationId" : "declineTeam",
+        "parameters" : [ {
+          "description" : "The UUID of the team.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "teamId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/TeamId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TeamTransient"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to update the team."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Teams not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Decline all current transient states for a team.",
         "tags" : [ "Team" ]
       }
     },
@@ -5661,7 +6013,7 @@
         "description" : "Represents a transient state of a role.\n",
         "example" : {
           "createdAt" : "createdAt",
-          "requiredApprovalCount" : "",
+          "requiredApprovalCount" : 6,
           "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "name" : "name",
@@ -5694,10 +6046,12 @@
             "type" : "string"
           },
           "approvalCount" : {
+            "description" : "The current amount of approvals for this transient.",
             "type" : "integer"
           },
           "requiredApprovalCount" : {
-            "description" : "The required approval count before this entity is released."
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
           },
           "changedBy" : {
             "format" : "uuid",
@@ -5726,7 +6080,7 @@
             "r_state" : "r_state",
             "action" : "action",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "approvalCount" : 1
+            "approvalCount" : 5
           }, {
             "childRole" : {
               "name" : "name",
@@ -5740,11 +6094,11 @@
             "r_state" : "r_state",
             "action" : "action",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "approvalCount" : 1
+            "approvalCount" : 5
           } ],
           "latestActiveRoleTransients" : [ {
             "createdAt" : "createdAt",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 6,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "name" : "name",
@@ -5755,7 +6109,7 @@
             "approvalCount" : 0
           }, {
             "createdAt" : "createdAt",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 6,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "name" : "name",
@@ -5778,7 +6132,7 @@
             "r_state" : "r_state",
             "action" : "action",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "approvalCount" : 6
+            "approvalCount" : 1
           }, {
             "createdAt" : "createdAt",
             "requiredApprovalCount" : "",
@@ -5792,7 +6146,7 @@
             "r_state" : "r_state",
             "action" : "action",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "approvalCount" : 6
+            "approvalCount" : 1
           } ]
         },
         "properties" : {
@@ -5884,7 +6238,7 @@
           "r_state" : "r_state",
           "action" : "action",
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-          "approvalCount" : 6
+          "approvalCount" : 1
         },
         "properties" : {
           "uuid" : {
@@ -5987,7 +6341,7 @@
           "r_state" : "r_state",
           "action" : "action",
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-          "approvalCount" : 1
+          "approvalCount" : 5
         },
         "properties" : {
           "uuid" : {
@@ -6028,6 +6382,127 @@
       "SystemTransients" : {
         "description" : "Represents a collection of all the entities within the system that are currently being modified. Response may include only the transients for certain requested entity types.\n",
         "example" : {
+          "teams" : [ {
+            "teamName" : "teamName",
+            "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "capturerName" : "capturerName",
+            "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+            "latestTransientTeamDataPolicies" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "requiredApprovalCount" : "",
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "requiredApprovalCount" : "",
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            } ],
+            "latestTransientTeamChildTeams" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : "",
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "childTeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 5
+            }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : "",
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "childTeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 5
+            } ],
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "latestActiveTeamTransient" : {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : 6,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "name" : "name",
+              "description" : "description",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 0
+            }
+          }, {
+            "teamName" : "teamName",
+            "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "capturerName" : "capturerName",
+            "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+            "latestTransientTeamDataPolicies" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "requiredApprovalCount" : "",
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "requiredApprovalCount" : "",
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            } ],
+            "latestTransientTeamChildTeams" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : "",
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "childTeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 5
+            }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : "",
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "childTeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 5
+            } ],
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "latestActiveTeamTransient" : {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : 6,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "name" : "name",
+              "description" : "description",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 0
+            }
+          } ],
           "roles" : [ {
             "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "capturerName" : "capturerName",
@@ -6055,7 +6530,7 @@
             "capturedDate" : "2000-01-23T04:56:07.000+00:00",
             "latestActiveRoleTransient" : {
               "createdAt" : "createdAt",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 6,
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "name" : "name",
@@ -6115,7 +6590,7 @@
             "capturedDate" : "2000-01-23T04:56:07.000+00:00",
             "latestActiveRoleTransient" : {
               "createdAt" : "createdAt",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 6,
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "name" : "name",
@@ -6156,6 +6631,12 @@
               "$ref" : "#/components/schemas/SystemTransientsRole"
             },
             "type" : "array"
+          },
+          "teams" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SystemTransientsTeam"
+            },
+            "type" : "array"
           }
         },
         "type" : "object"
@@ -6189,7 +6670,7 @@
           "capturedDate" : "2000-01-23T04:56:07.000+00:00",
           "latestActiveRoleTransient" : {
             "createdAt" : "createdAt",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 6,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "name" : "name",
@@ -6246,16 +6727,118 @@
             "$ref" : "#/components/schemas/RoleTransientsItem"
           },
           "latestTransientRoleFunctions" : {
-            "description" : "A list of the latest transient role function assignments for this transient role.",
+            "description" : "A list of the latest (most recent only) transient role function assignments for this transient role.",
             "items" : {
               "$ref" : "#/components/schemas/RoleFunctionTransient"
             },
             "type" : "array"
           },
           "latestTransientRoleChildRoles" : {
-            "description" : "A list of the latest transient role - child role assignments for this transient role.",
+            "description" : "A list of the latest (most recent one per relation) transient role - child role assignments for this transient role.",
             "items" : {
               "$ref" : "#/components/schemas/RoleChildRoleTransient"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "SystemTransientsTeam" : {
+        "description" : "Represents a collection of all the latest transients for teams with any changes.\n",
+        "example" : {
+          "teamName" : "teamName",
+          "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "capturerName" : "capturerName",
+          "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+          "latestTransientTeamDataPolicies" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : "",
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : "",
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          } ],
+          "latestTransientTeamChildTeams" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : "",
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "childTeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : "",
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "childTeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          } ],
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "latestActiveTeamTransient" : {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 6,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "name" : "name",
+            "description" : "description",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 0
+          }
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "teamName" : {
+            "type" : "string"
+          },
+          "capturerUuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "capturerName" : {
+            "type" : "string"
+          },
+          "capturedDate" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "latestActiveTeamTransient" : {
+            "$ref" : "#/components/schemas/TeamBaseTeamTransient"
+          },
+          "latestTransientTeamDataPolicies" : {
+            "description" : "A list of the latest (most recent one per relation) transient team - data policy assignment changes for this transient role.",
+            "items" : {
+              "$ref" : "#/components/schemas/TeamDataPolicyTransient"
+            },
+            "type" : "array"
+          },
+          "latestTransientTeamChildTeams" : {
+            "description" : "A list of the latest (most recent one per relation) transient team - child team assignment changes for this transient role.",
+            "items" : {
+              "$ref" : "#/components/schemas/TeamChildTeamTransient"
             },
             "type" : "array"
           }
@@ -7252,6 +7835,27 @@
         },
         "type" : "object"
       },
+      "TeamSimple" : {
+        "description" : "Models a simple representation of a team. This model does not include any of the team's relations.\n",
+        "example" : {
+          "name" : "name",
+          "description" : "description",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
       "TeamSubmit" : {
         "description" : "Model used for creating or updating a team. Team can be optionally associated with a sub-realm by specifying the 'subRealmId' of the sub-realm.\n",
         "example" : {
@@ -7300,6 +7904,512 @@
           }
         },
         "required" : [ "description", "name", "uuid" ],
+        "type" : "object"
+      },
+      "TeamTransient" : {
+        "description" : "Represents a transient state of a team and all the relations that can potentially have their assignment status changed, such as child teams or data policies.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "requiredApprovalCount" : 6,
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "name" : "name",
+          "description" : "description",
+          "r_state" : "r_state",
+          "action" : "action",
+          "latestTransientTeamDataPolicies" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : "",
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : "",
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          } ],
+          "latestTransientTeamChildTeams" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : "",
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "childTeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : "",
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "childTeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          } ],
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 0
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "roleId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current approval count.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "createdBy" : {
+            "description" : "The UUID of the user who created this transient state record.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "description" : "The date that this transient state was created.",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "latestTransientTeamDataPolicies" : {
+            "description" : "A list of the latest transient team data policy assignments for this transient team.",
+            "items" : {
+              "$ref" : "#/components/schemas/TeamDataPolicyTransient"
+            },
+            "type" : "array"
+          },
+          "latestTransientTeamChildTeams" : {
+            "description" : "A list of the latest transient team - child team assignments for this transient team.",
+            "items" : {
+              "$ref" : "#/components/schemas/TeamChildTeamTransient"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "TeamTransients" : {
+        "description" : "Represents the current active transients for a team and it's relations.\n",
+        "example" : {
+          "latestActiveTeamTransients" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 6,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "name" : "name",
+            "description" : "description",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 0
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 6,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "name" : "name",
+            "description" : "description",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 0
+          } ],
+          "latestTransientRoleChildRoles" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : "",
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "childTeam" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : "",
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "childTeam" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          } ],
+          "latestTransientTeamDataPolicies" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : "",
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "dataPolicy" : {
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "Name" : "Name"
+            },
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : "",
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "dataPolicy" : {
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "Name" : "Name"
+            },
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          } ]
+        },
+        "properties" : {
+          "latestActiveTeamTransients" : {
+            "description" : "A list of the latest active (since last decline or released state) transient base team records for this team.",
+            "items" : {
+              "$ref" : "#/components/schemas/TeamBaseTeamTransient"
+            },
+            "type" : "array"
+          },
+          "latestTransientTeamDataPolicies" : {
+            "description" : "A list of the latest active (since last decline or released state) transient data policy assignment changes for this team.",
+            "items" : {
+              "$ref" : "#/components/schemas/TeamDataPolicyDetailedTransient"
+            },
+            "type" : "array"
+          },
+          "latestTransientRoleChildRoles" : {
+            "description" : "A list of the latest active (since last decline or released state) transient child team assignment changes for this team.",
+            "items" : {
+              "$ref" : "#/components/schemas/TeamChildTeamDetailedTransient"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "TeamBaseTeamTransient" : {
+        "description" : "Represents a transient state of an actual team record, excluding any transient relations.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "requiredApprovalCount" : 6,
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "name" : "name",
+          "description" : "description",
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 0
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "roleId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current approval count.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "createdBy" : {
+            "description" : "The UUID of the user who created this transient state record.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "description" : "The date that this transient state was created.",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "TeamDataPolicyTransient" : {
+        "description" : "Represents a transient state of a team data-polocy assignment.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "requiredApprovalCount" : "",
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 1
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "teamId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "dataPolicyId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released."
+          },
+          "createdBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "TeamDataPolicyDetailedTransient" : {
+        "description" : "Represents a transient state of a team data-polocy assignment.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "requiredApprovalCount" : "",
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "dataPolicy" : {
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "Name" : "Name"
+          },
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 1
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "teamId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "dataPolicy" : {
+            "$ref" : "#/components/schemas/DataPolicySimple"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released."
+          },
+          "createdBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "TeamChildTeamTransient" : {
+        "description" : "Represents a transient state of a team child-team assignment.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "requiredApprovalCount" : "",
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "childTeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 5
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "teamId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "childTeamId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released."
+          },
+          "createdBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "TeamChildTeamDetailedTransient" : {
+        "description" : "Represents a transient state of a team child-team assignment.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "requiredApprovalCount" : "",
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "r_state" : "r_state",
+          "action" : "action",
+          "childTeam" : {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          },
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 5
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "teamId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "childTeam" : {
+            "$ref" : "#/components/schemas/TeamSimple"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released."
+          },
+          "createdBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "TransientTeamId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "TransientTeamDataPolicyId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "DataPolicyId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "DataPolicySimple" : {
+        "description" : "A simple (no relations) representation of a data policy.\n",
+        "example" : {
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "Name" : "Name"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "Name" : {
+            "type" : "string"
+          }
+        },
         "type" : "object"
       },
       "Oauth2ClientSubmit" : {

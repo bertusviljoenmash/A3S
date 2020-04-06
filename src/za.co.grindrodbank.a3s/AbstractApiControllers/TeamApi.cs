@@ -33,6 +33,30 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
     public abstract class TeamApiController : ControllerBase
     { 
         /// <summary>
+        /// Approve all current transient states for a team.
+        /// </summary>
+        /// <remarks>Approve all current transient states for a team, given the team&#39;s UUID.</remarks>
+        /// <param name="teamId">The UUID of the team.</param>
+        /// <response code="200">OK.</response>
+        /// <response code="400">Bad Request.</response>
+        /// <response code="401">Not authenticated.</response>
+        /// <response code="403">Forbidden - You are not authorized to update the team.</response>
+        /// <response code="404">Teams not found.</response>
+        /// <response code="422">Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.</response>
+        /// <response code="500">An unexpected error occurred.</response>
+        [HttpPatch]
+        [Route("/teams/{teamId}/approve", Name = "ApproveTeam")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(TeamTransient))]
+        [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 404, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 422, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
+        public abstract Task<IActionResult> ApproveTeamAsync([FromRoute][Required]Guid teamId);
+
+        /// <summary>
         /// Creates a new team.
         /// </summary>
         /// <remarks>Create a new team.</remarks>
@@ -57,6 +81,54 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         public abstract Task<IActionResult> CreateTeamAsync([FromBody]TeamSubmit teamSubmit);
 
         /// <summary>
+        /// Decline all current transient states for a team.
+        /// </summary>
+        /// <remarks>Decline all current transient states for a team, given the team&#39;s UUID.</remarks>
+        /// <param name="teamId">The UUID of the team.</param>
+        /// <response code="200">OK.</response>
+        /// <response code="400">Bad Request.</response>
+        /// <response code="401">Not authenticated.</response>
+        /// <response code="403">Forbidden - You are not authorized to update the team.</response>
+        /// <response code="404">Teams not found.</response>
+        /// <response code="422">Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.</response>
+        /// <response code="500">An unexpected error occurred.</response>
+        [HttpPatch]
+        [Route("/teams/{teamId}/decline", Name = "DeclineTeam")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(TeamTransient))]
+        [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 404, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 422, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
+        public abstract Task<IActionResult> DeclineTeamAsync([FromRoute][Required]Guid teamId);
+
+        /// <summary>
+        /// Delete a team.
+        /// </summary>
+        /// <remarks>Deletes a team by it&#39;s UUID.</remarks>
+        /// <param name="teamId">The UUID of the team.</param>
+        /// <response code="200">OK.</response>
+        /// <response code="400">Bad Request.</response>
+        /// <response code="401">Not authenticated.</response>
+        /// <response code="403">Forbidden - You are not authorized to update the team.</response>
+        /// <response code="404">Teams not found.</response>
+        /// <response code="422">Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.</response>
+        /// <response code="500">An unexpected error occurred.</response>
+        [HttpDelete]
+        [Route("/teams/{teamId}", Name = "DeleteTeam")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(TeamTransient))]
+        [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 404, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 422, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
+        public abstract Task<IActionResult> DeleteTeamAsync([FromRoute][Required]Guid teamId);
+
+        /// <summary>
         /// Get a team.
         /// </summary>
         /// <remarks>Get a team by its UUID.</remarks>
@@ -77,6 +149,28 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         [ProducesResponseType(statusCode: 404, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
         public abstract Task<IActionResult> GetTeamAsync([FromRoute][Required]Guid teamId);
+
+        /// <summary>
+        /// Get the current active (all transients since last declined or released state) for a team and it&#39;s relations.
+        /// </summary>
+        /// <remarks>Get the latest transients for a team by the team&#39;s UUID.</remarks>
+        /// <param name="teamId">team</param>
+        /// <response code="200">OK.</response>
+        /// <response code="400">Bad Request.</response>
+        /// <response code="401">Not authenticated.</response>
+        /// <response code="403">Forbidden - You are not authorized to access the team.</response>
+        /// <response code="404">Team not found.</response>
+        /// <response code="500">An unexpected error occurred.</response>
+        [HttpGet]
+        [Route("/teams/{teamId}/transients", Name = "GetTeamTransients")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(TeamTransients))]
+        [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 404, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
+        public abstract Task<IActionResult> GetTeamTransientsAsync([FromRoute][Required]Guid teamId);
 
         /// <summary>
         /// Search for teams.
