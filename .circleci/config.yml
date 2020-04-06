@@ -96,6 +96,7 @@ jobs:
       - run: sudo apt install nodejs
       # Install Newman Using NPM
       - run: npm install -g newman
+      - run: npm install -g newman-reporter-htmlextra
       - run: newman run -h
       # Add the required hostname entries for the integration tests.
       - run: echo 127.0.0.1 a3s-identity-server | sudo tee -a /etc/hosts
@@ -112,7 +113,21 @@ jobs:
       - run: docker-compose -f ~/repo/quickstart/docker-compose.yml up -d
       - run: sleep 5
       # # Run the Newman orb to execute the collection against the quickstart environment.
-      - run: newman run ~/repo/tests/postman-integration-tests/A3S-integration.postman_collection.json -r cli -e ~/repo/postman/A3S-quickstart.postman_environment.json
+      - run: |
+          mkdir ~/repo/results
+          mkdir ~/repo/results/junit
+          
+          sed -i '1s/^/\xef\xbb\xbf/' ~/repo/tests/postman-integration-tests/A3S-integration.postman_collection.json
+          sed -i '1s/^/\xef\xbb\xbf/' ~/repo/postman/A3S-quickstart.postman_environment.json
+           
+          newman run ~/repo/tests/postman-integration-tests/A3S-integration.postman_collection.json -r cli,htmlextra,junit -e ~/repo/postman/A3S-quickstart.postman_environment.json --reporter-htmlextra-export ~/repo/results --reporter-htmlextra-browserTitle "A3S Test Dashboard" --reporter-htmlextra-title "A3S Test Dashboard" --reporter-junit-export ~/repo/results/junit/results.xml
+          
+      - store_artifacts:
+          path: ~/repo/results
+          destination: integration-test-results   
+
+      - store_test_results:
+          path: ~/repo/results/junit
 
   generate-axios-client:
     working_directory: ~/repo
