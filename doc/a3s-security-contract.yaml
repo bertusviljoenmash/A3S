@@ -4,7 +4,6 @@
 # More information at: https://github.com/GrindrodBank/A3S/blob/master/doc/security-contracts.md
 #
 name: A3S Security Contract
-generated: 2019-11-11 14:26:00 +02:00
 applications:
     # This value will be used to create the client scope within the Identity Server. Therefore, it cannot contain any spaces, and should follow a fully smaller case convention.
   - fullname: a3s   
@@ -154,20 +153,19 @@ applications:
 
 clients:
   - clientId: test-client-api
-    name: "Test client"
+    name: "A3S Test client"
     allowedGrantTypes:
       - authorization_code
       - password
     redirectUris:
-      - "https://www.getpostman.com/oauth2/callback"
+      - "{{ .Values.configuration.securityContract.client.redirectUri }}"
     postLogoutRedirectUris:
-      - "https://www.getpostman.com"
+      - "{{ .Values.configuration.securityContract.client.postLogoutRedirectUri }}"
     allowedCorsOrigins:
-      - "https://www.getpostman.com"
+      - "{{ .Values.configuration.securityContract.client.allowedCorsOrigin }}"
     allowedScopes:
       - "openid"
       - "profile"
-      - "dokuti"
       - "a3s"
     clientSecrets:
       - "secret"
@@ -292,101 +290,15 @@ defaultConfigurations:
         description: An A3S Role for managing changes to system entities.
         functions:
           - "a3s.changeReview"
-    # Defines a section for declaring new LDAP Authentication Modes.
-    ldapAuthenticationModes:
-      - name: open-ldap-dev
-        hostName: localhost
-        port: 389
-        isLdaps: false
-        # Note: The admin account username for the LDAP profile.
-        account: "admin"
-        baseDn: "dc=bigbaobab,dc=org"
-        # The LDAP Attribute definitions
-        ldapAttributes:
-          - userField: "firstName"
-            ldapField: "givenName"
-          - userField: "surname"
-            ldapField: "sn"
-          - userField: "userName"
-            ldapField: "userPrincipalName"
-          - userField: "email"
-            ldapField: "mail"
-          - userField: "avatar"
-            ldapField: "jpegPhoto"
     users:
       - username: a3s-admin
         name: a3s-admin
         surname: system user
         email: a3s-admin@localhost
         # Note: Passwords require at least one capital, one number and one non-alpha-numeric character.
-        password: "Password1#"
+        password: "{{ .Values.configuration.securityContract.adminUserPassword }}"
         # The roles in this list will be assigned to the user. If the roles don't exist, they will NOT be created and will simply be ignored.
         roles:
           - "A3S Super Admin"
-        customAttributes:
-          - key: identity-number
-            value: "8211193422082"
-          - key: agent-id
-            value: "id117"
-      - username: a3s-user1
-        name: a3s user 1
-        surname: some surname
-        email: a3s-user1@localhost
-        password: "Password1#"
-        roles:
-          - "A3S User Manager"
-        customAttributes:
-          - key: identity-number
-            value: "8210173422081"
-          - key: agent-id
-            value: "id191"
-      - username: a3s-ops-admin
-        name: a3s ops admin
-        surname: some surname
-        email: a3s-ops@localhost
-        password: "Password1#"
-        roles:
-          - "A3S Authentication Manager Compound Role"
-        customAttributes:
-          - key: identity-number
-            value: "8209123422083"
-          - key: agent-id
-            value: "id122"
-      - username: a3s-ldap-user
-        name: a3s ldap user
-        surname: some surname
-        email: a3s-ldap@localhost
-        password: "Password1#"
-        ldapAuthenticationMode: open-ldap-dev
-        roles:
-          - "A3S Authentication Manager Compound Role"
-        customAttributes:
-          - key: identity-number
-            value: "8207253422082"
-          - key: agent-id
-            value: "id1233"
 
-    teams:
-      - name: default-team
-        description: A simple test default team.
-        users:
-          - a3s-user1
-          - a3s-ops-admin
-        # Data policies can be assigned to teams, applying all the associated policies to members of teams.
-        # Data policies are declared by micro-services within the 'applications' section of the security contract. Micro-services enforce data policies.
-        dataPolicies:
-          - a3s.viewYourTeamsOnly
-
-      - name: admin-team
-        description: A simple test admin team.
-        users:
-          - a3s-admin
-      - name: ops-team
-        description: A simple test ops team.
-        users:
-          - a3s-ops-admin
-      - name: special-team
-        description: A compound team
-        teams:
-          - admin-team
-          - ops-team
+   
