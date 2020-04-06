@@ -4608,12 +4608,12 @@ components:
           type: string
           format: date-time
         latestTransientTeamDataPolicies:
-          description: A list of the latest transient role function assignments for this transient role.
+          description: A list of the latest transient team data policy assignments for this transient team.
           type: array
           items:
             $ref: '#/components/schemas/TeamDataPolicyTransient'
         latestTransientTeamChildTeams:
-          description: A list of the latest transient role - child role assignments for this transient role.
+          description: A list of the latest transient team - child team assignments for this transient team.
           type: array
           items:
             $ref: '#/components/schemas/TeamChildTeamTransient'
@@ -4637,7 +4637,7 @@ components:
           description: A list of the latest active (since last decline or released state) transient child team assignment changes for this team.
           type: array
           items:
-            $ref: '#/components/schemas/RoleChildRoleDetailedTransient'
+            $ref: '#/components/schemas/TeamChildTeamDetailedTransient'
             
     TeamBaseTeamTransient:
       description: |
