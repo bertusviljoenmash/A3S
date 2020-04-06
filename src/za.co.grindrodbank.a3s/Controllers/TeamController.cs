@@ -36,11 +36,26 @@ namespace za.co.grindrodbank.a3s.Controllers
             this.mapper = mapper;
         }
 
+        public override Task<IActionResult> ApproveTeamAsync([FromRoute, Required] Guid teamId)
+        {
+            throw new NotImplementedException();
+        }
+
         [Authorize(Policy = "permission:a3s.teams.create")]
         public async override Task<IActionResult> CreateTeamAsync([FromBody] TeamSubmit teamSubmit)
         {
             var loggedOnUser = ClaimsHelper.GetScalarClaimValue<Guid>(User, ClaimTypes.NameIdentifier, Guid.Empty);
             return Ok(await teamService.CreateAsync(teamSubmit, loggedOnUser));
+        }
+
+        public override Task<IActionResult> DeclineTeamAsync([FromRoute, Required] Guid teamId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<IActionResult> DeleteTeamAsync([FromRoute, Required] Guid teamId)
+        {
+            throw new NotImplementedException();
         }
 
         [Authorize(Policy = "permission:a3s.teams.read")]
@@ -55,6 +70,11 @@ namespace za.co.grindrodbank.a3s.Controllers
                 return NotFound();
 
             return Ok(team);
+        }
+
+        public override Task<IActionResult> GetTeamTransientsAsync([FromRoute, Required] Guid teamId)
+        {
+            throw new NotImplementedException();
         }
 
         [Authorize(Policy = "permission:a3s.teams.read")]
