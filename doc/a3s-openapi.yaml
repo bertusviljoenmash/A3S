@@ -1541,6 +1541,233 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+                
+    delete:
+      tags:
+        - Team
+      summary: Delete a team.
+      description: Deletes a team by it's UUID.
+      operationId: deleteTeam
+      parameters:
+        - name: teamId
+          in: path
+          description: The UUID of the team.
+          required: true
+          schema:
+            $ref: '#/components/schemas/TeamId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamTransient'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to update the team.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Teams not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  '/teams/{teamId}/transients':
+    get:
+      tags:
+        - Team
+      summary: Get the current active (all transients since last declined or released state) for a team and it's relations.
+      description: Get the latest transients for a team by the team's UUID.
+      operationId: getTeamTransients
+      parameters:
+        - name: teamId
+          in: path
+          description: team
+          required: true
+          schema:
+            $ref: '#/components/schemas/TeamId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamTransients'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the team.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Team not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+                
+  '/teams/{teamId}/approve':              
+    patch:
+      tags:
+        - Team
+      summary: Approve all current transient states for a team.
+      description: Approve all current transient states for a team, given the team's UUID.
+      operationId: approveTeam
+      parameters:
+        - name: teamId
+          in: path
+          description: The UUID of the team.
+          required: true
+          schema:
+            $ref: '#/components/schemas/TeamId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamTransient'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to update the team.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Teams not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  '/teams/{teamId}/decline':              
+    patch:
+      tags:
+        - Team
+      summary: Decline all current transient states for a team.
+      description: Decline all current transient states for a team, given the team's UUID.
+      operationId: declineTeam
+      parameters:
+        - name: teamId
+          in: path
+          description: The UUID of the team.
+          required: true
+          schema:
+            $ref: '#/components/schemas/TeamId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamTransient'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to update the team.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Teams not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+                
+  
   #endregion
   
   #region - Clients
@@ -3646,7 +3873,9 @@ components:
           type: string
         approvalCount:
           type: integer
+          description: The current amount of approvals for this transient.
         requiredApprovalCount:
+          type: integer
           description: The required approval count before this entity is released.
         changedBy:
           type: string
@@ -3685,7 +3914,7 @@ components:
         roleId:
           $ref: '#/components/schemas/RoleId'
         functionId:
-          $ref: '#/components/schemas/RoleId'
+          $ref: '#/components/schemas/FunctionId'
         r_state:
           type: string
         action:
@@ -3789,6 +4018,10 @@ components:
           type: array
           items: 
             $ref: '#/components/schemas/SystemTransientsRole'
+        teams:
+          type: array
+          items: 
+            $ref: '#/components/schemas/SystemTransientsTeam'
             
     SystemTransientsRole:
       description: |
@@ -3809,15 +4042,44 @@ components:
         latestActiveRoleTransient:
             $ref: '#/components/schemas/RoleTransientsItem'
         latestTransientRoleFunctions:
-          description: A list of the latest transient role function assignments for this transient role.
+          description: A list of the latest (most recent only) transient role function assignments for this transient role.
           type: array
           items:
             $ref: '#/components/schemas/RoleFunctionTransient'
         latestTransientRoleChildRoles:
-          description: A list of the latest transient role - child role assignments for this transient role.
+          description: A list of the latest (most recent one per relation) transient role - child role assignments for this transient role.
           type: array
           items:
             $ref: '#/components/schemas/RoleChildRoleTransient'
+            
+    SystemTransientsTeam:
+      description: |
+        Represents a collection of all the latest transients for teams with any changes.
+      type: object
+      properties:
+        uuid : 
+          $ref: '#/components/schemas/TeamId'
+        teamName: 
+          type: string
+        capturerUuid:
+          $ref: '#/components/schemas/UserId'
+        capturerName: 
+          type: string
+        capturedDate: 
+          type: string
+          format: date-time
+        latestActiveTeamTransient:
+          $ref: '#/components/schemas/TeamBaseTeamTransient'
+        latestTransientTeamDataPolicies:
+          description: A list of the latest (most recent one per relation) transient team - data policy assignment changes for this transient role.
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamDataPolicyTransient'
+        latestTransientTeamChildTeams:
+          description: A list of the latest (most recent one per relation) transient team - child team assignment changes for this transient role.
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamChildTeamTransient'
     # Begin Region - Transients
     
     # End Region - Transients
@@ -4269,7 +4531,18 @@ components:
             $ref: '#/components/schemas/TermsOfServiceId'
         subRealmId:
           $ref: '#/components/schemas/SubRealmId'
-        
+          
+    TeamSimple:
+      description: |
+        Models a simple representation of a team. This model does not include any of the team's relations.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TeamId'
+        name:
+          type: string
+        description:
+          type: string
 
     TeamSubmit:
       description: |
@@ -4302,8 +4575,234 @@ components:
             nullable: true
         subRealmId:
           $ref: '#/components/schemas/SubRealmId'
-        
+          
+    TeamTransient:
+      description: |
+        Represents a transient state of a team and all the relations that can potentially have their assignment status changed, such as child teams or data policies.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientTeamId'
+        roleId:
+          $ref: '#/components/schemas/TeamId'
+        name:
+          type: string
+        description:
+          type: string
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          description: The current approval count.
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+          type: integer
+        createdBy:
+          description: The UUID of the user who created this transient state record.
+          type: string
+          format: uuid
+        createdAt:
+          description: The date that this transient state was created.
+          type: string
+          format: date-time
+        latestTransientTeamDataPolicies:
+          description: A list of the latest transient team data policy assignments for this transient team.
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamDataPolicyTransient'
+        latestTransientTeamChildTeams:
+          description: A list of the latest transient team - child team assignments for this transient team.
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamChildTeamTransient'
+            
+    TeamTransients:
+      description: |
+        Represents the current active transients for a team and it's relations.
+      type: object
+      properties:
+        latestActiveTeamTransients:
+          description: A list of the latest active (since last decline or released state) transient base team records for this team.
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamBaseTeamTransient'
+        latestTransientTeamDataPolicies:
+          description: A list of the latest active (since last decline or released state) transient data policy assignment changes for this team.
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamDataPolicyDetailedTransient'
+        latestTransientRoleChildRoles:
+          description: A list of the latest active (since last decline or released state) transient child team assignment changes for this team.
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamChildTeamDetailedTransient'
+            
+    TeamBaseTeamTransient:
+      description: |
+        Represents a transient state of an actual team record, excluding any transient relations.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientTeamId'
+        roleId:
+          $ref: '#/components/schemas/TeamId'
+        name:
+          type: string
+        description:
+          type: string
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          description: The current approval count.
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+          type: integer
+        createdBy:
+          description: The UUID of the user who created this transient state record.
+          type: string
+          format: uuid
+        createdAt:
+          description: The date that this transient state was created.
+          type: string
+          format: date-time
+            
+    TeamDataPolicyTransient:
+      description: |
+        Represents a transient state of a team data-polocy assignment.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientTeamDataPolicyId'
+        teamId:
+          $ref: '#/components/schemas/TeamId'
+        dataPolicyId:
+          $ref: '#/components/schemas/DataPolicyId'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+          
+    TeamDataPolicyDetailedTransient:
+      description: |
+        Represents a transient state of a team data-polocy assignment.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientTeamDataPolicyId'
+        teamId:
+          $ref: '#/components/schemas/TeamId'
+        dataPolicy:
+          $ref: '#/components/schemas/DataPolicySimple'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+          
+    TeamChildTeamTransient:
+      description: |
+        Represents a transient state of a team child-team assignment.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientTeamDataPolicyId'
+        teamId:
+          $ref: '#/components/schemas/TeamId'
+        childTeamId:
+          $ref: '#/components/schemas/TeamId'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+          
+    TeamChildTeamDetailedTransient:
+      description: |
+        Represents a transient state of a team child-team assignment.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientTeamDataPolicyId'
+        teamId:
+          $ref: '#/components/schemas/TeamId'
+        childTeam:
+          $ref: '#/components/schemas/TeamSimple'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+            
+    TransientTeamId:
+      type: string
+      format: uuid
+      
+    TransientTeamDataPolicyId:
+      type: string
+      format: uuid
+      
     # End Region -Team
+    
+    # Region - Data Policies
+    
+    DataPolicyId:
+      type: string
+      format: uuid
+    
+    DataPolicySimple:
+      description: |
+        A simple (no relations) representation of a data policy.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/DataPolicyId'
+        Name:
+          type: string
+          
+    # End Region - Data Policies
+    
     
     # Region -  Clients
     Oauth2ClientSubmit:

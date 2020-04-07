@@ -27,22 +27,28 @@ using za.co.grindrodbank.a3s.Converters;
 namespace za.co.grindrodbank.a3s.A3SApiResources
 { 
     /// <summary>
-    /// Represents a collection of all the entities within the system that are currently being modified. Response may include only the transients for certain requested entity types. 
+    /// Models a simple representation of a team. This model does not include any of the team&#39;s relations. 
     /// </summary>
     [DataContract]
-    public partial class SystemTransients : IEquatable<SystemTransients>
+    public partial class TeamSimple : IEquatable<TeamSimple>
     { 
         /// <summary>
-        /// Gets or Sets Roles
+        /// Gets or Sets Uuid
         /// </summary>
-        [DataMember(Name="roles", EmitDefaultValue=false)]
-        public List<SystemTransientsRole> Roles { get; set; }
+        [DataMember(Name="uuid", EmitDefaultValue=false)]
+        public Guid Uuid { get; set; }
 
         /// <summary>
-        /// Gets or Sets Teams
+        /// Gets or Sets Name
         /// </summary>
-        [DataMember(Name="teams", EmitDefaultValue=false)]
-        public List<SystemTransientsTeam> Teams { get; set; }
+        [DataMember(Name="name", EmitDefaultValue=false)]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Description
+        /// </summary>
+        [DataMember(Name="description", EmitDefaultValue=false)]
+        public string Description { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -51,9 +57,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class SystemTransients {\n");
-            sb.Append("  Roles: ").Append(Roles).Append("\n");
-            sb.Append("  Teams: ").Append(Teams).Append("\n");
+            sb.Append("class TeamSimple {\n");
+            sb.Append("  Uuid: ").Append(Uuid).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -76,31 +83,34 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((SystemTransients)obj);
+            return obj.GetType() == GetType() && Equals((TeamSimple)obj);
         }
 
         /// <summary>
-        /// Returns true if SystemTransients instances are equal
+        /// Returns true if TeamSimple instances are equal
         /// </summary>
-        /// <param name="other">Instance of SystemTransients to be compared</param>
+        /// <param name="other">Instance of TeamSimple to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(SystemTransients other)
+        public bool Equals(TeamSimple other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    Roles == other.Roles ||
-                    Roles != null &&
-                    other.Roles != null &&
-                    Roles.SequenceEqual(other.Roles)
+                    Uuid == other.Uuid ||
+                    Uuid != null &&
+                    Uuid.Equals(other.Uuid)
                 ) && 
                 (
-                    Teams == other.Teams ||
-                    Teams != null &&
-                    other.Teams != null &&
-                    Teams.SequenceEqual(other.Teams)
+                    Name == other.Name ||
+                    Name != null &&
+                    Name.Equals(other.Name)
+                ) && 
+                (
+                    Description == other.Description ||
+                    Description != null &&
+                    Description.Equals(other.Description)
                 );
         }
 
@@ -114,10 +124,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Roles != null)
-                    hashCode = hashCode * 59 + Roles.GetHashCode();
-                    if (Teams != null)
-                    hashCode = hashCode * 59 + Teams.GetHashCode();
+                    if (Uuid != null)
+                    hashCode = hashCode * 59 + Uuid.GetHashCode();
+                    if (Name != null)
+                    hashCode = hashCode * 59 + Name.GetHashCode();
+                    if (Description != null)
+                    hashCode = hashCode * 59 + Description.GetHashCode();
                 return hashCode;
             }
         }
@@ -125,12 +137,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(SystemTransients left, SystemTransients right)
+        public static bool operator ==(TeamSimple left, TeamSimple right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(SystemTransients left, SystemTransients right)
+        public static bool operator !=(TeamSimple left, TeamSimple right)
         {
             return !Equals(left, right);
         }

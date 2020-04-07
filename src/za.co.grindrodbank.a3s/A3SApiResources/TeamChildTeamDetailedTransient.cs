@@ -27,35 +27,28 @@ using za.co.grindrodbank.a3s.Converters;
 namespace za.co.grindrodbank.a3s.A3SApiResources
 { 
     /// <summary>
-    /// Represents a transient state of a role. 
+    /// Represents a transient state of a team child-team assignment. 
     /// </summary>
     [DataContract]
-    public partial class RoleTransientsItem : IEquatable<RoleTransientsItem>
+    public partial class TeamChildTeamDetailedTransient : IEquatable<TeamChildTeamDetailedTransient>
     { 
         /// <summary>
-        /// A unique ID for a transient role record.
+        /// Gets or Sets Uuid
         /// </summary>
-        /// <value>A unique ID for a transient role record.</value>
         [DataMember(Name="uuid", EmitDefaultValue=false)]
         public Guid Uuid { get; set; }
 
         /// <summary>
-        /// Gets or Sets RoleId
+        /// Gets or Sets TeamId
         /// </summary>
-        [DataMember(Name="roleId", EmitDefaultValue=false)]
-        public Guid RoleId { get; set; }
+        [DataMember(Name="teamId", EmitDefaultValue=false)]
+        public Guid TeamId { get; set; }
 
         /// <summary>
-        /// Gets or Sets Name
+        /// Gets or Sets ChildTeam
         /// </summary>
-        [DataMember(Name="name", EmitDefaultValue=false)]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Description
-        /// </summary>
-        [DataMember(Name="description", EmitDefaultValue=false)]
-        public string Description { get; set; }
+        [DataMember(Name="childTeam", EmitDefaultValue=false)]
+        public TeamSimple ChildTeam { get; set; }
 
         /// <summary>
         /// Gets or Sets RState
@@ -70,9 +63,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public string Action { get; set; }
 
         /// <summary>
-        /// The current amount of approvals for this transient.
+        /// Gets or Sets ApprovalCount
         /// </summary>
-        /// <value>The current amount of approvals for this transient.</value>
         [DataMember(Name="approvalCount", EmitDefaultValue=false)]
         public int ApprovalCount { get; set; }
 
@@ -81,19 +73,19 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         /// </summary>
         /// <value>The required approval count before this entity is released.</value>
         [DataMember(Name="requiredApprovalCount", EmitDefaultValue=false)]
-        public int RequiredApprovalCount { get; set; }
+        public Object RequiredApprovalCount { get; set; }
 
         /// <summary>
-        /// Gets or Sets ChangedBy
+        /// Gets or Sets CreatedBy
         /// </summary>
-        [DataMember(Name="changedBy", EmitDefaultValue=false)]
-        public Guid ChangedBy { get; set; }
+        [DataMember(Name="createdBy", EmitDefaultValue=false)]
+        public Guid CreatedBy { get; set; }
 
         /// <summary>
         /// Gets or Sets CreatedAt
         /// </summary>
         [DataMember(Name="createdAt", EmitDefaultValue=false)]
-        public string CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -102,16 +94,15 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class RoleTransientsItem {\n");
+            sb.Append("class TeamChildTeamDetailedTransient {\n");
             sb.Append("  Uuid: ").Append(Uuid).Append("\n");
-            sb.Append("  RoleId: ").Append(RoleId).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  TeamId: ").Append(TeamId).Append("\n");
+            sb.Append("  ChildTeam: ").Append(ChildTeam).Append("\n");
             sb.Append("  RState: ").Append(RState).Append("\n");
             sb.Append("  Action: ").Append(Action).Append("\n");
             sb.Append("  ApprovalCount: ").Append(ApprovalCount).Append("\n");
             sb.Append("  RequiredApprovalCount: ").Append(RequiredApprovalCount).Append("\n");
-            sb.Append("  ChangedBy: ").Append(ChangedBy).Append("\n");
+            sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  CreatedAt: ").Append(CreatedAt).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -135,15 +126,15 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((RoleTransientsItem)obj);
+            return obj.GetType() == GetType() && Equals((TeamChildTeamDetailedTransient)obj);
         }
 
         /// <summary>
-        /// Returns true if RoleTransientsItem instances are equal
+        /// Returns true if TeamChildTeamDetailedTransient instances are equal
         /// </summary>
-        /// <param name="other">Instance of RoleTransientsItem to be compared</param>
+        /// <param name="other">Instance of TeamChildTeamDetailedTransient to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(RoleTransientsItem other)
+        public bool Equals(TeamChildTeamDetailedTransient other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -155,19 +146,14 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     Uuid.Equals(other.Uuid)
                 ) && 
                 (
-                    RoleId == other.RoleId ||
-                    RoleId != null &&
-                    RoleId.Equals(other.RoleId)
+                    TeamId == other.TeamId ||
+                    TeamId != null &&
+                    TeamId.Equals(other.TeamId)
                 ) && 
                 (
-                    Name == other.Name ||
-                    Name != null &&
-                    Name.Equals(other.Name)
-                ) && 
-                (
-                    Description == other.Description ||
-                    Description != null &&
-                    Description.Equals(other.Description)
+                    ChildTeam == other.ChildTeam ||
+                    ChildTeam != null &&
+                    ChildTeam.Equals(other.ChildTeam)
                 ) && 
                 (
                     RState == other.RState ||
@@ -186,13 +172,13 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                 ) && 
                 (
                     RequiredApprovalCount == other.RequiredApprovalCount ||
-                    
+                    RequiredApprovalCount != null &&
                     RequiredApprovalCount.Equals(other.RequiredApprovalCount)
                 ) && 
                 (
-                    ChangedBy == other.ChangedBy ||
-                    ChangedBy != null &&
-                    ChangedBy.Equals(other.ChangedBy)
+                    CreatedBy == other.CreatedBy ||
+                    CreatedBy != null &&
+                    CreatedBy.Equals(other.CreatedBy)
                 ) && 
                 (
                     CreatedAt == other.CreatedAt ||
@@ -213,22 +199,20 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                 // Suitable nullity checks etc, of course :)
                     if (Uuid != null)
                     hashCode = hashCode * 59 + Uuid.GetHashCode();
-                    if (RoleId != null)
-                    hashCode = hashCode * 59 + RoleId.GetHashCode();
-                    if (Name != null)
-                    hashCode = hashCode * 59 + Name.GetHashCode();
-                    if (Description != null)
-                    hashCode = hashCode * 59 + Description.GetHashCode();
+                    if (TeamId != null)
+                    hashCode = hashCode * 59 + TeamId.GetHashCode();
+                    if (ChildTeam != null)
+                    hashCode = hashCode * 59 + ChildTeam.GetHashCode();
                     if (RState != null)
                     hashCode = hashCode * 59 + RState.GetHashCode();
                     if (Action != null)
                     hashCode = hashCode * 59 + Action.GetHashCode();
                     
                     hashCode = hashCode * 59 + ApprovalCount.GetHashCode();
-                    
+                    if (RequiredApprovalCount != null)
                     hashCode = hashCode * 59 + RequiredApprovalCount.GetHashCode();
-                    if (ChangedBy != null)
-                    hashCode = hashCode * 59 + ChangedBy.GetHashCode();
+                    if (CreatedBy != null)
+                    hashCode = hashCode * 59 + CreatedBy.GetHashCode();
                     if (CreatedAt != null)
                     hashCode = hashCode * 59 + CreatedAt.GetHashCode();
                 return hashCode;
@@ -238,12 +222,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(RoleTransientsItem left, RoleTransientsItem right)
+        public static bool operator ==(TeamChildTeamDetailedTransient left, TeamChildTeamDetailedTransient right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(RoleTransientsItem left, RoleTransientsItem right)
+        public static bool operator !=(TeamChildTeamDetailedTransient left, TeamChildTeamDetailedTransient right)
         {
             return !Equals(left, right);
         }

@@ -27,15 +27,14 @@ using za.co.grindrodbank.a3s.Converters;
 namespace za.co.grindrodbank.a3s.A3SApiResources
 { 
     /// <summary>
-    /// Represents a transient state of a role. 
+    /// Represents a transient state of an actual team record, excluding any transient relations. 
     /// </summary>
     [DataContract]
-    public partial class RoleTransientsItem : IEquatable<RoleTransientsItem>
+    public partial class TeamBaseTeamTransient : IEquatable<TeamBaseTeamTransient>
     { 
         /// <summary>
-        /// A unique ID for a transient role record.
+        /// Gets or Sets Uuid
         /// </summary>
-        /// <value>A unique ID for a transient role record.</value>
         [DataMember(Name="uuid", EmitDefaultValue=false)]
         public Guid Uuid { get; set; }
 
@@ -70,9 +69,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public string Action { get; set; }
 
         /// <summary>
-        /// The current amount of approvals for this transient.
+        /// The current approval count.
         /// </summary>
-        /// <value>The current amount of approvals for this transient.</value>
+        /// <value>The current approval count.</value>
         [DataMember(Name="approvalCount", EmitDefaultValue=false)]
         public int ApprovalCount { get; set; }
 
@@ -84,16 +83,18 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public int RequiredApprovalCount { get; set; }
 
         /// <summary>
-        /// Gets or Sets ChangedBy
+        /// The UUID of the user who created this transient state record.
         /// </summary>
-        [DataMember(Name="changedBy", EmitDefaultValue=false)]
-        public Guid ChangedBy { get; set; }
+        /// <value>The UUID of the user who created this transient state record.</value>
+        [DataMember(Name="createdBy", EmitDefaultValue=false)]
+        public Guid CreatedBy { get; set; }
 
         /// <summary>
-        /// Gets or Sets CreatedAt
+        /// The date that this transient state was created.
         /// </summary>
+        /// <value>The date that this transient state was created.</value>
         [DataMember(Name="createdAt", EmitDefaultValue=false)]
-        public string CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -102,7 +103,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class RoleTransientsItem {\n");
+            sb.Append("class TeamBaseTeamTransient {\n");
             sb.Append("  Uuid: ").Append(Uuid).Append("\n");
             sb.Append("  RoleId: ").Append(RoleId).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
@@ -111,7 +112,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  Action: ").Append(Action).Append("\n");
             sb.Append("  ApprovalCount: ").Append(ApprovalCount).Append("\n");
             sb.Append("  RequiredApprovalCount: ").Append(RequiredApprovalCount).Append("\n");
-            sb.Append("  ChangedBy: ").Append(ChangedBy).Append("\n");
+            sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  CreatedAt: ").Append(CreatedAt).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -135,15 +136,15 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((RoleTransientsItem)obj);
+            return obj.GetType() == GetType() && Equals((TeamBaseTeamTransient)obj);
         }
 
         /// <summary>
-        /// Returns true if RoleTransientsItem instances are equal
+        /// Returns true if TeamBaseTeamTransient instances are equal
         /// </summary>
-        /// <param name="other">Instance of RoleTransientsItem to be compared</param>
+        /// <param name="other">Instance of TeamBaseTeamTransient to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(RoleTransientsItem other)
+        public bool Equals(TeamBaseTeamTransient other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -190,9 +191,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     RequiredApprovalCount.Equals(other.RequiredApprovalCount)
                 ) && 
                 (
-                    ChangedBy == other.ChangedBy ||
-                    ChangedBy != null &&
-                    ChangedBy.Equals(other.ChangedBy)
+                    CreatedBy == other.CreatedBy ||
+                    CreatedBy != null &&
+                    CreatedBy.Equals(other.CreatedBy)
                 ) && 
                 (
                     CreatedAt == other.CreatedAt ||
@@ -227,8 +228,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + ApprovalCount.GetHashCode();
                     
                     hashCode = hashCode * 59 + RequiredApprovalCount.GetHashCode();
-                    if (ChangedBy != null)
-                    hashCode = hashCode * 59 + ChangedBy.GetHashCode();
+                    if (CreatedBy != null)
+                    hashCode = hashCode * 59 + CreatedBy.GetHashCode();
                     if (CreatedAt != null)
                     hashCode = hashCode * 59 + CreatedAt.GetHashCode();
                 return hashCode;
@@ -238,12 +239,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(RoleTransientsItem left, RoleTransientsItem right)
+        public static bool operator ==(TeamBaseTeamTransient left, TeamBaseTeamTransient right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(RoleTransientsItem left, RoleTransientsItem right)
+        public static bool operator !=(TeamBaseTeamTransient left, TeamBaseTeamTransient right)
         {
             return !Equals(left, right);
         }
