@@ -27,10 +27,10 @@ using za.co.grindrodbank.a3s.Converters;
 namespace za.co.grindrodbank.a3s.A3SApiResources
 { 
     /// <summary>
-    /// Represents a transient state of a team data-polocy assignment. 
+    /// Represents a transient state of an actual function record, excluding any transient relations. 
     /// </summary>
     [DataContract]
-    public partial class TeamDataPolicyTransient : IEquatable<TeamDataPolicyTransient>
+    public partial class FunctionBaseFunctionTransient : IEquatable<FunctionBaseFunctionTransient>
     { 
         /// <summary>
         /// Gets or Sets Uuid
@@ -39,16 +39,22 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public Guid Uuid { get; set; }
 
         /// <summary>
-        /// Gets or Sets TeamId
+        /// Gets or Sets FunctionId
         /// </summary>
-        [DataMember(Name="teamId", EmitDefaultValue=false)]
-        public Guid TeamId { get; set; }
+        [DataMember(Name="functionId", EmitDefaultValue=false)]
+        public Guid FunctionId { get; set; }
 
         /// <summary>
-        /// Gets or Sets DataPolicyId
+        /// Gets or Sets Name
         /// </summary>
-        [DataMember(Name="dataPolicyId", EmitDefaultValue=false)]
-        public Guid DataPolicyId { get; set; }
+        [DataMember(Name="name", EmitDefaultValue=false)]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Description
+        /// </summary>
+        [DataMember(Name="description", EmitDefaultValue=false)]
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or Sets RState
@@ -63,9 +69,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public string Action { get; set; }
 
         /// <summary>
-        /// The current amount of approvals.
+        /// The current approval count.
         /// </summary>
-        /// <value>The current amount of approvals.</value>
+        /// <value>The current approval count.</value>
         [DataMember(Name="approvalCount", EmitDefaultValue=false)]
         public int ApprovalCount { get; set; }
 
@@ -77,14 +83,16 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public int RequiredApprovalCount { get; set; }
 
         /// <summary>
-        /// Gets or Sets CreatedBy
+        /// The UUID of the user who created this transient state record.
         /// </summary>
+        /// <value>The UUID of the user who created this transient state record.</value>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public Guid CreatedBy { get; set; }
 
         /// <summary>
-        /// Gets or Sets CreatedAt
+        /// The date that this transient state was created.
         /// </summary>
+        /// <value>The date that this transient state was created.</value>
         [DataMember(Name="createdAt", EmitDefaultValue=false)]
         public DateTime CreatedAt { get; set; }
 
@@ -95,10 +103,11 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class TeamDataPolicyTransient {\n");
+            sb.Append("class FunctionBaseFunctionTransient {\n");
             sb.Append("  Uuid: ").Append(Uuid).Append("\n");
-            sb.Append("  TeamId: ").Append(TeamId).Append("\n");
-            sb.Append("  DataPolicyId: ").Append(DataPolicyId).Append("\n");
+            sb.Append("  FunctionId: ").Append(FunctionId).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  RState: ").Append(RState).Append("\n");
             sb.Append("  Action: ").Append(Action).Append("\n");
             sb.Append("  ApprovalCount: ").Append(ApprovalCount).Append("\n");
@@ -127,15 +136,15 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((TeamDataPolicyTransient)obj);
+            return obj.GetType() == GetType() && Equals((FunctionBaseFunctionTransient)obj);
         }
 
         /// <summary>
-        /// Returns true if TeamDataPolicyTransient instances are equal
+        /// Returns true if FunctionBaseFunctionTransient instances are equal
         /// </summary>
-        /// <param name="other">Instance of TeamDataPolicyTransient to be compared</param>
+        /// <param name="other">Instance of FunctionBaseFunctionTransient to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(TeamDataPolicyTransient other)
+        public bool Equals(FunctionBaseFunctionTransient other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -147,14 +156,19 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     Uuid.Equals(other.Uuid)
                 ) && 
                 (
-                    TeamId == other.TeamId ||
-                    TeamId != null &&
-                    TeamId.Equals(other.TeamId)
+                    FunctionId == other.FunctionId ||
+                    FunctionId != null &&
+                    FunctionId.Equals(other.FunctionId)
                 ) && 
                 (
-                    DataPolicyId == other.DataPolicyId ||
-                    DataPolicyId != null &&
-                    DataPolicyId.Equals(other.DataPolicyId)
+                    Name == other.Name ||
+                    Name != null &&
+                    Name.Equals(other.Name)
+                ) && 
+                (
+                    Description == other.Description ||
+                    Description != null &&
+                    Description.Equals(other.Description)
                 ) && 
                 (
                     RState == other.RState ||
@@ -200,10 +214,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                 // Suitable nullity checks etc, of course :)
                     if (Uuid != null)
                     hashCode = hashCode * 59 + Uuid.GetHashCode();
-                    if (TeamId != null)
-                    hashCode = hashCode * 59 + TeamId.GetHashCode();
-                    if (DataPolicyId != null)
-                    hashCode = hashCode * 59 + DataPolicyId.GetHashCode();
+                    if (FunctionId != null)
+                    hashCode = hashCode * 59 + FunctionId.GetHashCode();
+                    if (Name != null)
+                    hashCode = hashCode * 59 + Name.GetHashCode();
+                    if (Description != null)
+                    hashCode = hashCode * 59 + Description.GetHashCode();
                     if (RState != null)
                     hashCode = hashCode * 59 + RState.GetHashCode();
                     if (Action != null)
@@ -223,12 +239,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(TeamDataPolicyTransient left, TeamDataPolicyTransient right)
+        public static bool operator ==(FunctionBaseFunctionTransient left, FunctionBaseFunctionTransient right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(TeamDataPolicyTransient left, TeamDataPolicyTransient right)
+        public static bool operator !=(FunctionBaseFunctionTransient left, FunctionBaseFunctionTransient right)
         {
             return !Equals(left, right);
         }

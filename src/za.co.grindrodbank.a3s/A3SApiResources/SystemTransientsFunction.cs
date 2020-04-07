@@ -27,10 +27,10 @@ using za.co.grindrodbank.a3s.Converters;
 namespace za.co.grindrodbank.a3s.A3SApiResources
 { 
     /// <summary>
-    /// Represents a collection of all the latest transients for roles with any changes. 
+    /// Represents a collection of all the latest transients for functions with any changes. 
     /// </summary>
     [DataContract]
-    public partial class SystemTransientsRole : IEquatable<SystemTransientsRole>
+    public partial class SystemTransientsFunction : IEquatable<SystemTransientsFunction>
     { 
         /// <summary>
         /// Gets or Sets Uuid
@@ -39,10 +39,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public Guid Uuid { get; set; }
 
         /// <summary>
-        /// Gets or Sets RoleName
+        /// Gets or Sets FunctionName
         /// </summary>
-        [DataMember(Name="roleName", EmitDefaultValue=false)]
-        public string RoleName { get; set; }
+        [DataMember(Name="functionName", EmitDefaultValue=false)]
+        public string FunctionName { get; set; }
 
         /// <summary>
         /// Gets or Sets CapturerUuid
@@ -63,24 +63,17 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public DateTime CapturedDate { get; set; }
 
         /// <summary>
-        /// Gets or Sets LatestActiveRoleTransient
+        /// Gets or Sets LatestActiveFunctionTransient
         /// </summary>
-        [DataMember(Name="latestActiveRoleTransient", EmitDefaultValue=false)]
-        public RoleTransientsItem LatestActiveRoleTransient { get; set; }
+        [DataMember(Name="latestActiveFunctionTransient", EmitDefaultValue=false)]
+        public FunctionBaseFunctionTransient LatestActiveFunctionTransient { get; set; }
 
         /// <summary>
-        /// A list of the latest (most recent only) transient role function assignments for this transient role.
+        /// A list of the latest (most recent one per relation) transient function - permission assignment changes for this transient function.
         /// </summary>
-        /// <value>A list of the latest (most recent only) transient role function assignments for this transient role.</value>
-        [DataMember(Name="latestTransientRoleFunctions", EmitDefaultValue=false)]
-        public List<RoleFunctionTransient> LatestTransientRoleFunctions { get; set; }
-
-        /// <summary>
-        /// A list of the latest (most recent one per relation) transient role - child role assignments for this transient role.
-        /// </summary>
-        /// <value>A list of the latest (most recent one per relation) transient role - child role assignments for this transient role.</value>
-        [DataMember(Name="latestTransientRoleChildRoles", EmitDefaultValue=false)]
-        public List<RoleChildRoleTransient> LatestTransientRoleChildRoles { get; set; }
+        /// <value>A list of the latest (most recent one per relation) transient function - permission assignment changes for this transient function.</value>
+        [DataMember(Name="latestTransientFunctionPermissions", EmitDefaultValue=false)]
+        public List<FunctionPermissionTransient> LatestTransientFunctionPermissions { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -89,15 +82,14 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class SystemTransientsRole {\n");
+            sb.Append("class SystemTransientsFunction {\n");
             sb.Append("  Uuid: ").Append(Uuid).Append("\n");
-            sb.Append("  RoleName: ").Append(RoleName).Append("\n");
+            sb.Append("  FunctionName: ").Append(FunctionName).Append("\n");
             sb.Append("  CapturerUuid: ").Append(CapturerUuid).Append("\n");
             sb.Append("  CapturerName: ").Append(CapturerName).Append("\n");
             sb.Append("  CapturedDate: ").Append(CapturedDate).Append("\n");
-            sb.Append("  LatestActiveRoleTransient: ").Append(LatestActiveRoleTransient).Append("\n");
-            sb.Append("  LatestTransientRoleFunctions: ").Append(LatestTransientRoleFunctions).Append("\n");
-            sb.Append("  LatestTransientRoleChildRoles: ").Append(LatestTransientRoleChildRoles).Append("\n");
+            sb.Append("  LatestActiveFunctionTransient: ").Append(LatestActiveFunctionTransient).Append("\n");
+            sb.Append("  LatestTransientFunctionPermissions: ").Append(LatestTransientFunctionPermissions).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -120,15 +112,15 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((SystemTransientsRole)obj);
+            return obj.GetType() == GetType() && Equals((SystemTransientsFunction)obj);
         }
 
         /// <summary>
-        /// Returns true if SystemTransientsRole instances are equal
+        /// Returns true if SystemTransientsFunction instances are equal
         /// </summary>
-        /// <param name="other">Instance of SystemTransientsRole to be compared</param>
+        /// <param name="other">Instance of SystemTransientsFunction to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(SystemTransientsRole other)
+        public bool Equals(SystemTransientsFunction other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -140,9 +132,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     Uuid.Equals(other.Uuid)
                 ) && 
                 (
-                    RoleName == other.RoleName ||
-                    RoleName != null &&
-                    RoleName.Equals(other.RoleName)
+                    FunctionName == other.FunctionName ||
+                    FunctionName != null &&
+                    FunctionName.Equals(other.FunctionName)
                 ) && 
                 (
                     CapturerUuid == other.CapturerUuid ||
@@ -160,21 +152,15 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     CapturedDate.Equals(other.CapturedDate)
                 ) && 
                 (
-                    LatestActiveRoleTransient == other.LatestActiveRoleTransient ||
-                    LatestActiveRoleTransient != null &&
-                    LatestActiveRoleTransient.Equals(other.LatestActiveRoleTransient)
+                    LatestActiveFunctionTransient == other.LatestActiveFunctionTransient ||
+                    LatestActiveFunctionTransient != null &&
+                    LatestActiveFunctionTransient.Equals(other.LatestActiveFunctionTransient)
                 ) && 
                 (
-                    LatestTransientRoleFunctions == other.LatestTransientRoleFunctions ||
-                    LatestTransientRoleFunctions != null &&
-                    other.LatestTransientRoleFunctions != null &&
-                    LatestTransientRoleFunctions.SequenceEqual(other.LatestTransientRoleFunctions)
-                ) && 
-                (
-                    LatestTransientRoleChildRoles == other.LatestTransientRoleChildRoles ||
-                    LatestTransientRoleChildRoles != null &&
-                    other.LatestTransientRoleChildRoles != null &&
-                    LatestTransientRoleChildRoles.SequenceEqual(other.LatestTransientRoleChildRoles)
+                    LatestTransientFunctionPermissions == other.LatestTransientFunctionPermissions ||
+                    LatestTransientFunctionPermissions != null &&
+                    other.LatestTransientFunctionPermissions != null &&
+                    LatestTransientFunctionPermissions.SequenceEqual(other.LatestTransientFunctionPermissions)
                 );
         }
 
@@ -190,20 +176,18 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                 // Suitable nullity checks etc, of course :)
                     if (Uuid != null)
                     hashCode = hashCode * 59 + Uuid.GetHashCode();
-                    if (RoleName != null)
-                    hashCode = hashCode * 59 + RoleName.GetHashCode();
+                    if (FunctionName != null)
+                    hashCode = hashCode * 59 + FunctionName.GetHashCode();
                     if (CapturerUuid != null)
                     hashCode = hashCode * 59 + CapturerUuid.GetHashCode();
                     if (CapturerName != null)
                     hashCode = hashCode * 59 + CapturerName.GetHashCode();
                     if (CapturedDate != null)
                     hashCode = hashCode * 59 + CapturedDate.GetHashCode();
-                    if (LatestActiveRoleTransient != null)
-                    hashCode = hashCode * 59 + LatestActiveRoleTransient.GetHashCode();
-                    if (LatestTransientRoleFunctions != null)
-                    hashCode = hashCode * 59 + LatestTransientRoleFunctions.GetHashCode();
-                    if (LatestTransientRoleChildRoles != null)
-                    hashCode = hashCode * 59 + LatestTransientRoleChildRoles.GetHashCode();
+                    if (LatestActiveFunctionTransient != null)
+                    hashCode = hashCode * 59 + LatestActiveFunctionTransient.GetHashCode();
+                    if (LatestTransientFunctionPermissions != null)
+                    hashCode = hashCode * 59 + LatestTransientFunctionPermissions.GetHashCode();
                 return hashCode;
             }
         }
@@ -211,12 +195,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(SystemTransientsRole left, SystemTransientsRole right)
+        public static bool operator ==(SystemTransientsFunction left, SystemTransientsFunction right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(SystemTransientsRole left, SystemTransientsRole right)
+        public static bool operator !=(SystemTransientsFunction left, SystemTransientsFunction right)
         {
             return !Equals(left, right);
         }

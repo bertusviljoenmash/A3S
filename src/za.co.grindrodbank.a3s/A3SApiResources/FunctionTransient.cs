@@ -27,10 +27,10 @@ using za.co.grindrodbank.a3s.Converters;
 namespace za.co.grindrodbank.a3s.A3SApiResources
 { 
     /// <summary>
-    /// Represents a transient state of a team data-polocy assignment. 
+    /// Represents a transient state of a function and it&#39;s relations. 
     /// </summary>
     [DataContract]
-    public partial class TeamDataPolicyTransient : IEquatable<TeamDataPolicyTransient>
+    public partial class FunctionTransient : IEquatable<FunctionTransient>
     { 
         /// <summary>
         /// Gets or Sets Uuid
@@ -39,16 +39,22 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public Guid Uuid { get; set; }
 
         /// <summary>
-        /// Gets or Sets TeamId
+        /// Gets or Sets FunctionId
         /// </summary>
-        [DataMember(Name="teamId", EmitDefaultValue=false)]
-        public Guid TeamId { get; set; }
+        [DataMember(Name="functionId", EmitDefaultValue=false)]
+        public Guid FunctionId { get; set; }
 
         /// <summary>
-        /// Gets or Sets DataPolicyId
+        /// Gets or Sets Name
         /// </summary>
-        [DataMember(Name="dataPolicyId", EmitDefaultValue=false)]
-        public Guid DataPolicyId { get; set; }
+        [DataMember(Name="name", EmitDefaultValue=false)]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Description
+        /// </summary>
+        [DataMember(Name="description", EmitDefaultValue=false)]
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or Sets RState
@@ -63,9 +69,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public string Action { get; set; }
 
         /// <summary>
-        /// The current amount of approvals.
+        /// The current approval count.
         /// </summary>
-        /// <value>The current amount of approvals.</value>
+        /// <value>The current approval count.</value>
         [DataMember(Name="approvalCount", EmitDefaultValue=false)]
         public int ApprovalCount { get; set; }
 
@@ -77,16 +83,17 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public int RequiredApprovalCount { get; set; }
 
         /// <summary>
-        /// Gets or Sets CreatedBy
+        /// Gets or Sets ChangedBy
         /// </summary>
-        [DataMember(Name="createdBy", EmitDefaultValue=false)]
-        public Guid CreatedBy { get; set; }
+        [DataMember(Name="changedBy", EmitDefaultValue=false)]
+        public Guid ChangedBy { get; set; }
 
         /// <summary>
-        /// Gets or Sets CreatedAt
+        /// A list of the latest transient function permission assignments for this transient function.
         /// </summary>
-        [DataMember(Name="createdAt", EmitDefaultValue=false)]
-        public DateTime CreatedAt { get; set; }
+        /// <value>A list of the latest transient function permission assignments for this transient function.</value>
+        [DataMember(Name="latestTransientFunctionPermissions", EmitDefaultValue=false)]
+        public List<FunctionPermissionTransient> LatestTransientFunctionPermissions { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -95,16 +102,17 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class TeamDataPolicyTransient {\n");
+            sb.Append("class FunctionTransient {\n");
             sb.Append("  Uuid: ").Append(Uuid).Append("\n");
-            sb.Append("  TeamId: ").Append(TeamId).Append("\n");
-            sb.Append("  DataPolicyId: ").Append(DataPolicyId).Append("\n");
+            sb.Append("  FunctionId: ").Append(FunctionId).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  RState: ").Append(RState).Append("\n");
             sb.Append("  Action: ").Append(Action).Append("\n");
             sb.Append("  ApprovalCount: ").Append(ApprovalCount).Append("\n");
             sb.Append("  RequiredApprovalCount: ").Append(RequiredApprovalCount).Append("\n");
-            sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
-            sb.Append("  CreatedAt: ").Append(CreatedAt).Append("\n");
+            sb.Append("  ChangedBy: ").Append(ChangedBy).Append("\n");
+            sb.Append("  LatestTransientFunctionPermissions: ").Append(LatestTransientFunctionPermissions).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -127,15 +135,15 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((TeamDataPolicyTransient)obj);
+            return obj.GetType() == GetType() && Equals((FunctionTransient)obj);
         }
 
         /// <summary>
-        /// Returns true if TeamDataPolicyTransient instances are equal
+        /// Returns true if FunctionTransient instances are equal
         /// </summary>
-        /// <param name="other">Instance of TeamDataPolicyTransient to be compared</param>
+        /// <param name="other">Instance of FunctionTransient to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(TeamDataPolicyTransient other)
+        public bool Equals(FunctionTransient other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -147,14 +155,19 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     Uuid.Equals(other.Uuid)
                 ) && 
                 (
-                    TeamId == other.TeamId ||
-                    TeamId != null &&
-                    TeamId.Equals(other.TeamId)
+                    FunctionId == other.FunctionId ||
+                    FunctionId != null &&
+                    FunctionId.Equals(other.FunctionId)
                 ) && 
                 (
-                    DataPolicyId == other.DataPolicyId ||
-                    DataPolicyId != null &&
-                    DataPolicyId.Equals(other.DataPolicyId)
+                    Name == other.Name ||
+                    Name != null &&
+                    Name.Equals(other.Name)
+                ) && 
+                (
+                    Description == other.Description ||
+                    Description != null &&
+                    Description.Equals(other.Description)
                 ) && 
                 (
                     RState == other.RState ||
@@ -177,14 +190,15 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     RequiredApprovalCount.Equals(other.RequiredApprovalCount)
                 ) && 
                 (
-                    CreatedBy == other.CreatedBy ||
-                    CreatedBy != null &&
-                    CreatedBy.Equals(other.CreatedBy)
+                    ChangedBy == other.ChangedBy ||
+                    ChangedBy != null &&
+                    ChangedBy.Equals(other.ChangedBy)
                 ) && 
                 (
-                    CreatedAt == other.CreatedAt ||
-                    CreatedAt != null &&
-                    CreatedAt.Equals(other.CreatedAt)
+                    LatestTransientFunctionPermissions == other.LatestTransientFunctionPermissions ||
+                    LatestTransientFunctionPermissions != null &&
+                    other.LatestTransientFunctionPermissions != null &&
+                    LatestTransientFunctionPermissions.SequenceEqual(other.LatestTransientFunctionPermissions)
                 );
         }
 
@@ -200,10 +214,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                 // Suitable nullity checks etc, of course :)
                     if (Uuid != null)
                     hashCode = hashCode * 59 + Uuid.GetHashCode();
-                    if (TeamId != null)
-                    hashCode = hashCode * 59 + TeamId.GetHashCode();
-                    if (DataPolicyId != null)
-                    hashCode = hashCode * 59 + DataPolicyId.GetHashCode();
+                    if (FunctionId != null)
+                    hashCode = hashCode * 59 + FunctionId.GetHashCode();
+                    if (Name != null)
+                    hashCode = hashCode * 59 + Name.GetHashCode();
+                    if (Description != null)
+                    hashCode = hashCode * 59 + Description.GetHashCode();
                     if (RState != null)
                     hashCode = hashCode * 59 + RState.GetHashCode();
                     if (Action != null)
@@ -212,10 +228,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + ApprovalCount.GetHashCode();
                     
                     hashCode = hashCode * 59 + RequiredApprovalCount.GetHashCode();
-                    if (CreatedBy != null)
-                    hashCode = hashCode * 59 + CreatedBy.GetHashCode();
-                    if (CreatedAt != null)
-                    hashCode = hashCode * 59 + CreatedAt.GetHashCode();
+                    if (ChangedBy != null)
+                    hashCode = hashCode * 59 + ChangedBy.GetHashCode();
+                    if (LatestTransientFunctionPermissions != null)
+                    hashCode = hashCode * 59 + LatestTransientFunctionPermissions.GetHashCode();
                 return hashCode;
             }
         }
@@ -223,12 +239,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(TeamDataPolicyTransient left, TeamDataPolicyTransient right)
+        public static bool operator ==(FunctionTransient left, FunctionTransient right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(TeamDataPolicyTransient left, TeamDataPolicyTransient right)
+        public static bool operator !=(FunctionTransient left, FunctionTransient right)
         {
             return !Equals(left, right);
         }

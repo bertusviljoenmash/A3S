@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   description: >-
     API Definition for A3S. This service allows authentication, authorisation and accounting.
-  version: 1.1.6
+  version: 2.0.0-alpha-1.0.0
   title: A3S
 paths:
   #region - User
@@ -1022,7 +1022,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Role'
+                $ref: '#/components/schemas/RoleTransient'
         '400':
           description: Bad Request.
           content:
@@ -1392,7 +1392,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Team'
+                $ref: '#/components/schemas/TeamTransient'
         '400':
           description: Bad Request.
           content:
@@ -1504,7 +1504,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Team'
+                $ref: '#/components/schemas/TeamTransient'
         '400':
           description: Bad Request.
           content:
@@ -2520,7 +2520,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Function'
+                $ref: '#/components/schemas/FunctionTransient'
         '400':
           description: Bad Request.
           content:
@@ -2626,7 +2626,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Function'
+                $ref: '#/components/schemas/FunctionTransient'
         '204':
           description: No Content.
         '400':
@@ -2673,8 +2673,12 @@ paths:
           schema:
             $ref: '#/components/schemas/FunctionId'
       responses:
-        '204':
-          description: No Content.
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTransient'
         '400':
           description: Invalid parameters.
           content:
@@ -2700,6 +2704,174 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+                
+  '/functions/{functionId}/transients':
+    get:
+      tags:
+        - Function
+      summary: Get the current active (all transients since last declined or released state) for a function and it's relations.
+      description: Get the latest transients for a function by the function's UUID.
+      operationId: getFunctionTransients
+      parameters:
+        - name: functionId
+          in: path
+          description: The UUID of the function.
+          required: true
+          schema:
+            $ref: '#/components/schemas/FunctionId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTransients'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the function.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Function not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+                
+  '/functions/{functionId}/approve':              
+    patch:
+      tags:
+        - Function
+      summary: Approve all current transient states for a function.
+      description: Approve all current transient states for a function, given the function's UUID.
+      operationId: approveFunction
+      parameters:
+        - name: functionId
+          in: path
+          description: The UUID of the function.
+          required: true
+          schema:
+            $ref: '#/components/schemas/FunctionId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTransient'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to update the function.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Function not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  '/functions/{functionId}/decline':              
+    patch:
+      tags:
+        - Function
+      summary: Decline all current transient states for a function.
+      description: Decline all current transient states for a function, given the function's UUID.
+      operationId: declineFunction
+      parameters:
+        - name: functionId
+          in: path
+          description: The UUID of the function.
+          required: true
+          schema:
+            $ref: '#/components/schemas/FunctionId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTransient'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to update the function.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Teams not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
           description: An unexpected error occurred.
           content:
             application/json:
@@ -3921,7 +4093,9 @@ components:
           type: string
         approvalCount:
           type: integer
+          description: The current amount of approvals.
         requiredApprovalCount:
+          type: integer
           description: The required approval count before this entity is released.
         changedBy:
           type: string
@@ -3947,8 +4121,10 @@ components:
           type: string
         approvalCount:
           type: integer
+          description: The current amount of approvals.
         requiredApprovalCount:
           description: The required approval count before this entity is released.
+          type: integer
         changedBy:
           type: string
           format: uuid
@@ -3973,7 +4149,9 @@ components:
           type: string
         approvalCount:
           type: integer
+          description: The current amount of approvals.
         requiredApprovalCount:
+          type: integer
           description: The required approval count before this entity is released.
         changedBy:
           type: string
@@ -3999,8 +4177,10 @@ components:
           type: string
         approvalCount:
           type: integer
+          description: The current amount of approvals.
         requiredApprovalCount:
           description: The required approval count before this entity is released.
+          type: integer
         changedBy:
           type: string
           format: uuid
@@ -4022,6 +4202,10 @@ components:
           type: array
           items: 
             $ref: '#/components/schemas/SystemTransientsTeam'
+        functions:
+          type: array
+          items: 
+            $ref: '#/components/schemas/SystemTransientsFunction'
             
     SystemTransientsRole:
       description: |
@@ -4080,6 +4264,31 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TeamChildTeamTransient'
+            
+    SystemTransientsFunction:
+      description: |
+        Represents a collection of all the latest transients for functions with any changes.
+      type: object
+      properties:
+        uuid : 
+          $ref: '#/components/schemas/FunctionId'
+        functionName: 
+          type: string
+        capturerUuid:
+          $ref: '#/components/schemas/UserId'
+        capturerName: 
+          type: string
+        capturedDate: 
+          type: string
+          format: date-time
+        latestActiveFunctionTransient:
+          $ref: '#/components/schemas/FunctionBaseFunctionTransient'
+        latestTransientFunctionPermissions:
+          description: A list of the latest (most recent one per relation) transient function - permission assignment changes for this transient function.
+          type: array
+          items:
+            $ref: '#/components/schemas/FunctionPermissionTransient'
+        
     # Begin Region - Transients
     
     # End Region - Transients
@@ -4292,6 +4501,151 @@ components:
           items:
             type: string
             format: uuid
+    
+    FunctionTransientId:
+      type: string
+      format: uuid
+            
+    FunctionTransient:
+      description: |
+        Represents a transient state of a function and it's relations.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/FunctionTransientId'
+        functionId:
+          $ref: '#/components/schemas/FunctionId'
+        name:
+          type: string
+        description:
+          type: string
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          description: The current approval count.
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+          type: integer
+        changedBy:
+          type: string
+          format: uuid
+        latestTransientFunctionPermissions:
+          description: A list of the latest transient function permission assignments for this transient function.
+          type: array
+          items:
+            $ref: '#/components/schemas/FunctionPermissionTransient'
+    
+    FunctionPermissionTransientId:
+      type: string
+      format: uuid
+            
+    FunctionPermissionTransient:
+      description: |
+        Represents a transient state of a function permission assignment.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/FunctionPermissionTransientId'
+        functionId:
+          $ref: '#/components/schemas/FunctionId'
+        permissionId:
+          $ref: '#/components/schemas/PermissionId'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+          description: The current amount of approvals.
+        requiredApprovalCount:
+          type: integer
+          description: The required approval count before this entity is released.
+        changedBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+          
+    FunctionPermissionDetailedTransient:
+      description: |
+        Represents a transient state of a permission function assignment and contains a more detailed object for the transient related permission.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/FunctionPermissionTransientId'
+        functionId:
+          $ref: '#/components/schemas/FunctionId'
+        permission:
+          $ref: '#/components/schemas/Permission'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          description: The current approval count.
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+          type: integer
+        changedBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+          
+    FunctionTransients:
+      description: |
+        Represents the current active transients for a single function and it's relations.
+      type: object
+      properties:
+        latestActiveFunctionTransients:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunctionBaseFunctionTransient'
+        latestTransientFunctionPermissions:
+          description: A list of the latest transient function permission assignments for this transient role.
+          type: array
+          items:
+            $ref: '#/components/schemas/FunctionPermissionDetailedTransient'
+            
+    FunctionBaseFunctionTransient:
+      description: |
+        Represents a transient state of an actual function record, excluding any transient relations.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/FunctionTransientId'
+        functionId:
+          $ref: '#/components/schemas/FunctionId'
+        name:
+          type: string
+        description:
+          type: string
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          description: The current approval count.
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+          type: integer
+        createdBy:
+          description: The UUID of the user who created this transient state record.
+          type: string
+          format: uuid
+        createdAt:
+          description: The date that this transient state was created.
+          type: string
+          format: date-time
+        
+
     # End Region - Functions
     
     # Region - Application Function
@@ -4583,7 +4937,7 @@ components:
       properties:
         uuid:
           $ref: '#/components/schemas/TransientTeamId'
-        roleId:
+        teamId:
           $ref: '#/components/schemas/TeamId'
         name:
           type: string
@@ -4646,7 +5000,7 @@ components:
       properties:
         uuid:
           $ref: '#/components/schemas/TransientTeamId'
-        roleId:
+        teamId:
           $ref: '#/components/schemas/TeamId'
         name:
           type: string
@@ -4688,7 +5042,9 @@ components:
           type: string
         approvalCount:
           type: integer
+          description: The current amount of approvals.
         requiredApprovalCount:
+          type: integer
           description: The required approval count before this entity is released.
         createdBy:
           type: string
@@ -4714,8 +5070,10 @@ components:
           type: string
         approvalCount:
           type: integer
+          description: The current amount of approvals.
         requiredApprovalCount:
           description: The required approval count before this entity is released.
+          type: integer
         createdBy:
           type: string
           format: uuid
@@ -4740,7 +5098,9 @@ components:
           type: string
         approvalCount:
           type: integer
+          description: The current amount of approvals.
         requiredApprovalCount:
+          type: integer
           description: The required approval count before this entity is released.
         createdBy:
           type: string
@@ -4766,8 +5126,10 @@ components:
           type: string
         approvalCount:
           type: integer
+          description: The current amount of approvals.
         requiredApprovalCount:
           description: The required approval count before this entity is released.
+          type: integer
         createdBy:
           type: string
           format: uuid

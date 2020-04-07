@@ -3,7 +3,7 @@
   "info" : {
     "description" : "API Definition for A3S. This service allows authentication, authorisation and accounting.",
     "title" : "A3S",
-    "version" : "1.1.6"
+    "version" : "2.0.0-alpha-1.0.0"
   },
   "servers" : [ {
     "url" : "/"
@@ -1658,7 +1658,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Role"
+                  "$ref" : "#/components/schemas/RoleTransient"
                 }
               }
             },
@@ -2153,7 +2153,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Team"
+                  "$ref" : "#/components/schemas/TeamTransient"
                 }
               }
             },
@@ -2421,7 +2421,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Team"
+                  "$ref" : "#/components/schemas/TeamTransient"
                 }
               }
             },
@@ -3869,7 +3869,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Function"
+                  "$ref" : "#/components/schemas/FunctionTransient"
                 }
               }
             },
@@ -3946,8 +3946,15 @@
           "style" : "simple"
         } ],
         "responses" : {
-          "204" : {
-            "description" : "No Content."
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FunctionTransient"
+                }
+              }
+            },
+            "description" : "OK"
           },
           "400" : {
             "content" : {
@@ -4110,7 +4117,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Function"
+                  "$ref" : "#/components/schemas/FunctionTransient"
                 }
               }
             },
@@ -4171,6 +4178,269 @@
           }
         },
         "summary" : "Update a function.",
+        "tags" : [ "Function" ]
+      }
+    },
+    "/functions/{functionId}/transients" : {
+      "get" : {
+        "description" : "Get the latest transients for a function by the function's UUID.",
+        "operationId" : "getFunctionTransients",
+        "parameters" : [ {
+          "description" : "The UUID of the function.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "functionId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/FunctionId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FunctionTransients"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the function."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Function not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Get the current active (all transients since last declined or released state) for a function and it's relations.",
+        "tags" : [ "Function" ]
+      }
+    },
+    "/functions/{functionId}/approve" : {
+      "patch" : {
+        "description" : "Approve all current transient states for a function, given the function's UUID.",
+        "operationId" : "approveFunction",
+        "parameters" : [ {
+          "description" : "The UUID of the function.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "functionId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/FunctionId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FunctionTransient"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to update the function."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Function not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Approve all current transient states for a function.",
+        "tags" : [ "Function" ]
+      }
+    },
+    "/functions/{functionId}/decline" : {
+      "patch" : {
+        "description" : "Decline all current transient states for a function, given the function's UUID.",
+        "operationId" : "declineFunction",
+        "parameters" : [ {
+          "description" : "The UUID of the function.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "functionId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/FunctionId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FunctionTransient"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to update the function."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Teams not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Decline all current transient states for a function.",
         "tags" : [ "Function" ]
       }
     },
@@ -5909,7 +6179,7 @@
           "requiredApprovalCount" : 6,
           "latestTransientRoleChildRoles" : [ {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 2,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -5919,7 +6189,7 @@
             "approvalCount" : 5
           }, {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 2,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -5938,7 +6208,7 @@
           "latestTransientRoleFunctions" : [ {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 5,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -5948,7 +6218,7 @@
           }, {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 5,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -6074,7 +6344,7 @@
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
             },
             "createdAt" : "createdAt",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 2,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -6088,7 +6358,7 @@
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
             },
             "createdAt" : "createdAt",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 2,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -6121,7 +6391,7 @@
           } ],
           "latestTransientRoleFunctions" : [ {
             "createdAt" : "createdAt",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 5,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "function" : {
@@ -6135,7 +6405,7 @@
             "approvalCount" : 1
           }, {
             "createdAt" : "createdAt",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 5,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "function" : {
@@ -6178,7 +6448,7 @@
         "example" : {
           "createdAt" : "2000-01-23T04:56:07.000+00:00",
           "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-          "requiredApprovalCount" : "",
+          "requiredApprovalCount" : 5,
           "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "r_state" : "r_state",
@@ -6207,10 +6477,12 @@
             "type" : "string"
           },
           "approvalCount" : {
+            "description" : "The current amount of approvals.",
             "type" : "integer"
           },
           "requiredApprovalCount" : {
-            "description" : "The required approval count before this entity is released."
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
           },
           "changedBy" : {
             "format" : "uuid",
@@ -6227,7 +6499,7 @@
         "description" : "Represents a transient state of a role function assignment, but with more details pertaining to the function.\n",
         "example" : {
           "createdAt" : "createdAt",
-          "requiredApprovalCount" : "",
+          "requiredApprovalCount" : 5,
           "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "function" : {
@@ -6260,10 +6532,12 @@
             "type" : "string"
           },
           "approvalCount" : {
+            "description" : "The current amount of approvals.",
             "type" : "integer"
           },
           "requiredApprovalCount" : {
-            "description" : "The required approval count before this entity is released."
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
           },
           "changedBy" : {
             "format" : "uuid",
@@ -6280,7 +6554,7 @@
         "description" : "Represents a transient state of a role - child role assignment.\n",
         "example" : {
           "createdAt" : "2000-01-23T04:56:07.000+00:00",
-          "requiredApprovalCount" : "",
+          "requiredApprovalCount" : 2,
           "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "r_state" : "r_state",
@@ -6310,10 +6584,12 @@
             "type" : "string"
           },
           "approvalCount" : {
+            "description" : "The current amount of approvals.",
             "type" : "integer"
           },
           "requiredApprovalCount" : {
-            "description" : "The required approval count before this entity is released."
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
           },
           "changedBy" : {
             "format" : "uuid",
@@ -6335,7 +6611,7 @@
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
           },
           "createdAt" : "createdAt",
-          "requiredApprovalCount" : "",
+          "requiredApprovalCount" : 2,
           "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "r_state" : "r_state",
@@ -6363,10 +6639,12 @@
             "type" : "string"
           },
           "approvalCount" : {
+            "description" : "The current amount of approvals.",
             "type" : "integer"
           },
           "requiredApprovalCount" : {
-            "description" : "The required approval count before this entity is released."
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
           },
           "changedBy" : {
             "format" : "uuid",
@@ -6390,7 +6668,7 @@
             "latestTransientTeamDataPolicies" : [ {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 5,
               "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6400,7 +6678,7 @@
             }, {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 5,
               "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6410,7 +6688,7 @@
             } ],
             "latestTransientTeamChildTeams" : [ {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 2,
               "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6420,7 +6698,7 @@
               "approvalCount" : 5
             }, {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 2,
               "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6434,7 +6712,7 @@
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "requiredApprovalCount" : 6,
               "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "name" : "name",
               "description" : "description",
               "r_state" : "r_state",
@@ -6450,7 +6728,7 @@
             "latestTransientTeamDataPolicies" : [ {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 5,
               "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6460,7 +6738,7 @@
             }, {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 5,
               "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6470,7 +6748,7 @@
             } ],
             "latestTransientTeamChildTeams" : [ {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 2,
               "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6480,7 +6758,7 @@
               "approvalCount" : 5
             }, {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 2,
               "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6494,7 +6772,7 @@
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "requiredApprovalCount" : 6,
               "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-              "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "name" : "name",
               "description" : "description",
               "r_state" : "r_state",
@@ -6503,12 +6781,91 @@
               "approvalCount" : 0
             }
           } ],
+          "functions" : [ {
+            "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "capturerName" : "capturerName",
+            "functionName" : "functionName",
+            "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+            "latestTransientFunctionPermissions" : [ {
+              "permissionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "requiredApprovalCount" : 5,
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            }, {
+              "permissionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "requiredApprovalCount" : 5,
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            } ],
+            "latestActiveFunctionTransient" : {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "requiredApprovalCount" : 6,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "name" : "name",
+              "description" : "description",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 0
+            },
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          }, {
+            "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "capturerName" : "capturerName",
+            "functionName" : "functionName",
+            "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+            "latestTransientFunctionPermissions" : [ {
+              "permissionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "requiredApprovalCount" : 5,
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            }, {
+              "permissionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "requiredApprovalCount" : 5,
+              "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            } ],
+            "latestActiveFunctionTransient" : {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "requiredApprovalCount" : 6,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "name" : "name",
+              "description" : "description",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 0
+            },
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          } ],
           "roles" : [ {
             "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "capturerName" : "capturerName",
             "latestTransientRoleChildRoles" : [ {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 2,
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6518,7 +6875,7 @@
               "approvalCount" : 5
             }, {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 2,
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6545,7 +6902,7 @@
             "latestTransientRoleFunctions" : [ {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 5,
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6555,7 +6912,7 @@
             }, {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 5,
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6568,7 +6925,7 @@
             "capturerName" : "capturerName",
             "latestTransientRoleChildRoles" : [ {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 2,
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6578,7 +6935,7 @@
               "approvalCount" : 5
             }, {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 2,
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6605,7 +6962,7 @@
             "latestTransientRoleFunctions" : [ {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 5,
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6615,7 +6972,7 @@
             }, {
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-              "requiredApprovalCount" : "",
+              "requiredApprovalCount" : 5,
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "r_state" : "r_state",
@@ -6637,6 +6994,12 @@
               "$ref" : "#/components/schemas/SystemTransientsTeam"
             },
             "type" : "array"
+          },
+          "functions" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SystemTransientsFunction"
+            },
+            "type" : "array"
           }
         },
         "type" : "object"
@@ -6648,7 +7011,7 @@
           "capturerName" : "capturerName",
           "latestTransientRoleChildRoles" : [ {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 2,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -6658,7 +7021,7 @@
             "approvalCount" : 5
           }, {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 2,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -6685,7 +7048,7 @@
           "latestTransientRoleFunctions" : [ {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 5,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -6695,7 +7058,7 @@
           }, {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 5,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -6753,7 +7116,7 @@
           "latestTransientTeamDataPolicies" : [ {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 5,
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -6763,7 +7126,7 @@
           }, {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 5,
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -6773,7 +7136,7 @@
           } ],
           "latestTransientTeamChildTeams" : [ {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 2,
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -6783,7 +7146,7 @@
             "approvalCount" : 5
           }, {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 2,
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -6797,7 +7160,7 @@
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "requiredApprovalCount" : 6,
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "name" : "name",
             "description" : "description",
             "r_state" : "r_state",
@@ -6839,6 +7202,80 @@
             "description" : "A list of the latest (most recent one per relation) transient team - child team assignment changes for this transient role.",
             "items" : {
               "$ref" : "#/components/schemas/TeamChildTeamTransient"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "SystemTransientsFunction" : {
+        "description" : "Represents a collection of all the latest transients for functions with any changes.\n",
+        "example" : {
+          "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "capturerName" : "capturerName",
+          "functionName" : "functionName",
+          "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+          "latestTransientFunctionPermissions" : [ {
+            "permissionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : 5,
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          }, {
+            "permissionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : 5,
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          } ],
+          "latestActiveFunctionTransient" : {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : 6,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "name" : "name",
+            "description" : "description",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 0
+          },
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "functionName" : {
+            "type" : "string"
+          },
+          "capturerUuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "capturerName" : {
+            "type" : "string"
+          },
+          "capturedDate" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "latestActiveFunctionTransient" : {
+            "$ref" : "#/components/schemas/FunctionBaseFunctionTransient"
+          },
+          "latestTransientFunctionPermissions" : {
+            "description" : "A list of the latest (most recent one per relation) transient function - permission assignment changes for this transient function.",
+            "items" : {
+              "$ref" : "#/components/schemas/FunctionPermissionTransient"
             },
             "type" : "array"
           }
@@ -7224,6 +7661,325 @@
           }
         },
         "required" : [ "applicationId", "description", "name", "permissions", "uuid" ],
+        "type" : "object"
+      },
+      "FunctionTransientId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "FunctionTransient" : {
+        "description" : "Represents a transient state of a function and it's relations.\n",
+        "example" : {
+          "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "requiredApprovalCount" : 6,
+          "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "name" : "name",
+          "latestTransientFunctionPermissions" : [ {
+            "permissionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : 5,
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          }, {
+            "permissionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : 5,
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          } ],
+          "description" : "description",
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 0
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "functionId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current approval count.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "changedBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "latestTransientFunctionPermissions" : {
+            "description" : "A list of the latest transient function permission assignments for this transient function.",
+            "items" : {
+              "$ref" : "#/components/schemas/FunctionPermissionTransient"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "FunctionPermissionTransientId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "FunctionPermissionTransient" : {
+        "description" : "Represents a transient state of a function permission assignment.\n",
+        "example" : {
+          "permissionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "requiredApprovalCount" : 5,
+          "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 1
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "functionId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "permissionId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current amount of approvals.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "changedBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "FunctionPermissionDetailedTransient" : {
+        "description" : "Represents a transient state of a permission function assignment and contains a more detailed object for the transient related permission.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "requiredApprovalCount" : 5,
+          "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "r_state" : "r_state",
+          "action" : "action",
+          "permission" : {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          },
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 1
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "functionId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "permission" : {
+            "$ref" : "#/components/schemas/Permission"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current approval count.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "changedBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "FunctionTransients" : {
+        "description" : "Represents the current active transients for a single function and it's relations.\n",
+        "example" : {
+          "latestActiveFunctionTransients" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : 6,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "name" : "name",
+            "description" : "description",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 0
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : 6,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "name" : "name",
+            "description" : "description",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 0
+          } ],
+          "latestTransientFunctionPermissions" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : 5,
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "permission" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "requiredApprovalCount" : 5,
+            "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "permission" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          } ]
+        },
+        "properties" : {
+          "latestActiveFunctionTransients" : {
+            "items" : {
+              "$ref" : "#/components/schemas/FunctionBaseFunctionTransient"
+            },
+            "type" : "array"
+          },
+          "latestTransientFunctionPermissions" : {
+            "description" : "A list of the latest transient function permission assignments for this transient role.",
+            "items" : {
+              "$ref" : "#/components/schemas/FunctionPermissionDetailedTransient"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "FunctionBaseFunctionTransient" : {
+        "description" : "Represents a transient state of an actual function record, excluding any transient relations.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "requiredApprovalCount" : 6,
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "name" : "name",
+          "description" : "description",
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 0
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "functionId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current approval count.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "createdBy" : {
+            "description" : "The UUID of the user who created this transient state record.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "description" : "The date that this transient state was created.",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
         "type" : "object"
       },
       "ApplicationFunctionId" : {
@@ -7912,7 +8668,7 @@
           "createdAt" : "2000-01-23T04:56:07.000+00:00",
           "requiredApprovalCount" : 6,
           "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-          "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "name" : "name",
           "description" : "description",
           "r_state" : "r_state",
@@ -7920,7 +8676,7 @@
           "latestTransientTeamDataPolicies" : [ {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 5,
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -7930,7 +8686,7 @@
           }, {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 5,
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -7940,7 +8696,7 @@
           } ],
           "latestTransientTeamChildTeams" : [ {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 2,
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -7950,7 +8706,7 @@
             "approvalCount" : 5
           }, {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 2,
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -7967,7 +8723,7 @@
             "format" : "uuid",
             "type" : "string"
           },
-          "roleId" : {
+          "teamId" : {
             "format" : "uuid",
             "type" : "string"
           },
@@ -8025,7 +8781,7 @@
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "requiredApprovalCount" : 6,
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "name" : "name",
             "description" : "description",
             "r_state" : "r_state",
@@ -8036,7 +8792,7 @@
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "requiredApprovalCount" : 6,
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "name" : "name",
             "description" : "description",
             "r_state" : "r_state",
@@ -8046,7 +8802,7 @@
           } ],
           "latestTransientRoleChildRoles" : [ {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 2,
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -8060,7 +8816,7 @@
             "approvalCount" : 5
           }, {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 2,
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "r_state" : "r_state",
@@ -8075,7 +8831,7 @@
           } ],
           "latestTransientTeamDataPolicies" : [ {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 5,
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "dataPolicy" : {
@@ -8088,7 +8844,7 @@
             "approvalCount" : 1
           }, {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
-            "requiredApprovalCount" : "",
+            "requiredApprovalCount" : 5,
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "dataPolicy" : {
@@ -8132,7 +8888,7 @@
           "createdAt" : "2000-01-23T04:56:07.000+00:00",
           "requiredApprovalCount" : 6,
           "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-          "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "name" : "name",
           "description" : "description",
           "r_state" : "r_state",
@@ -8145,7 +8901,7 @@
             "format" : "uuid",
             "type" : "string"
           },
-          "roleId" : {
+          "teamId" : {
             "format" : "uuid",
             "type" : "string"
           },
@@ -8187,7 +8943,7 @@
         "example" : {
           "createdAt" : "2000-01-23T04:56:07.000+00:00",
           "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-          "requiredApprovalCount" : "",
+          "requiredApprovalCount" : 5,
           "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "r_state" : "r_state",
@@ -8215,10 +8971,12 @@
             "type" : "string"
           },
           "approvalCount" : {
+            "description" : "The current amount of approvals.",
             "type" : "integer"
           },
           "requiredApprovalCount" : {
-            "description" : "The required approval count before this entity is released."
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
           },
           "createdBy" : {
             "format" : "uuid",
@@ -8235,7 +8993,7 @@
         "description" : "Represents a transient state of a team data-polocy assignment.\n",
         "example" : {
           "createdAt" : "2000-01-23T04:56:07.000+00:00",
-          "requiredApprovalCount" : "",
+          "requiredApprovalCount" : 5,
           "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "dataPolicy" : {
@@ -8266,10 +9024,12 @@
             "type" : "string"
           },
           "approvalCount" : {
+            "description" : "The current amount of approvals.",
             "type" : "integer"
           },
           "requiredApprovalCount" : {
-            "description" : "The required approval count before this entity is released."
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
           },
           "createdBy" : {
             "format" : "uuid",
@@ -8286,7 +9046,7 @@
         "description" : "Represents a transient state of a team child-team assignment.\n",
         "example" : {
           "createdAt" : "2000-01-23T04:56:07.000+00:00",
-          "requiredApprovalCount" : "",
+          "requiredApprovalCount" : 2,
           "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "r_state" : "r_state",
@@ -8315,10 +9075,12 @@
             "type" : "string"
           },
           "approvalCount" : {
+            "description" : "The current amount of approvals.",
             "type" : "integer"
           },
           "requiredApprovalCount" : {
-            "description" : "The required approval count before this entity is released."
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
           },
           "createdBy" : {
             "format" : "uuid",
@@ -8335,7 +9097,7 @@
         "description" : "Represents a transient state of a team child-team assignment.\n",
         "example" : {
           "createdAt" : "2000-01-23T04:56:07.000+00:00",
-          "requiredApprovalCount" : "",
+          "requiredApprovalCount" : 2,
           "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "r_state" : "r_state",
@@ -8367,10 +9129,12 @@
             "type" : "string"
           },
           "approvalCount" : {
+            "description" : "The current amount of approvals.",
             "type" : "integer"
           },
           "requiredApprovalCount" : {
-            "description" : "The required approval count before this entity is released."
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
           },
           "createdBy" : {
             "format" : "uuid",
