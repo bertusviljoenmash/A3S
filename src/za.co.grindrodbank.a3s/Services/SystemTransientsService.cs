@@ -39,7 +39,7 @@ namespace za.co.grindrodbank.a3s.Services
                 TransientRoles = new List<SystemTransientsRoleModel>()
             };
 
-            if (includeUsers)
+            if (includeRoles)
             {
                 await GetAllLatestTransientRoles(allSystemTransients);
             }
