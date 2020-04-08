@@ -94,7 +94,7 @@ jobs:
       - run: curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
       - run: sudo apt install nodejs
       # Install Newman Using NPM
-      - run: npm install -g newman
+      - run: npm install -g newman@4.6.0
       - run: npm install -g newman-reporter-htmlextra
       - run: newman run -h
       # Add the required hostname entries for the integration tests.
