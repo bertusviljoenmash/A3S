@@ -3415,7 +3415,7 @@
               "application/json" : {
                 "schema" : {
                   "items" : {
-                    "$ref" : "#/components/schemas/TermsOfServiceListItem"
+                    "$ref" : "#/components/schemas/TermsOfService"
                   },
                   "type" : "array"
                 }
@@ -3494,7 +3494,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/TermsOfService"
+                  "$ref" : "#/components/schemas/TermsOfServiceTransient"
                 }
               }
             },
@@ -3561,8 +3561,15 @@
           "style" : "simple"
         } ],
         "responses" : {
-          "204" : {
-            "description" : "No Content."
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TermsOfServiceTransient"
+                }
+              }
+            },
+            "description" : "OK."
           },
           "400" : {
             "content" : {
@@ -3705,6 +3712,269 @@
           }
         },
         "summary" : "Get a terms of service entry.",
+        "tags" : [ "TermsOfService" ]
+      }
+    },
+    "/termsOfService/{termsOfServiceId}/transients" : {
+      "get" : {
+        "description" : "Get the latest transients for a terms of service agreement by it's UUID.",
+        "operationId" : "getTermsOfServiceTransients",
+        "parameters" : [ {
+          "description" : "The UUID of the terms of service agreement.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "termsOfServiceId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/TermsOfServiceId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TermsOfServiceTransients"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the terms of service agreements."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Terms of service agreement not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Get the current active (all transients since last declined or released state) for a terms of service agreement.",
+        "tags" : [ "TermsOfService" ]
+      }
+    },
+    "/termsOfService/{termsOfServiceId}/approve" : {
+      "patch" : {
+        "description" : "Approve all current transient states for terms of service agreement, given it's UUID.",
+        "operationId" : "approveTermsOfService",
+        "parameters" : [ {
+          "description" : "The UUID of the terms of service agreement.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "termsOfServiceId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/TermsOfServiceId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TermsOfServiceTransient"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to approve the terms of service agreement."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Function not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Approve all current transient states for an terms of service agreement.",
+        "tags" : [ "TermsOfService" ]
+      }
+    },
+    "/termsOfService/{termsOfServiceId}/decline" : {
+      "patch" : {
+        "description" : "Decline all current transient states for a terms of service agreement, given it's UUID.",
+        "operationId" : "declineTermsOfServiceAgreement",
+        "parameters" : [ {
+          "description" : "The UUID of the terms of service agreement.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "termsOfServiceId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/TermsOfServiceId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TermsOfServiceTransient"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to decline the terms of service agreement."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Terms of service agreement not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Decline all current transient states for a terms of service agreement.",
         "tags" : [ "TermsOfService" ]
       }
     },
@@ -5308,7 +5578,7 @@
     },
     "/authenticationModes/ldap/{ldapAuthenticationModeId}/transients" : {
       "get" : {
-        "description" : "Get the latest transients for an LDAP Auth mode by the it's UUID.",
+        "description" : "Get the latest transients for an LDAP Auth mode by it's UUID.",
         "operationId" : "getLdapAuthModeTransients",
         "parameters" : [ {
           "description" : "The UUID of the LDAP authentication mode.",
@@ -5370,7 +5640,7 @@
                 }
               }
             },
-            "description" : "Function not found."
+            "description" : "LDAP Authentication mode not found."
           },
           "500" : {
             "content" : {
@@ -5451,7 +5721,7 @@
                 }
               }
             },
-            "description" : "Function not found."
+            "description" : "LDAP Authentication mode not found."
           },
           "422" : {
             "content" : {
@@ -5542,7 +5812,7 @@
                 }
               }
             },
-            "description" : "Teams not found."
+            "description" : "LDAP Authentication mode not found."
           },
           "422" : {
             "content" : {
@@ -6446,6 +6716,7 @@
       "RoleTransient" : {
         "description" : "Represents a transient state of a role.\n",
         "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
           "requiredApprovalCount" : 6,
           "latestTransientRoleChildRoles" : [ {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
@@ -6532,6 +6803,10 @@
             "format" : "uuid",
             "type" : "string"
           },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
           "latestTransientRoleFunctions" : {
             "description" : "A list of the latest transient role function assignments for this transient role.",
             "items" : {
@@ -6552,7 +6827,7 @@
       "RoleTransientsItem" : {
         "description" : "Represents a transient state of a role.\n",
         "example" : {
-          "createdAt" : "createdAt",
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
           "requiredApprovalCount" : 6,
           "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6598,7 +6873,7 @@
             "type" : "string"
           },
           "createdAt" : {
-            "format" : "datetime",
+            "format" : "date-time",
             "type" : "string"
           }
         },
@@ -6637,7 +6912,7 @@
             "approvalCount" : 5
           } ],
           "latestActiveRoleTransients" : [ {
-            "createdAt" : "createdAt",
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "requiredApprovalCount" : 6,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -6648,7 +6923,7 @@
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "approvalCount" : 0
           }, {
-            "createdAt" : "createdAt",
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "requiredApprovalCount" : 6,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -7156,7 +7431,7 @@
             } ],
             "capturedDate" : "2000-01-23T04:56:07.000+00:00",
             "latestActiveRoleTransient" : {
-              "createdAt" : "createdAt",
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "requiredApprovalCount" : 6,
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -7216,7 +7491,7 @@
             } ],
             "capturedDate" : "2000-01-23T04:56:07.000+00:00",
             "latestActiveRoleTransient" : {
-              "createdAt" : "createdAt",
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "requiredApprovalCount" : 6,
               "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -7250,6 +7525,45 @@
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "approvalCount" : 1
             } ]
+          } ],
+          "TermsOfServiceAgreements" : [ {
+            "TermsOfServiceName" : "TermsOfServiceName",
+            "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "capturerName" : "capturerName",
+            "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+            "latestActiveTermsOfServiceTransient" : {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : 6,
+              "autoUpdate" : true,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "agreementName" : "agreementName",
+              "r_state" : "r_state",
+              "action" : "action",
+              "termsOfServiceId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "agreementFileData" : "agreementFileData",
+              "approvalCount" : 0
+            },
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          }, {
+            "TermsOfServiceName" : "TermsOfServiceName",
+            "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "capturerName" : "capturerName",
+            "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+            "latestActiveTermsOfServiceTransient" : {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : 6,
+              "autoUpdate" : true,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "agreementName" : "agreementName",
+              "r_state" : "r_state",
+              "action" : "action",
+              "termsOfServiceId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "agreementFileData" : "agreementFileData",
+              "approvalCount" : 0
+            },
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
           } ],
           "LdapAuthenticationModes" : [ {
             "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -7333,6 +7647,12 @@
               "$ref" : "#/components/schemas/SystemTransientsLdapAuthenticationMode"
             },
             "type" : "array"
+          },
+          "TermsOfServiceAgreements" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SystemTransientsTermsOfService"
+            },
+            "type" : "array"
           }
         },
         "type" : "object"
@@ -7365,7 +7685,7 @@
           } ],
           "capturedDate" : "2000-01-23T04:56:07.000+00:00",
           "latestActiveRoleTransient" : {
-            "createdAt" : "createdAt",
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "requiredApprovalCount" : 6,
             "roleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -7671,6 +7991,53 @@
         },
         "type" : "object"
       },
+      "SystemTransientsTermsOfService" : {
+        "description" : "Represents the latest transients (only the most recent transient record) for a terms of service agreement with any active transients.\n",
+        "example" : {
+          "TermsOfServiceName" : "TermsOfServiceName",
+          "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "capturerName" : "capturerName",
+          "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+          "latestActiveTermsOfServiceTransient" : {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 6,
+            "autoUpdate" : true,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "agreementName" : "agreementName",
+            "r_state" : "r_state",
+            "action" : "action",
+            "termsOfServiceId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "agreementFileData" : "agreementFileData",
+            "approvalCount" : 0
+          },
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "TermsOfServiceName" : {
+            "type" : "string"
+          },
+          "capturerUuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "capturerName" : {
+            "type" : "string"
+          },
+          "capturedDate" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "latestActiveTermsOfServiceTransient" : {
+            "$ref" : "#/components/schemas/TermsOfServiceTransient"
+          }
+        },
+        "type" : "object"
+      },
       "ApplicationId" : {
         "description" : "The UUID of an application.",
         "format" : "uuid",
@@ -7856,15 +8223,12 @@
         },
         "type" : "object"
       },
-      "TermsOfServiceListItem" : {
-        "description" : "Models a terms of service agreement returned inside lists.\n",
+      "TermsOfServiceSimple" : {
+        "description" : "Models a simple terms of service agreement that needs to be agreed to by a user on login, which does not model any terms of service relations.\n",
         "example" : {
-          "acceptedUserIds" : [ null, null ],
-          "subRealmId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "agreementName" : "agreementName",
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-          "version" : "version",
-          "teamIds" : [ null, null ]
+          "version" : "version"
         },
         "properties" : {
           "uuid" : {
@@ -7875,25 +8239,6 @@
             "type" : "string"
           },
           "version" : {
-            "type" : "string"
-          },
-          "teamIds" : {
-            "description" : "Teams linked to this terms of service entry.",
-            "items" : {
-              "$ref" : "#/components/schemas/TeamId"
-            },
-            "type" : "array"
-          },
-          "acceptedUserIds" : {
-            "description" : "A list of User Id's that have accepted this terms of service entry.",
-            "items" : {
-              "$ref" : "#/components/schemas/UserId"
-            },
-            "type" : "array"
-          },
-          "subRealmId" : {
-            "description" : "The UUID identifier for a sub-realm.",
-            "format" : "uuid",
             "type" : "string"
           }
         },
@@ -7929,6 +8274,107 @@
           }
         },
         "required" : [ "agreementFileData", "agreementName", "autoUpdate" ],
+        "type" : "object"
+      },
+      "TermsOfServiceTransientId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "TermsOfServiceTransient" : {
+        "description" : "Models the transient state of a terms of service agreement that needs to be agreed to by a user on login.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "requiredApprovalCount" : 6,
+          "autoUpdate" : true,
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "agreementName" : "agreementName",
+          "r_state" : "r_state",
+          "action" : "action",
+          "termsOfServiceId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "agreementFileData" : "agreementFileData",
+          "approvalCount" : 0
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "termsOfServiceId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "agreementName" : {
+            "type" : "string"
+          },
+          "agreementFileData" : {
+            "type" : "string"
+          },
+          "autoUpdate" : {
+            "type" : "boolean"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current approval count.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "createdBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "TermsOfServiceTransients" : {
+        "description" : "Represents the current active transients for a terms of service agreement.\n",
+        "example" : {
+          "latestActiveTermsOfServiceTransients" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 6,
+            "autoUpdate" : true,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "agreementName" : "agreementName",
+            "r_state" : "r_state",
+            "action" : "action",
+            "termsOfServiceId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "agreementFileData" : "agreementFileData",
+            "approvalCount" : 0
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 6,
+            "autoUpdate" : true,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "agreementName" : "agreementName",
+            "r_state" : "r_state",
+            "action" : "action",
+            "termsOfServiceId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "agreementFileData" : "agreementFileData",
+            "approvalCount" : 0
+          } ]
+        },
+        "properties" : {
+          "latestActiveTermsOfServiceTransients" : {
+            "items" : {
+              "$ref" : "#/components/schemas/TermsOfServiceTransient"
+            },
+            "type" : "array"
+          }
+        },
         "type" : "object"
       },
       "FunctionId" : {
@@ -9054,14 +9500,30 @@
       "TeamTransient" : {
         "description" : "Represents a transient state of a team and all the relations that can potentially have their assignment status changed, such as child teams or data policies.\n",
         "example" : {
-          "createdAt" : "2000-01-23T04:56:07.000+00:00",
           "requiredApprovalCount" : 6,
-          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-          "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-          "name" : "name",
+          "latestTransientTermsOfService" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 9,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "termsOfServiceId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 7
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 9,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "termsOfServiceId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 7
+          } ],
           "description" : "description",
           "r_state" : "r_state",
-          "action" : "action",
           "latestTransientTeamDataPolicies" : [ {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -9105,7 +9567,12 @@
             "approvalCount" : 5
           } ],
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-          "approvalCount" : 0
+          "approvalCount" : 0,
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "name" : "name",
+          "action" : "action"
         },
         "properties" : {
           "uuid" : {
@@ -9157,6 +9624,13 @@
             "description" : "A list of the latest transient team - child team assignments for this transient team.",
             "items" : {
               "$ref" : "#/components/schemas/TeamChildTeamTransient"
+            },
+            "type" : "array"
+          },
+          "latestTransientTermsOfService" : {
+            "description" : "A list of the latest transient team - terms of service assignments for this transient team.",
+            "items" : {
+              "$ref" : "#/components/schemas/TeamTermsOfServiceTransient"
             },
             "type" : "array"
           }
@@ -9218,6 +9692,35 @@
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "approvalCount" : 5
           } ],
+          "latestTransientTermsOfService" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 9,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "termsOfService" : {
+              "agreementName" : "agreementName",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "version" : "version"
+            },
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 7
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 9,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "termsOfService" : {
+              "agreementName" : "agreementName",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "version" : "version"
+            },
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 7
+          } ],
           "latestTransientTeamDataPolicies" : [ {
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "requiredApprovalCount" : 5,
@@ -9255,16 +9758,23 @@
             "type" : "array"
           },
           "latestTransientTeamDataPolicies" : {
-            "description" : "A list of the latest active (since last decline or released state) transient data policy assignment changes for this team.",
+            "description" : "A list of the latest active (since last declined or released state) transient data policy assignment changes for this team.",
             "items" : {
               "$ref" : "#/components/schemas/TeamDataPolicyDetailedTransient"
             },
             "type" : "array"
           },
           "latestTransientRoleChildRoles" : {
-            "description" : "A list of the latest active (since last decline or released state) transient child team assignment changes for this team.",
+            "description" : "A list of the latest active (since last declined or released state) transient child team assignment changes for this team.",
             "items" : {
               "$ref" : "#/components/schemas/TeamChildTeamDetailedTransient"
+            },
+            "type" : "array"
+          },
+          "latestTransientTermsOfService" : {
+            "description" : "A list of the latest active (since last declined or released state) transient terms of service assignment changes for this team.",
+            "items" : {
+              "$ref" : "#/components/schemas/TeamTermsOfServiceDetailedTransient"
             },
             "type" : "array"
           }
@@ -9328,7 +9838,7 @@
         "type" : "object"
       },
       "TeamDataPolicyTransient" : {
-        "description" : "Represents a transient state of a team data-polocy assignment.\n",
+        "description" : "Represents a transient state of a team data-policy assignment.\n",
         "example" : {
           "createdAt" : "2000-01-23T04:56:07.000+00:00",
           "dataPolicyId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -9379,7 +9889,7 @@
         "type" : "object"
       },
       "TeamDataPolicyDetailedTransient" : {
-        "description" : "Represents a transient state of a team data-polocy assignment.\n",
+        "description" : "Represents a transient state of a team data-policy assignment.\n",
         "example" : {
           "createdAt" : "2000-01-23T04:56:07.000+00:00",
           "requiredApprovalCount" : 5,
@@ -9536,11 +10046,120 @@
         },
         "type" : "object"
       },
+      "TeamTermsOfServiceTransient" : {
+        "description" : "Represents a transient state of a team terms of service agreement assignment.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "requiredApprovalCount" : 9,
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "r_state" : "r_state",
+          "action" : "action",
+          "termsOfServiceId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 7
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "teamId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "termsOfServiceId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current amount of approvals.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "createdBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "TeamTermsOfServiceDetailedTransient" : {
+        "description" : "Represents a transient state of a team terms of service agreement assignment.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "requiredApprovalCount" : 9,
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "teamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "r_state" : "r_state",
+          "action" : "action",
+          "termsOfService" : {
+            "agreementName" : "agreementName",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "version" : "version"
+          },
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 7
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "teamId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "termsOfService" : {
+            "$ref" : "#/components/schemas/TermsOfServiceSimple"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current amount of approvals.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "createdBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
       "TransientTeamId" : {
         "format" : "uuid",
         "type" : "string"
       },
       "TransientTeamDataPolicyId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "TransientTeamtermsOfServiceId" : {
         "format" : "uuid",
         "type" : "string"
       },

@@ -41,7 +41,7 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         /// <response code="400">Bad Request.</response>
         /// <response code="401">Not authenticated.</response>
         /// <response code="403">Forbidden - You are not authorized to approve the LDAP Authentication mode.</response>
-        /// <response code="404">Function not found.</response>
+        /// <response code="404">LDAP Authentication mode not found.</response>
         /// <response code="422">Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.</response>
         /// <response code="500">An unexpected error occurred.</response>
         [HttpPatch]
@@ -89,7 +89,7 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         /// <response code="400">Bad Request.</response>
         /// <response code="401">Not authenticated.</response>
         /// <response code="403">Forbidden - You are not authorized to decline the LDAP Authentication mode.</response>
-        /// <response code="404">Teams not found.</response>
+        /// <response code="404">LDAP Authentication mode not found.</response>
         /// <response code="422">Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.</response>
         /// <response code="500">An unexpected error occurred.</response>
         [HttpPatch]
@@ -131,13 +131,13 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         /// <summary>
         /// Get the current active (all transients since last declined or released state) for an LDAP authentication mode.
         /// </summary>
-        /// <remarks>Get the latest transients for an LDAP Auth mode by the it&#39;s UUID.</remarks>
+        /// <remarks>Get the latest transients for an LDAP Auth mode by it&#39;s UUID.</remarks>
         /// <param name="ldapAuthenticationModeId">The UUID of the LDAP authentication mode.</param>
         /// <response code="200">OK.</response>
         /// <response code="400">Bad Request.</response>
         /// <response code="401">Not authenticated.</response>
         /// <response code="403">Forbidden - You are not authorized to access the LDAP Authentication mode.</response>
-        /// <response code="404">Function not found.</response>
+        /// <response code="404">LDAP Authentication mode not found.</response>
         /// <response code="500">An unexpected error occurred.</response>
         [HttpGet]
         [Route("/authenticationModes/ldap/{ldapAuthenticationModeId}/transients", Name = "GetLdapAuthModeTransients")]

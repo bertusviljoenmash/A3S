@@ -57,6 +57,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public List<SystemTransientsLdapAuthenticationMode> LdapAuthenticationModes { get; set; }
 
         /// <summary>
+        /// Gets or Sets TermsOfServiceAgreements
+        /// </summary>
+        [DataMember(Name="TermsOfServiceAgreements", EmitDefaultValue=false)]
+        public List<SystemTransientsTermsOfService> TermsOfServiceAgreements { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -68,6 +74,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  Teams: ").Append(Teams).Append("\n");
             sb.Append("  Functions: ").Append(Functions).Append("\n");
             sb.Append("  LdapAuthenticationModes: ").Append(LdapAuthenticationModes).Append("\n");
+            sb.Append("  TermsOfServiceAgreements: ").Append(TermsOfServiceAgreements).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -127,6 +134,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     LdapAuthenticationModes != null &&
                     other.LdapAuthenticationModes != null &&
                     LdapAuthenticationModes.SequenceEqual(other.LdapAuthenticationModes)
+                ) && 
+                (
+                    TermsOfServiceAgreements == other.TermsOfServiceAgreements ||
+                    TermsOfServiceAgreements != null &&
+                    other.TermsOfServiceAgreements != null &&
+                    TermsOfServiceAgreements.SequenceEqual(other.TermsOfServiceAgreements)
                 );
         }
 
@@ -148,6 +161,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + Functions.GetHashCode();
                     if (LdapAuthenticationModes != null)
                     hashCode = hashCode * 59 + LdapAuthenticationModes.GetHashCode();
+                    if (TermsOfServiceAgreements != null)
+                    hashCode = hashCode * 59 + TermsOfServiceAgreements.GetHashCode();
                 return hashCode;
             }
         }

@@ -90,6 +90,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public Guid ChangedBy { get; set; }
 
         /// <summary>
+        /// Gets or Sets CreatedAt
+        /// </summary>
+        [DataMember(Name="createdAt", EmitDefaultValue=false)]
+        public DateTime CreatedAt { get; set; }
+
+        /// <summary>
         /// A list of the latest transient role function assignments for this transient role.
         /// </summary>
         /// <value>A list of the latest transient role function assignments for this transient role.</value>
@@ -120,6 +126,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  ApprovalCount: ").Append(ApprovalCount).Append("\n");
             sb.Append("  RequiredApprovalCount: ").Append(RequiredApprovalCount).Append("\n");
             sb.Append("  ChangedBy: ").Append(ChangedBy).Append("\n");
+            sb.Append("  CreatedAt: ").Append(CreatedAt).Append("\n");
             sb.Append("  LatestTransientRoleFunctions: ").Append(LatestTransientRoleFunctions).Append("\n");
             sb.Append("  LatestTransientRoleChildRoles: ").Append(LatestTransientRoleChildRoles).Append("\n");
             sb.Append("}\n");
@@ -204,6 +211,11 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     ChangedBy.Equals(other.ChangedBy)
                 ) && 
                 (
+                    CreatedAt == other.CreatedAt ||
+                    CreatedAt != null &&
+                    CreatedAt.Equals(other.CreatedAt)
+                ) && 
+                (
                     LatestTransientRoleFunctions == other.LatestTransientRoleFunctions ||
                     LatestTransientRoleFunctions != null &&
                     other.LatestTransientRoleFunctions != null &&
@@ -245,6 +257,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + RequiredApprovalCount.GetHashCode();
                     if (ChangedBy != null)
                     hashCode = hashCode * 59 + ChangedBy.GetHashCode();
+                    if (CreatedAt != null)
+                    hashCode = hashCode * 59 + CreatedAt.GetHashCode();
                     if (LatestTransientRoleFunctions != null)
                     hashCode = hashCode * 59 + LatestTransientRoleFunctions.GetHashCode();
                     if (LatestTransientRoleChildRoles != null)

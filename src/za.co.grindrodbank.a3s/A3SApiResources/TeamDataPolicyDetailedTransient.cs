@@ -27,7 +27,7 @@ using za.co.grindrodbank.a3s.Converters;
 namespace za.co.grindrodbank.a3s.A3SApiResources
 { 
     /// <summary>
-    /// Represents a transient state of a team data-polocy assignment. 
+    /// Represents a transient state of a team data-policy assignment. 
     /// </summary>
     [DataContract]
     public partial class TeamDataPolicyDetailedTransient : IEquatable<TeamDataPolicyDetailedTransient>

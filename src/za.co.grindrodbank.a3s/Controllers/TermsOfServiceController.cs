@@ -36,11 +36,21 @@ namespace za.co.grindrodbank.a3s.Controllers
             this.mapper = mapper;
         }
 
+        public override Task<IActionResult> ApproveTermsOfServiceAsync([FromRoute, Required] Guid termsOfServiceId)
+        {
+            throw new NotImplementedException();
+        }
+
         [Authorize(Policy = "permission:a3s.termsOfService.create")]
         public async override Task<IActionResult> CreateTermsOfServiceAsync([FromBody] TermsOfServiceSubmit termsOfServiceSubmit)
         {
             var loggedOnUser = ClaimsHelper.GetScalarClaimValue<Guid>(User, ClaimTypes.NameIdentifier, Guid.Empty);
             return Ok(await termsOfServiceService.CreateAsync(termsOfServiceSubmit, loggedOnUser));
+        }
+
+        public override Task<IActionResult> DeclineTermsOfServiceAgreementAsync([FromRoute, Required] Guid termsOfServiceId)
+        {
+            throw new NotImplementedException();
         }
 
         [Authorize(Policy = "permission:a3s.termsOfService.delete")]
@@ -64,6 +74,11 @@ namespace za.co.grindrodbank.a3s.Controllers
             return Ok(termsOfService);
         }
 
+        public override Task<IActionResult> GetTermsOfServiceTransientsAsync([FromRoute, Required] Guid termsOfServiceId)
+        {
+            throw new NotImplementedException();
+        }
+
         [Authorize(Policy = "permission:a3s.termsOfService.read")]
         public async override Task<IActionResult> ListTermsOfServicesAsync([FromQuery]int page, [FromQuery][Range(1, 20)]int size, [FromQuery]bool includeRelations, [FromQuery][StringLength(255, MinimumLength = 0)]string filterAgreementName, [FromQuery]string orderBy)
         {
@@ -79,7 +94,7 @@ namespace za.co.grindrodbank.a3s.Controllers
 
             paginationHelper.AddPaginationHeaderMetaDataToResponse(paginatedResult, currrentFilters, orderBy, "ListTermsOfServices", Url, Response);
 
-            return Ok(mapper.Map<List<TermsOfServiceListItem>>(paginatedResult.Results));
+            return Ok(mapper.Map<List<TermsOfService>>(paginatedResult.Results));
         }
     }
 }

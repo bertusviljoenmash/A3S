@@ -2232,7 +2232,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/TermsOfServiceListItem'
+                  $ref: '#/components/schemas/TermsOfService'
         '400':
           description: Bad Request.
           content:
@@ -2274,7 +2274,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TermsOfService'
+                $ref: '#/components/schemas/TermsOfServiceTransient'
         '400':
           description: Bad Request.
           content:
@@ -2364,8 +2364,12 @@ paths:
           schema:
             $ref: '#/components/schemas/TermsOfServiceId'
       responses:
-        '204':
-          description: No Content.
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermsOfServiceTransient'
         '400':
           description: Invalid parameters.
           content:
@@ -2397,6 +2401,174 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+                
+  '/termsOfService/{termsOfServiceId}/transients':
+    get:
+      tags:
+        - TermsOfService
+      summary: Get the current active (all transients since last declined or released state) for a terms of service agreement.
+      description: Get the latest transients for a terms of service agreement by it's UUID.
+      operationId: getTermsOfServiceTransients
+      parameters:
+        - name: termsOfServiceId
+          description: The UUID of the terms of service agreement.
+          required: true
+          in: path
+          schema:
+            $ref: '#/components/schemas/TermsOfServiceId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermsOfServiceTransients'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the terms of service agreements.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Terms of service agreement not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+                
+  '/termsOfService/{termsOfServiceId}/approve':              
+    patch:
+      tags:
+        - TermsOfService
+      summary: Approve all current transient states for an terms of service agreement.
+      description: Approve all current transient states for terms of service agreement, given it's UUID.
+      operationId: approveTermsOfService
+      parameters:
+        - name: termsOfServiceId
+          description: The UUID of the terms of service agreement.
+          required: true
+          in: path
+          schema:
+            $ref: '#/components/schemas/TermsOfServiceId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermsOfServiceTransient'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to approve the terms of service agreement.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Function not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  '/termsOfService/{termsOfServiceId}/decline':              
+    patch:
+      tags:
+        - TermsOfService
+      summary: Decline all current transient states for a terms of service agreement.
+      description: Decline all current transient states for a terms of service agreement, given it's UUID.
+      operationId: declineTermsOfServiceAgreement
+      parameters:
+        - name: termsOfServiceId
+          description: The UUID of the terms of service agreement.
+          required: true
+          in: path
+          schema:
+            $ref: '#/components/schemas/TermsOfServiceId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermsOfServiceTransient'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to decline the terms of service agreement.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Terms of service agreement not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
           description: An unexpected error occurred.
           content:
             application/json:
@@ -3449,7 +3621,7 @@ paths:
       tags:
         - LdapAuthenticationMode
       summary: Get the current active (all transients since last declined or released state) for an LDAP authentication mode.
-      description: Get the latest transients for an LDAP Auth mode by the it's UUID.
+      description: Get the latest transients for an LDAP Auth mode by it's UUID.
       operationId: getLdapAuthModeTransients
       parameters:
         - name: ldapAuthenticationModeId
@@ -3484,7 +3656,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: Function not found.
+          description: LDAP Authentication mode not found.
           content:
             application/json:
               schema:
@@ -3536,7 +3708,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: Function not found.
+          description: LDAP Authentication mode not found.
           content:
             application/json:
               schema:
@@ -3594,7 +3766,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: Teams not found.
+          description: LDAP Authentication mode not found.
           content:
             application/json:
               schema:
@@ -4190,6 +4362,9 @@ components:
         changedBy:
           type: string
           format: uuid
+        createdAt:
+          type: string
+          format: date-time
         latestTransientRoleFunctions:
           description: A list of the latest transient role function assignments for this transient role.
           type: array
@@ -4229,7 +4404,7 @@ components:
           format: uuid
         createdAt:
           type: string
-          format: datetime
+          format: date-time
             
     RoleTransients:
       description: |
@@ -4385,6 +4560,10 @@ components:
           type: array
           items: 
             $ref: '#/components/schemas/SystemTransientsLdapAuthenticationMode'
+        TermsOfServiceAgreements:
+          type: array
+          items: 
+            $ref: '#/components/schemas/SystemTransientsTermsOfService'
             
     SystemTransientsRole:
       description: |
@@ -4486,6 +4665,25 @@ components:
           format: date-time
         latestActiveLdapAuthenticationModeTransient:
           $ref: '#/components/schemas/LdapAuthenticationModeTransient'
+          
+    SystemTransientsTermsOfService:
+      description: |
+        Represents the latest transients (only the most recent transient record) for a terms of service agreement with any active transients.
+      type: object
+      properties:
+        uuid : 
+          $ref: '#/components/schemas/TermsOfServiceId'
+        TermsOfServiceName: 
+          type: string
+        capturerUuid:
+          $ref: '#/components/schemas/UserId'
+        capturerName: 
+          type: string
+        capturedDate: 
+          type: string
+          format: date-time
+        latestActiveTermsOfServiceTransient:
+          $ref: '#/components/schemas/TermsOfServiceTransient'
         
     # Begin Region - Transients
     
@@ -4580,9 +4778,9 @@ components:
         subRealmId:
           $ref: '#/components/schemas/SubRealmId'
           
-    TermsOfServiceListItem:
+    TermsOfServiceSimple:
       description: |
-        Models a terms of service agreement returned inside lists.
+        Models a simple terms of service agreement that needs to be agreed to by a user on login, which does not model any terms of service relations.
       type: object
       properties:
         uuid:
@@ -4591,18 +4789,8 @@ components:
           type: string
         version:
           type: string
-        teamIds:
-          description: Teams linked to this terms of service entry.
-          type: array
-          items:
-            $ref: '#/components/schemas/TeamId'
-        acceptedUserIds:
-          description: A list of User Id's that have accepted this terms of service entry.
-          type: array
-          items:
-            $ref: '#/components/schemas/UserId'
-        subRealmId:
-          $ref: '#/components/schemas/SubRealmId'
+       
+          
 
     TermsOfServiceSubmit:
       description: |
@@ -4623,7 +4811,53 @@ components:
           type: boolean
         subRealmId:
           $ref: '#/components/schemas/SubRealmId'
-      
+    
+    TermsOfServiceTransientId:
+      type: string
+      format: uuid
+          
+    TermsOfServiceTransient:
+      description: |
+        Models the transient state of a terms of service agreement that needs to be agreed to by a user on login.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TermsOfServiceTransientId'
+        termsOfServiceId:
+          $ref: '#/components/schemas/TermsOfServiceId'
+        agreementName:
+          type: string
+        agreementFileData:
+          type: string
+        autoUpdate:
+          type: boolean
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          description: The current approval count.
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+          type: integer
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+          
+    TermsOfServiceTransients:
+      description: |
+        Represents the current active transients for a terms of service agreement.
+      type: object
+      properties:
+        latestActiveTermsOfServiceTransients:
+          type: array
+          items:
+            $ref: '#/components/schemas/TermsOfServiceTransient'
+
     # End Region - TermsOfService      
 
     # Region - Functions
@@ -5169,6 +5403,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TeamChildTeamTransient'
+        latestTransientTermsOfService:
+          description: A list of the latest transient team - terms of service assignments for this transient team.
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamTermsOfServiceTransient'
             
     TeamTransients:
       description: |
@@ -5181,15 +5420,20 @@ components:
           items:
             $ref: '#/components/schemas/TeamBaseTeamTransient'
         latestTransientTeamDataPolicies:
-          description: A list of the latest active (since last decline or released state) transient data policy assignment changes for this team.
+          description: A list of the latest active (since last declined or released state) transient data policy assignment changes for this team.
           type: array
           items:
             $ref: '#/components/schemas/TeamDataPolicyDetailedTransient'
         latestTransientRoleChildRoles:
-          description: A list of the latest active (since last decline or released state) transient child team assignment changes for this team.
+          description: A list of the latest active (since last declined or released state) transient child team assignment changes for this team.
           type: array
           items:
             $ref: '#/components/schemas/TeamChildTeamDetailedTransient'
+        latestTransientTermsOfService:
+          description: A list of the latest active (since last declined or released state) transient terms of service assignment changes for this team.
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamTermsOfServiceDetailedTransient'
             
     TeamBaseTeamTransient:
       description: |
@@ -5225,7 +5469,7 @@ components:
             
     TeamDataPolicyTransient:
       description: |
-        Represents a transient state of a team data-polocy assignment.
+        Represents a transient state of a team data-policy assignment.
       type: object
       properties:
         uuid:
@@ -5253,7 +5497,7 @@ components:
           
     TeamDataPolicyDetailedTransient:
       description: |
-        Represents a transient state of a team data-polocy assignment.
+        Represents a transient state of a team data-policy assignment.
       type: object
       properties:
         uuid:
@@ -5334,12 +5578,72 @@ components:
         createdAt:
           type: string
           format: date-time
+          
+    TeamTermsOfServiceTransient:
+      description: |
+        Represents a transient state of a team terms of service agreement assignment.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientTeamtermsOfServiceId'
+        teamId:
+          $ref: '#/components/schemas/TeamId'
+        termsOfServiceId:
+          $ref: '#/components/schemas/TermsOfServiceId'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+          description: The current amount of approvals.
+        requiredApprovalCount:
+          type: integer
+          description: The required approval count before this entity is released.
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+          
+    TeamTermsOfServiceDetailedTransient:
+      description: |
+        Represents a transient state of a team terms of service agreement assignment.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TransientTeamtermsOfServiceId'
+        teamId:
+          $ref: '#/components/schemas/TeamId'
+        termsOfService:
+          $ref: '#/components/schemas/TermsOfServiceSimple'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+          description: The current amount of approvals.
+        requiredApprovalCount:
+          type: integer
+          description: The required approval count before this entity is released.
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
             
     TransientTeamId:
       type: string
       format: uuid
       
     TransientTeamDataPolicyId:
+      type: string
+      format: uuid
+      
+    TransientTeamtermsOfServiceId:
       type: string
       format: uuid
       

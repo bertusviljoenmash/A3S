@@ -40,18 +40,25 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public List<TeamBaseTeamTransient> LatestActiveTeamTransients { get; set; }
 
         /// <summary>
-        /// A list of the latest active (since last decline or released state) transient data policy assignment changes for this team.
+        /// A list of the latest active (since last declined or released state) transient data policy assignment changes for this team.
         /// </summary>
-        /// <value>A list of the latest active (since last decline or released state) transient data policy assignment changes for this team.</value>
+        /// <value>A list of the latest active (since last declined or released state) transient data policy assignment changes for this team.</value>
         [DataMember(Name="latestTransientTeamDataPolicies", EmitDefaultValue=false)]
         public List<TeamDataPolicyDetailedTransient> LatestTransientTeamDataPolicies { get; set; }
 
         /// <summary>
-        /// A list of the latest active (since last decline or released state) transient child team assignment changes for this team.
+        /// A list of the latest active (since last declined or released state) transient child team assignment changes for this team.
         /// </summary>
-        /// <value>A list of the latest active (since last decline or released state) transient child team assignment changes for this team.</value>
+        /// <value>A list of the latest active (since last declined or released state) transient child team assignment changes for this team.</value>
         [DataMember(Name="latestTransientRoleChildRoles", EmitDefaultValue=false)]
         public List<TeamChildTeamDetailedTransient> LatestTransientRoleChildRoles { get; set; }
+
+        /// <summary>
+        /// A list of the latest active (since last declined or released state) transient terms of service assignment changes for this team.
+        /// </summary>
+        /// <value>A list of the latest active (since last declined or released state) transient terms of service assignment changes for this team.</value>
+        [DataMember(Name="latestTransientTermsOfService", EmitDefaultValue=false)]
+        public List<TeamTermsOfServiceDetailedTransient> LatestTransientTermsOfService { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -64,6 +71,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  LatestActiveTeamTransients: ").Append(LatestActiveTeamTransients).Append("\n");
             sb.Append("  LatestTransientTeamDataPolicies: ").Append(LatestTransientTeamDataPolicies).Append("\n");
             sb.Append("  LatestTransientRoleChildRoles: ").Append(LatestTransientRoleChildRoles).Append("\n");
+            sb.Append("  LatestTransientTermsOfService: ").Append(LatestTransientTermsOfService).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -117,6 +125,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     LatestTransientRoleChildRoles != null &&
                     other.LatestTransientRoleChildRoles != null &&
                     LatestTransientRoleChildRoles.SequenceEqual(other.LatestTransientRoleChildRoles)
+                ) && 
+                (
+                    LatestTransientTermsOfService == other.LatestTransientTermsOfService ||
+                    LatestTransientTermsOfService != null &&
+                    other.LatestTransientTermsOfService != null &&
+                    LatestTransientTermsOfService.SequenceEqual(other.LatestTransientTermsOfService)
                 );
         }
 
@@ -136,6 +150,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + LatestTransientTeamDataPolicies.GetHashCode();
                     if (LatestTransientRoleChildRoles != null)
                     hashCode = hashCode * 59 + LatestTransientRoleChildRoles.GetHashCode();
+                    if (LatestTransientTermsOfService != null)
+                    hashCode = hashCode * 59 + LatestTransientTermsOfService.GetHashCode();
                 return hashCode;
             }
         }
