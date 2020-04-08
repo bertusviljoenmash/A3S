@@ -862,7 +862,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/RoleTransient'
+                  $ref: '#/components/schemas/Role'
         '400':
           description: Bad Request.
           content:

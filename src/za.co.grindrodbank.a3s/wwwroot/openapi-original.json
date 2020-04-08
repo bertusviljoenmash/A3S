@@ -1311,7 +1311,7 @@
               "application/json" : {
                 "schema" : {
                   "items" : {
-                    "$ref" : "#/components/schemas/RoleTransient"
+                    "$ref" : "#/components/schemas/Role"
                   },
                   "type" : "array"
                 }
