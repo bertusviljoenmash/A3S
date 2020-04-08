@@ -33,6 +33,30 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
     public abstract class LdapAuthenticationModeApiController : ControllerBase
     { 
         /// <summary>
+        /// Approve all current transient states for an LDAP Authentication mode.
+        /// </summary>
+        /// <remarks>Approve all current transient states for an LDAP Authentication mode, given it&#39;s UUID.</remarks>
+        /// <param name="ldapAuthenticationModeId">The UUID of the LDAP authentication mode.</param>
+        /// <response code="200">OK.</response>
+        /// <response code="400">Bad Request.</response>
+        /// <response code="401">Not authenticated.</response>
+        /// <response code="403">Forbidden - You are not authorized to approve the LDAP Authentication mode.</response>
+        /// <response code="404">Function not found.</response>
+        /// <response code="422">Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.</response>
+        /// <response code="500">An unexpected error occurred.</response>
+        [HttpPatch]
+        [Route("/authenticationModes/ldap/{ldapAuthenticationModeId}/approve", Name = "ApproveLdapAuthenticationMode")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(LdapAuthenticationModeTransient))]
+        [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 404, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 422, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
+        public abstract Task<IActionResult> ApproveLdapAuthenticationModeAsync([FromRoute][Required]Guid ldapAuthenticationModeId);
+
+        /// <summary>
         /// Create a LDAP Authentication Mode.
         /// </summary>
         /// <remarks>Create a new LDAP Authentication Mode.</remarks>
@@ -47,7 +71,7 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         [HttpPost]
         [Route("/authenticationModes/ldap", Name = "CreateLdapAuthenticationMode")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(LdapAuthenticationMode))]
+        [ProducesResponseType(statusCode: 200, type: typeof(LdapAuthenticationModeTransient))]
         [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
@@ -57,11 +81,35 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         public abstract Task<IActionResult> CreateLdapAuthenticationModeAsync([FromBody]LdapAuthenticationModeSubmit ldapAuthenticationModeSubmit);
 
         /// <summary>
+        /// Decline all current transient states for an LDAP Authentication mode.
+        /// </summary>
+        /// <remarks>Decline all current transient states for an LDAP Authentication mode, given it&#39;s UUID.</remarks>
+        /// <param name="ldapAuthenticationModeId">The UUID of the LDAP authentication mode.</param>
+        /// <response code="200">OK.</response>
+        /// <response code="400">Bad Request.</response>
+        /// <response code="401">Not authenticated.</response>
+        /// <response code="403">Forbidden - You are not authorized to decline the LDAP Authentication mode.</response>
+        /// <response code="404">Teams not found.</response>
+        /// <response code="422">Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.</response>
+        /// <response code="500">An unexpected error occurred.</response>
+        [HttpPatch]
+        [Route("/authenticationModes/ldap/{ldapAuthenticationModeId}/decline", Name = "DeclineLdapAuthenticationMode")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(LdapAuthenticationModeTransient))]
+        [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 404, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 422, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
+        public abstract Task<IActionResult> DeclineLdapAuthenticationModeAsync([FromRoute][Required]Guid ldapAuthenticationModeId);
+
+        /// <summary>
         /// Deletes a LDAP Authentication Mode.
         /// </summary>
         /// <remarks>Deletes a LDAP Authentication Mode, but only if there are no users currently using this Authentication Mode.</remarks>
         /// <param name="ldapAuthenticationModeId">The UUID of the LDAP Authentication Mode.</param>
-        /// <response code="204">No Content.</response>
+        /// <response code="200">OK.</response>
         /// <response code="400">Bad Request.</response>
         /// <response code="401">Not authenticated.</response>
         /// <response code="403">Forbidden - You are not authorized to delete LDAP Authentication Modes.</response>
@@ -71,6 +119,7 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         [HttpDelete]
         [Route("/authenticationModes/ldap/{ldapAuthenticationModeId}", Name = "DeleteLdapAuthenticationMode")]
         [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(LdapAuthenticationModeTransient))]
         [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
@@ -78,6 +127,28 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         [ProducesResponseType(statusCode: 422, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
         public abstract Task<IActionResult> DeleteLdapAuthenticationModeAsync([FromRoute][Required]Guid ldapAuthenticationModeId);
+
+        /// <summary>
+        /// Get the current active (all transients since last declined or released state) for an LDAP authentication mode.
+        /// </summary>
+        /// <remarks>Get the latest transients for an LDAP Auth mode by the it&#39;s UUID.</remarks>
+        /// <param name="ldapAuthenticationModeId">The UUID of the LDAP authentication mode.</param>
+        /// <response code="200">OK.</response>
+        /// <response code="400">Bad Request.</response>
+        /// <response code="401">Not authenticated.</response>
+        /// <response code="403">Forbidden - You are not authorized to access the LDAP Authentication mode.</response>
+        /// <response code="404">Function not found.</response>
+        /// <response code="500">An unexpected error occurred.</response>
+        [HttpGet]
+        [Route("/authenticationModes/ldap/{ldapAuthenticationModeId}/transients", Name = "GetLdapAuthModeTransients")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(List<LdapAuthenticationModeTransient>))]
+        [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 404, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
+        public abstract Task<IActionResult> GetLdapAuthModeTransientsAsync([FromRoute][Required]Guid ldapAuthenticationModeId);
 
         /// <summary>
         /// Get a ldapAuthenticationMode
@@ -165,7 +236,7 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         [HttpPut]
         [Route("/authenticationModes/ldap/{ldapAuthenticationModeId}", Name = "UpdateLdapAuthenticationMode")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(LdapAuthenticationMode))]
+        [ProducesResponseType(statusCode: 200, type: typeof(LdapAuthenticationModeTransient))]
         [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]

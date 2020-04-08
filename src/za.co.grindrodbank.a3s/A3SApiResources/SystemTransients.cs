@@ -51,6 +51,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public List<SystemTransientsFunction> Functions { get; set; }
 
         /// <summary>
+        /// Gets or Sets LdapAuthenticationModes
+        /// </summary>
+        [DataMember(Name="LdapAuthenticationModes", EmitDefaultValue=false)]
+        public List<SystemTransientsLdapAuthenticationMode> LdapAuthenticationModes { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -61,6 +67,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  Roles: ").Append(Roles).Append("\n");
             sb.Append("  Teams: ").Append(Teams).Append("\n");
             sb.Append("  Functions: ").Append(Functions).Append("\n");
+            sb.Append("  LdapAuthenticationModes: ").Append(LdapAuthenticationModes).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -114,6 +121,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     Functions != null &&
                     other.Functions != null &&
                     Functions.SequenceEqual(other.Functions)
+                ) && 
+                (
+                    LdapAuthenticationModes == other.LdapAuthenticationModes ||
+                    LdapAuthenticationModes != null &&
+                    other.LdapAuthenticationModes != null &&
+                    LdapAuthenticationModes.SequenceEqual(other.LdapAuthenticationModes)
                 );
         }
 
@@ -133,6 +146,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + Teams.GetHashCode();
                     if (Functions != null)
                     hashCode = hashCode * 59 + Functions.GetHashCode();
+                    if (LdapAuthenticationModes != null)
+                    hashCode = hashCode * 59 + LdapAuthenticationModes.GetHashCode();
                 return hashCode;
             }
         }

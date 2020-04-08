@@ -27,7 +27,7 @@ using za.co.grindrodbank.a3s.Converters;
 namespace za.co.grindrodbank.a3s.A3SApiResources
 { 
     /// <summary>
-    /// Represents a collection of all the latest transients for roles with any changes. 
+    /// Represents the latest transients (only the most recent transient record) for a role with any active transients. 
     /// </summary>
     [DataContract]
     public partial class SystemTransientsRole : IEquatable<SystemTransientsRole>

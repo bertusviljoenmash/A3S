@@ -94,5 +94,20 @@ namespace za.co.grindrodbank.a3s.Controllers
             await authenticationModeService.DeleteAsync(ldapAuthenticationModeId);
             return NoContent();
         }
+
+        public override Task<IActionResult> ApproveLdapAuthenticationModeAsync([FromRoute, Required] Guid ldapAuthenticationModeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<IActionResult> DeclineLdapAuthenticationModeAsync([FromRoute, Required] Guid ldapAuthenticationModeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<IActionResult> GetLdapAuthModeTransientsAsync([FromRoute, Required] Guid ldapAuthenticationModeId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
