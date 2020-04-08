@@ -33,11 +33,36 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
     public abstract class UserApiController : ControllerBase
     { 
         /// <summary>
+        /// Approve all current transient states for a user.
+        /// </summary>
+        /// <remarks>Approve all current transient states for a user, given it&#39;s UUID.</remarks>
+        /// <param name="userId">The UUID of the user.</param>
+        /// <response code="200">OK.</response>
+        /// <response code="400">Bad Request.</response>
+        /// <response code="401">Not authenticated.</response>
+        /// <response code="403">Forbidden - You are not authorized to approve the user.</response>
+        /// <response code="404">User not found.</response>
+        /// <response code="422">Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.</response>
+        /// <response code="500">An unexpected error occurred.</response>
+        [HttpPatch]
+        [Route("/users/{userId}/approve", Name = "ApproveUser")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(UserTransient))]
+        [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 404, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 422, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
+        public abstract Task<IActionResult> ApproveUserAsync([FromRoute][Required]Guid userId);
+
+        /// <summary>
         /// Change a user password.
         /// </summary>
         /// <remarks>Change a user password.</remarks>
         /// <param name="userId">The UUID of the user.</param>
         /// <param name="userPasswordChangeSubmit"></param>
+        /// <response code="200">Successful. User update captured.</response>
         /// <response code="400">Bad Request.</response>
         /// <response code="401">Not authenticated.</response>
         /// <response code="403">Forbidden - You are not authorized update user passwords.</response>
@@ -46,6 +71,7 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         [HttpPut]
         [Route("/users/{userId}/changePassword", Name = "ChangeUserPassword")]
         [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(UserTransient))]
         [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
@@ -68,7 +94,7 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         [HttpPost]
         [Route("/users", Name = "CreateUser")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(UserSubmit))]
+        [ProducesResponseType(statusCode: 200, type: typeof(UserTransient))]
         [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
@@ -101,11 +127,35 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         public abstract Task<IActionResult> CreateUserProfileAsync([FromRoute][Required]Guid userId, [FromBody]UserProfileSubmit userProfileSubmit);
 
         /// <summary>
+        /// Decline all current transient states for a user.
+        /// </summary>
+        /// <remarks>Decline all current transient states for a user, given it&#39;s UUID.</remarks>
+        /// <param name="userId">The UUID of the user.</param>
+        /// <response code="200">OK.</response>
+        /// <response code="400">Bad Request.</response>
+        /// <response code="401">Not authenticated.</response>
+        /// <response code="403">Forbidden - You are not authorized to decline the user.</response>
+        /// <response code="404">User not found.</response>
+        /// <response code="422">Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.</response>
+        /// <response code="500">An unexpected error occurred.</response>
+        [HttpPatch]
+        [Route("/users/{userId}/decline", Name = "DeclineUser")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(UserTransient))]
+        [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 404, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 422, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
+        public abstract Task<IActionResult> DeclineUserAsync([FromRoute][Required]Guid userId);
+
+        /// <summary>
         /// Delete a user.
         /// </summary>
         /// <remarks>Mark a user as deleted.</remarks>
         /// <param name="userId">The user to delete.</param>
-        /// <response code="204">No Content.</response>
+        /// <response code="200">Successful. User Deletion captured.</response>
         /// <response code="400">Invalid parameters.</response>
         /// <response code="401">Not authenticated.</response>
         /// <response code="403">Forbidden - Not authorized to delete users.</response>
@@ -114,6 +164,7 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         [HttpDelete]
         [Route("/users/{userId}", Name = "DeleteUser")]
         [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(UserTransient))]
         [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
@@ -189,6 +240,28 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         public abstract Task<IActionResult> GetUserProfileAsync([FromRoute][Required]Guid userId, [FromRoute][Required]Guid profileId);
 
         /// <summary>
+        /// Get the current active (all transients since last declined or released state) for a user.
+        /// </summary>
+        /// <remarks>Get the latest transients for a user by it&#39;s UUID.</remarks>
+        /// <param name="userId">The UUID of the user.</param>
+        /// <response code="200">OK.</response>
+        /// <response code="400">Bad Request.</response>
+        /// <response code="401">Not authenticated.</response>
+        /// <response code="403">Forbidden - You are not authorized to access users.</response>
+        /// <response code="404">User not found.</response>
+        /// <response code="500">An unexpected error occurred.</response>
+        [HttpGet]
+        [Route("/users/{userId}/transients", Name = "GetUserTransients")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(UserTransients))]
+        [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 404, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
+        public abstract Task<IActionResult> GetUserTransientsAsync([FromRoute][Required]Guid userId);
+
+        /// <summary>
         /// Search a user for all their profiles.
         /// </summary>
         /// <remarks>Search for user profiles.</remarks>
@@ -258,7 +331,7 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         [HttpPut]
         [Route("/users/{userId}", Name = "UpdateUser")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(User))]
+        [ProducesResponseType(statusCode: 200, type: typeof(UserTransient))]
         [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]

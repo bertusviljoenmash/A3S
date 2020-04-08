@@ -63,6 +63,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public List<SystemTransientsTermsOfService> TermsOfServiceAgreements { get; set; }
 
         /// <summary>
+        /// Gets or Sets Users
+        /// </summary>
+        [DataMember(Name="Users", EmitDefaultValue=false)]
+        public List<SystemTransientsUser> Users { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -75,6 +81,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  Functions: ").Append(Functions).Append("\n");
             sb.Append("  LdapAuthenticationModes: ").Append(LdapAuthenticationModes).Append("\n");
             sb.Append("  TermsOfServiceAgreements: ").Append(TermsOfServiceAgreements).Append("\n");
+            sb.Append("  Users: ").Append(Users).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -140,6 +147,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     TermsOfServiceAgreements != null &&
                     other.TermsOfServiceAgreements != null &&
                     TermsOfServiceAgreements.SequenceEqual(other.TermsOfServiceAgreements)
+                ) && 
+                (
+                    Users == other.Users ||
+                    Users != null &&
+                    other.Users != null &&
+                    Users.SequenceEqual(other.Users)
                 );
         }
 
@@ -163,6 +176,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + LdapAuthenticationModes.GetHashCode();
                     if (TermsOfServiceAgreements != null)
                     hashCode = hashCode * 59 + TermsOfServiceAgreements.GetHashCode();
+                    if (Users != null)
+                    hashCode = hashCode * 59 + Users.GetHashCode();
                 return hashCode;
             }
         }
