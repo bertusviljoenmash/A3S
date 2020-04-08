@@ -27,10 +27,10 @@ using za.co.grindrodbank.a3s.Converters;
 namespace za.co.grindrodbank.a3s.A3SApiResources
 { 
     /// <summary>
-    /// Represents the latest transients (only the most recent transient record) for a team with any active transients. 
+    /// Represents the latest transients (only the most recent transient record) for an LDAP Authentication mode with any active transients. 
     /// </summary>
     [DataContract]
-    public partial class SystemTransientsTeam : IEquatable<SystemTransientsTeam>
+    public partial class SystemTransientsLdapAuthenticationMode : IEquatable<SystemTransientsLdapAuthenticationMode>
     { 
         /// <summary>
         /// Gets or Sets Uuid
@@ -39,10 +39,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public Guid Uuid { get; set; }
 
         /// <summary>
-        /// Gets or Sets TeamName
+        /// Gets or Sets LdapAuthenticationModeName
         /// </summary>
-        [DataMember(Name="teamName", EmitDefaultValue=false)]
-        public string TeamName { get; set; }
+        [DataMember(Name="LdapAuthenticationModeName", EmitDefaultValue=false)]
+        public string LdapAuthenticationModeName { get; set; }
 
         /// <summary>
         /// Gets or Sets CapturerUuid
@@ -63,24 +63,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public DateTime CapturedDate { get; set; }
 
         /// <summary>
-        /// Gets or Sets LatestActiveTeamTransient
+        /// Gets or Sets LatestActiveLdapAuthenticationModeTransient
         /// </summary>
-        [DataMember(Name="latestActiveTeamTransient", EmitDefaultValue=false)]
-        public TeamBaseTeamTransient LatestActiveTeamTransient { get; set; }
-
-        /// <summary>
-        /// A list of the latest (most recent one per relation) transient team - data policy assignment changes for this transient role.
-        /// </summary>
-        /// <value>A list of the latest (most recent one per relation) transient team - data policy assignment changes for this transient role.</value>
-        [DataMember(Name="latestTransientTeamDataPolicies", EmitDefaultValue=false)]
-        public List<TeamDataPolicyTransient> LatestTransientTeamDataPolicies { get; set; }
-
-        /// <summary>
-        /// A list of the latest (most recent one per relation) transient team - child team assignment changes for this transient role.
-        /// </summary>
-        /// <value>A list of the latest (most recent one per relation) transient team - child team assignment changes for this transient role.</value>
-        [DataMember(Name="latestTransientTeamChildTeams", EmitDefaultValue=false)]
-        public List<TeamChildTeamTransient> LatestTransientTeamChildTeams { get; set; }
+        [DataMember(Name="latestActiveLdapAuthenticationModeTransient", EmitDefaultValue=false)]
+        public LdapAuthenticationModeTransient LatestActiveLdapAuthenticationModeTransient { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -89,15 +75,13 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class SystemTransientsTeam {\n");
+            sb.Append("class SystemTransientsLdapAuthenticationMode {\n");
             sb.Append("  Uuid: ").Append(Uuid).Append("\n");
-            sb.Append("  TeamName: ").Append(TeamName).Append("\n");
+            sb.Append("  LdapAuthenticationModeName: ").Append(LdapAuthenticationModeName).Append("\n");
             sb.Append("  CapturerUuid: ").Append(CapturerUuid).Append("\n");
             sb.Append("  CapturerName: ").Append(CapturerName).Append("\n");
             sb.Append("  CapturedDate: ").Append(CapturedDate).Append("\n");
-            sb.Append("  LatestActiveTeamTransient: ").Append(LatestActiveTeamTransient).Append("\n");
-            sb.Append("  LatestTransientTeamDataPolicies: ").Append(LatestTransientTeamDataPolicies).Append("\n");
-            sb.Append("  LatestTransientTeamChildTeams: ").Append(LatestTransientTeamChildTeams).Append("\n");
+            sb.Append("  LatestActiveLdapAuthenticationModeTransient: ").Append(LatestActiveLdapAuthenticationModeTransient).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -120,15 +104,15 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((SystemTransientsTeam)obj);
+            return obj.GetType() == GetType() && Equals((SystemTransientsLdapAuthenticationMode)obj);
         }
 
         /// <summary>
-        /// Returns true if SystemTransientsTeam instances are equal
+        /// Returns true if SystemTransientsLdapAuthenticationMode instances are equal
         /// </summary>
-        /// <param name="other">Instance of SystemTransientsTeam to be compared</param>
+        /// <param name="other">Instance of SystemTransientsLdapAuthenticationMode to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(SystemTransientsTeam other)
+        public bool Equals(SystemTransientsLdapAuthenticationMode other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -140,9 +124,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     Uuid.Equals(other.Uuid)
                 ) && 
                 (
-                    TeamName == other.TeamName ||
-                    TeamName != null &&
-                    TeamName.Equals(other.TeamName)
+                    LdapAuthenticationModeName == other.LdapAuthenticationModeName ||
+                    LdapAuthenticationModeName != null &&
+                    LdapAuthenticationModeName.Equals(other.LdapAuthenticationModeName)
                 ) && 
                 (
                     CapturerUuid == other.CapturerUuid ||
@@ -160,21 +144,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     CapturedDate.Equals(other.CapturedDate)
                 ) && 
                 (
-                    LatestActiveTeamTransient == other.LatestActiveTeamTransient ||
-                    LatestActiveTeamTransient != null &&
-                    LatestActiveTeamTransient.Equals(other.LatestActiveTeamTransient)
-                ) && 
-                (
-                    LatestTransientTeamDataPolicies == other.LatestTransientTeamDataPolicies ||
-                    LatestTransientTeamDataPolicies != null &&
-                    other.LatestTransientTeamDataPolicies != null &&
-                    LatestTransientTeamDataPolicies.SequenceEqual(other.LatestTransientTeamDataPolicies)
-                ) && 
-                (
-                    LatestTransientTeamChildTeams == other.LatestTransientTeamChildTeams ||
-                    LatestTransientTeamChildTeams != null &&
-                    other.LatestTransientTeamChildTeams != null &&
-                    LatestTransientTeamChildTeams.SequenceEqual(other.LatestTransientTeamChildTeams)
+                    LatestActiveLdapAuthenticationModeTransient == other.LatestActiveLdapAuthenticationModeTransient ||
+                    LatestActiveLdapAuthenticationModeTransient != null &&
+                    LatestActiveLdapAuthenticationModeTransient.Equals(other.LatestActiveLdapAuthenticationModeTransient)
                 );
         }
 
@@ -190,20 +162,16 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                 // Suitable nullity checks etc, of course :)
                     if (Uuid != null)
                     hashCode = hashCode * 59 + Uuid.GetHashCode();
-                    if (TeamName != null)
-                    hashCode = hashCode * 59 + TeamName.GetHashCode();
+                    if (LdapAuthenticationModeName != null)
+                    hashCode = hashCode * 59 + LdapAuthenticationModeName.GetHashCode();
                     if (CapturerUuid != null)
                     hashCode = hashCode * 59 + CapturerUuid.GetHashCode();
                     if (CapturerName != null)
                     hashCode = hashCode * 59 + CapturerName.GetHashCode();
                     if (CapturedDate != null)
                     hashCode = hashCode * 59 + CapturedDate.GetHashCode();
-                    if (LatestActiveTeamTransient != null)
-                    hashCode = hashCode * 59 + LatestActiveTeamTransient.GetHashCode();
-                    if (LatestTransientTeamDataPolicies != null)
-                    hashCode = hashCode * 59 + LatestTransientTeamDataPolicies.GetHashCode();
-                    if (LatestTransientTeamChildTeams != null)
-                    hashCode = hashCode * 59 + LatestTransientTeamChildTeams.GetHashCode();
+                    if (LatestActiveLdapAuthenticationModeTransient != null)
+                    hashCode = hashCode * 59 + LatestActiveLdapAuthenticationModeTransient.GetHashCode();
                 return hashCode;
             }
         }
@@ -211,12 +179,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(SystemTransientsTeam left, SystemTransientsTeam right)
+        public static bool operator ==(SystemTransientsLdapAuthenticationMode left, SystemTransientsLdapAuthenticationMode right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(SystemTransientsTeam left, SystemTransientsTeam right)
+        public static bool operator !=(SystemTransientsLdapAuthenticationMode left, SystemTransientsLdapAuthenticationMode right)
         {
             return !Equals(left, right);
         }

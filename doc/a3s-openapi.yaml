@@ -862,7 +862,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Role'
+                  $ref: '#/components/schemas/RoleTransient'
         '400':
           description: Bad Request.
           content:
@@ -3238,7 +3238,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LdapAuthenticationMode'
+                $ref: '#/components/schemas/LdapAuthenticationModeTransient'
         '400':
           description: Invalid parameters.
           content:
@@ -3350,7 +3350,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LdapAuthenticationMode'
+                $ref: '#/components/schemas/LdapAuthenticationModeTransient'
         '400':
           description: Bad Request.
           content:
@@ -3401,8 +3401,12 @@ paths:
           schema:
             $ref: '#/components/schemas/LdapAuthenticationModeId'
       responses:
-        '204':
-          description: No Content.
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LdapAuthenticationModeTransient'
         '400':
           description: Bad Request.
           content:
@@ -3439,6 +3443,175 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  
+  '/authenticationModes/ldap/{ldapAuthenticationModeId}/transients':
+    get:
+      tags:
+        - LdapAuthenticationMode
+      summary: Get the current active (all transients since last declined or released state) for an LDAP authentication mode.
+      description: Get the latest transients for an LDAP Auth mode by the it's UUID.
+      operationId: getLdapAuthModeTransients
+      parameters:
+        - name: ldapAuthenticationModeId
+          in: path
+          description: The UUID of the LDAP authentication mode.
+          required: true
+          schema:
+            $ref: '#/components/schemas/LdapAuthenticationModeId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LdapAuthenticationModeTransients'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the LDAP Authentication mode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Function not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+                
+  '/authenticationModes/ldap/{ldapAuthenticationModeId}/approve':              
+    patch:
+      tags:
+        - LdapAuthenticationMode
+      summary: Approve all current transient states for an LDAP Authentication mode.
+      description: Approve all current transient states for an LDAP Authentication mode, given it's UUID.
+      operationId: approveLdapAuthenticationMode
+      parameters:
+        - name: ldapAuthenticationModeId
+          in: path
+          description: The UUID of the LDAP authentication mode.
+          required: true
+          schema:
+            $ref: '#/components/schemas/LdapAuthenticationModeId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LdapAuthenticationModeTransient'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to approve the LDAP Authentication mode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Function not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  '/authenticationModes/ldap/{ldapAuthenticationModeId}/decline':              
+    patch:
+      tags:
+        - LdapAuthenticationMode
+      summary: Decline all current transient states for an LDAP Authentication mode.
+      description: Decline all current transient states for an LDAP Authentication mode, given it's UUID.
+      operationId: declineLdapAuthenticationMode
+      parameters:
+        - name: ldapAuthenticationModeId
+          in: path
+          description: The UUID of the LDAP authentication mode.
+          required: true
+          schema:
+            $ref: '#/components/schemas/LdapAuthenticationModeId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LdapAuthenticationModeTransient'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to decline the LDAP Authentication mode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Teams not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+                
   '/authenticationModes/ldap/test':
     post:
       tags:
@@ -3488,6 +3661,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+                
+    
     #endregion - LdapAuthenticationModes
     
   # Region - Sub-Realms    
@@ -4206,10 +4381,14 @@ components:
           type: array
           items: 
             $ref: '#/components/schemas/SystemTransientsFunction'
+        LdapAuthenticationModes:
+          type: array
+          items: 
+            $ref: '#/components/schemas/SystemTransientsLdapAuthenticationMode'
             
     SystemTransientsRole:
       description: |
-        Represents a collection of all the latest transients for roles with any changes.
+        Represents the latest transients (only the most recent transient record) for a role with any active transients.
       type: object
       properties:
         uuid : 
@@ -4238,7 +4417,7 @@ components:
             
     SystemTransientsTeam:
       description: |
-        Represents a collection of all the latest transients for teams with any changes.
+        Represents the latest transients (only the most recent transient record) for a team with any active transients.
       type: object
       properties:
         uuid : 
@@ -4267,7 +4446,7 @@ components:
             
     SystemTransientsFunction:
       description: |
-        Represents a collection of all the latest transients for functions with any changes.
+        Represents the latest transients (only the most recent transient record) for a function with any active transients.
       type: object
       properties:
         uuid : 
@@ -4288,6 +4467,25 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FunctionPermissionTransient'
+            
+    SystemTransientsLdapAuthenticationMode:
+      description: |
+        Represents the latest transients (only the most recent transient record) for an LDAP Authentication mode with any active transients.
+      type: object
+      properties:
+        uuid : 
+          $ref: '#/components/schemas/LdapAuthenticationModeId'
+        LdapAuthenticationModeName: 
+          type: string
+        capturerUuid:
+          $ref: '#/components/schemas/UserId'
+        capturerName: 
+          type: string
+        capturedDate: 
+          type: string
+          format: date-time
+        latestActiveLdapAuthenticationModeTransient:
+          $ref: '#/components/schemas/LdapAuthenticationModeTransient'
         
     # Begin Region - Transients
     
@@ -5734,6 +5932,66 @@ components:
           description: A list of LDAP attribute to user field mappings
           items:
             $ref: '#/components/schemas/LdapAttributeLink'
+            
+    LdapAuthenticationModeTransientId:  
+      type: string
+      format: uuid
+            
+    LdapAuthenticationModeTransient:
+      description: |
+        Represents a transient state of an LDAP authentication mode.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/LdapAuthenticationModeTransientId'
+        LdapAuthenticationModeId:
+          $ref: '#/components/schemas/LdapAuthenticationModeId'
+        name:
+          type: string
+        hostname:
+          type: string
+        port:
+          type: integer
+          format: int32
+        isLdaps:
+          type: boolean
+        account:
+          type: string
+        baseDn:
+          type: string
+        password:
+          description: A boolean flag indicating whether the password has changed.
+          type: boolean
+        ldapAttributes:
+          type: array
+          description: A list of LDAP attribute to user field mappings.
+          items:
+            $ref: '#/components/schemas/LdapAttributeLink'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          description: The current approval count.
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+          type: integer
+        createdBy:
+          description: The UUID of the user who created this transient state record.
+          type: string
+          format: uuid
+        createdAt:
+          description: The date that this transient state was created.
+          type: string
+          format: date-time
+          
+    LdapAuthenticationModeTransients:
+      type: array
+      description: A list of all the latest active (all captured or approved transients since the last released or decline state) for this LDAP Authentication Mode.
+      items:
+        $ref: '#/components/schemas/LdapAuthenticationModeTransient'
+    
     #endregion
     
     #region - TwoFactorAuth

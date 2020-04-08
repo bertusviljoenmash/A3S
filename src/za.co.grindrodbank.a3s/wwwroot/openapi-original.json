@@ -1311,7 +1311,7 @@
               "application/json" : {
                 "schema" : {
                   "items" : {
-                    "$ref" : "#/components/schemas/Role"
+                    "$ref" : "#/components/schemas/RoleTransient"
                   },
                   "type" : "array"
                 }
@@ -4967,7 +4967,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/LdapAuthenticationMode"
+                  "$ref" : "#/components/schemas/LdapAuthenticationModeTransient"
                 }
               }
             },
@@ -5054,8 +5054,15 @@
           "style" : "simple"
         } ],
         "responses" : {
-          "204" : {
-            "description" : "No Content."
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LdapAuthenticationModeTransient"
+                }
+              }
+            },
+            "description" : "OK."
           },
           "400" : {
             "content" : {
@@ -5228,7 +5235,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/LdapAuthenticationMode"
+                  "$ref" : "#/components/schemas/LdapAuthenticationModeTransient"
                 }
               }
             },
@@ -5296,6 +5303,269 @@
           }
         },
         "summary" : "Update a LDAP Authentication Mode.",
+        "tags" : [ "LdapAuthenticationMode" ]
+      }
+    },
+    "/authenticationModes/ldap/{ldapAuthenticationModeId}/transients" : {
+      "get" : {
+        "description" : "Get the latest transients for an LDAP Auth mode by the it's UUID.",
+        "operationId" : "getLdapAuthModeTransients",
+        "parameters" : [ {
+          "description" : "The UUID of the LDAP authentication mode.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "ldapAuthenticationModeId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/LdapAuthenticationModeId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LdapAuthenticationModeTransients"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the LDAP Authentication mode."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Function not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Get the current active (all transients since last declined or released state) for an LDAP authentication mode.",
+        "tags" : [ "LdapAuthenticationMode" ]
+      }
+    },
+    "/authenticationModes/ldap/{ldapAuthenticationModeId}/approve" : {
+      "patch" : {
+        "description" : "Approve all current transient states for an LDAP Authentication mode, given it's UUID.",
+        "operationId" : "approveLdapAuthenticationMode",
+        "parameters" : [ {
+          "description" : "The UUID of the LDAP authentication mode.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "ldapAuthenticationModeId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/LdapAuthenticationModeId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LdapAuthenticationModeTransient"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to approve the LDAP Authentication mode."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Function not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Approve all current transient states for an LDAP Authentication mode.",
+        "tags" : [ "LdapAuthenticationMode" ]
+      }
+    },
+    "/authenticationModes/ldap/{ldapAuthenticationModeId}/decline" : {
+      "patch" : {
+        "description" : "Decline all current transient states for an LDAP Authentication mode, given it's UUID.",
+        "operationId" : "declineLdapAuthenticationMode",
+        "parameters" : [ {
+          "description" : "The UUID of the LDAP authentication mode.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "ldapAuthenticationModeId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/LdapAuthenticationModeId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LdapAuthenticationModeTransient"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to decline the LDAP Authentication mode."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Teams not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Decline all current transient states for an LDAP Authentication mode.",
         "tags" : [ "LdapAuthenticationMode" ]
       }
     },
@@ -6980,6 +7250,63 @@
               "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "approvalCount" : 1
             } ]
+          } ],
+          "LdapAuthenticationModes" : [ {
+            "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "capturerName" : "capturerName",
+            "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+            "latestActiveLdapAuthenticationModeTransient" : {
+              "ldapAttributes" : [ {
+                "ldapField" : "ldapField"
+              }, {
+                "ldapField" : "ldapField"
+              } ],
+              "requiredApprovalCount" : 1,
+              "r_state" : "r_state",
+              "isLdaps" : true,
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 6,
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "hostname" : "hostname",
+              "password" : true,
+              "port" : 0,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "LdapAuthenticationModeId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "name" : "name",
+              "action" : "action",
+              "baseDn" : "baseDn",
+              "account" : "account"
+            },
+            "LdapAuthenticationModeName" : "LdapAuthenticationModeName",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          }, {
+            "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "capturerName" : "capturerName",
+            "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+            "latestActiveLdapAuthenticationModeTransient" : {
+              "ldapAttributes" : [ {
+                "ldapField" : "ldapField"
+              }, {
+                "ldapField" : "ldapField"
+              } ],
+              "requiredApprovalCount" : 1,
+              "r_state" : "r_state",
+              "isLdaps" : true,
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 6,
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "hostname" : "hostname",
+              "password" : true,
+              "port" : 0,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "LdapAuthenticationModeId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "name" : "name",
+              "action" : "action",
+              "baseDn" : "baseDn",
+              "account" : "account"
+            },
+            "LdapAuthenticationModeName" : "LdapAuthenticationModeName",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
           } ]
         },
         "properties" : {
@@ -7000,12 +7327,18 @@
               "$ref" : "#/components/schemas/SystemTransientsFunction"
             },
             "type" : "array"
+          },
+          "LdapAuthenticationModes" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SystemTransientsLdapAuthenticationMode"
+            },
+            "type" : "array"
           }
         },
         "type" : "object"
       },
       "SystemTransientsRole" : {
-        "description" : "Represents a collection of all the latest transients for roles with any changes.\n",
+        "description" : "Represents the latest transients (only the most recent transient record) for a role with any active transients.\n",
         "example" : {
           "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "capturerName" : "capturerName",
@@ -7107,7 +7440,7 @@
         "type" : "object"
       },
       "SystemTransientsTeam" : {
-        "description" : "Represents a collection of all the latest transients for teams with any changes.\n",
+        "description" : "Represents the latest transients (only the most recent transient record) for a team with any active transients.\n",
         "example" : {
           "teamName" : "teamName",
           "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -7209,7 +7542,7 @@
         "type" : "object"
       },
       "SystemTransientsFunction" : {
-        "description" : "Represents a collection of all the latest transients for functions with any changes.\n",
+        "description" : "Represents the latest transients (only the most recent transient record) for a function with any active transients.\n",
         "example" : {
           "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "capturerName" : "capturerName",
@@ -7278,6 +7611,62 @@
               "$ref" : "#/components/schemas/FunctionPermissionTransient"
             },
             "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "SystemTransientsLdapAuthenticationMode" : {
+        "description" : "Represents the latest transients (only the most recent transient record) for an LDAP Authentication mode with any active transients.\n",
+        "example" : {
+          "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "capturerName" : "capturerName",
+          "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+          "latestActiveLdapAuthenticationModeTransient" : {
+            "ldapAttributes" : [ {
+              "ldapField" : "ldapField"
+            }, {
+              "ldapField" : "ldapField"
+            } ],
+            "requiredApprovalCount" : 1,
+            "r_state" : "r_state",
+            "isLdaps" : true,
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 6,
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "hostname" : "hostname",
+            "password" : true,
+            "port" : 0,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "LdapAuthenticationModeId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "name" : "name",
+            "action" : "action",
+            "baseDn" : "baseDn",
+            "account" : "account"
+          },
+          "LdapAuthenticationModeName" : "LdapAuthenticationModeName",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "LdapAuthenticationModeName" : {
+            "type" : "string"
+          },
+          "capturerUuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "capturerName" : {
+            "type" : "string"
+          },
+          "capturedDate" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "latestActiveLdapAuthenticationModeTransient" : {
+            "$ref" : "#/components/schemas/LdapAuthenticationModeTransient"
           }
         },
         "type" : "object"
@@ -10478,6 +10867,107 @@
         },
         "required" : [ "account", "baseDn", "hostName", "isLdaps", "name", "password", "port", "uuid" ],
         "type" : "object"
+      },
+      "LdapAuthenticationModeTransientId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "LdapAuthenticationModeTransient" : {
+        "description" : "Represents a transient state of an LDAP authentication mode.\n",
+        "example" : {
+          "ldapAttributes" : [ {
+            "ldapField" : "ldapField"
+          }, {
+            "ldapField" : "ldapField"
+          } ],
+          "requiredApprovalCount" : 1,
+          "r_state" : "r_state",
+          "isLdaps" : true,
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 6,
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "hostname" : "hostname",
+          "password" : true,
+          "port" : 0,
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "LdapAuthenticationModeId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "name" : "name",
+          "action" : "action",
+          "baseDn" : "baseDn",
+          "account" : "account"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "LdapAuthenticationModeId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "hostname" : {
+            "type" : "string"
+          },
+          "port" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "isLdaps" : {
+            "type" : "boolean"
+          },
+          "account" : {
+            "type" : "string"
+          },
+          "baseDn" : {
+            "type" : "string"
+          },
+          "password" : {
+            "description" : "A boolean flag indicating whether the password has changed.",
+            "type" : "boolean"
+          },
+          "ldapAttributes" : {
+            "description" : "A list of LDAP attribute to user field mappings.",
+            "items" : {
+              "$ref" : "#/components/schemas/LdapAttributeLink"
+            },
+            "type" : "array"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current approval count.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "createdBy" : {
+            "description" : "The UUID of the user who created this transient state record.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "description" : "The date that this transient state was created.",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "LdapAuthenticationModeTransients" : {
+        "description" : "A list of all the latest active (all captured or approved transients since the last released or decline state) for this LDAP Authentication Mode.",
+        "items" : {
+          "$ref" : "#/components/schemas/LdapAuthenticationModeTransient"
+        },
+        "type" : "array"
       },
       "TwoFactorAuthOTP" : {
         "description" : "A OTP for a specific user.\n",
