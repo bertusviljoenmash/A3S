@@ -91,7 +91,7 @@ jobs:
     working_directory: ~/repo
     steps:
       # Install NPM.
-      - run: curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+      - run: curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
       - run: sudo apt install nodejs
       # Install Newman Using NPM
       - run: npm install -g newman

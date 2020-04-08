@@ -124,7 +124,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserSubmit'
+                $ref: '#/components/schemas/UserTransient'
         '400':
           description: Invalid parameters.
           content:
@@ -237,7 +237,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserTransient'
         '400':
           description: Invalid parameters.
           content:
@@ -287,10 +287,13 @@ paths:
           in: path
           schema:
             $ref: '#/components/schemas/UserId'
-
       responses:
-        '204':
-          description: No Content.
+        '200':
+          description: Successful. User Deletion captured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTransient'
         '400':
           description: Invalid parameters.
           content:
@@ -341,6 +344,12 @@ paths:
             schema:
               $ref: '#/components/schemas/UserPasswordChangeSubmit'
       responses:
+        '200':
+          description: Successful. User update captured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTransient'
         '400':
           description: Bad Request.
           content:
@@ -371,6 +380,175 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+                
+  '/users/{userId}/transients':
+    get:
+      tags:
+        - User
+      summary: Get the current active (all transients since last declined or released state) for a user.
+      description: Get the latest transients for a user by it's UUID.
+      operationId: getUserTransients
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The UUID of the user.
+          schema:
+            $ref: '#/components/schemas/UserId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTransients'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+                
+  '/users/{userId}/approve':              
+    patch:
+      tags:
+        - User
+      summary: Approve all current transient states for a user.
+      description: Approve all current transient states for a user, given it's UUID.
+      operationId: approveUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The UUID of the user.
+          schema:
+            $ref: '#/components/schemas/UserId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTransient'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to approve the user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  '/users/{userId}/decline':              
+    patch:
+      tags:
+        - User
+      summary: Decline all current transient states for a user.
+      description: Decline all current transient states for a user, given it's UUID.
+      operationId: declineUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The UUID of the user.
+          schema:
+            $ref: '#/components/schemas/UserId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTransient'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to decline the user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+                
   '/users/{userId}/profiles':
     get:
       tags:
@@ -2499,7 +2677,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: Function not found.
+          description: Terms of service agreement not found.
           content:
             application/json:
               schema:
@@ -4564,6 +4742,10 @@ components:
           type: array
           items: 
             $ref: '#/components/schemas/SystemTransientsTermsOfService'
+        Users:
+          type: array
+          items: 
+            $ref: '#/components/schemas/SystemTransientsUser'
             
     SystemTransientsRole:
       description: |
@@ -4684,6 +4866,35 @@ components:
           format: date-time
         latestActiveTermsOfServiceTransient:
           $ref: '#/components/schemas/TermsOfServiceTransient'
+          
+    SystemTransientsUser:
+      description: |
+        Represents the latest transients (only the most recent transient record) for a user with any active transients.
+      type: object
+      properties:
+        uuid : 
+          $ref: '#/components/schemas/UserId'
+        userName: 
+          type: string
+        capturerUuid:
+          $ref: '#/components/schemas/UserId'
+        capturerName: 
+          type: string
+        capturedDate: 
+          type: string
+          format: date-time
+        latestActiveUserTransient:
+          $ref: '#/components/schemas/UserBaseUserTransient'
+        latestTransientUserRoles:
+          description: A list of the latest (most recent one per relation) transient user - role assignment changes for this transient user.
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRoleTransient'
+        latestTransientUserTeams:
+          description: A list of the latest (most recent one per relation) transient user - team assignment changes for this transient user.
+          type: array
+          items:
+            $ref: '#/components/schemas/UserTeamTransient'
         
     # Begin Region - Transients
     
@@ -5218,6 +5429,255 @@ components:
           type: string
         value:
           type: string
+    
+    UserTransientId:
+      type: string
+      format: uuid
+          
+    UserTransient:
+      description: |
+        Models the transient state of a user.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/UserTransientId'
+        userId:
+          $ref: '#/components/schemas/UserId'
+        name:
+          type: string
+        surname:
+          type: string
+        username:
+          type: string
+        password:
+          description: Tracks whether the user's password has been changed.
+          type: boolean
+        email:
+          type: string
+        phoneNumber:
+          type: string
+          nullable: true
+        avatar:
+          type: string
+          nullable: true
+        customAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserCustomAttribute'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          description: The current approval count.
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+          type: integer
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        latestTransientUserRoles:
+          description: A list of the latest transient user role assignments for this transient user.
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRoleTransient'
+        latestTransientUserTeams:
+          description: A list of the latest transient user - team assignments for this transient user.
+          type: array
+          items:
+            $ref: '#/components/schemas/UserTeamTransient'
+            
+    UserBaseUserTransient:
+      description: |
+        Models the transient state of a user.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/UserTransientId'
+        userId:
+          $ref: '#/components/schemas/UserId'
+        name:
+          type: string
+        surname:
+          type: string
+        username:
+          type: string
+        password:
+          description: Tracks whether the user's password has been changed.
+          type: boolean
+        email:
+          type: string
+        phoneNumber:
+          type: string
+          nullable: true
+        avatar:
+          type: string
+          nullable: true
+        customAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserCustomAttribute'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          description: The current approval count.
+          type: integer
+        requiredApprovalCount:
+          description: The required approval count before this entity is released.
+          type: integer
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+            
+    UserTransients:
+      description: |
+        Represents the current active transients for a user and it's relations.
+      type: object
+      properties:
+        latestActiveUserTransients:
+          description: A list of the latest transient base user records for this transient user.
+          type: array
+          items:
+            $ref: '#/components/schemas/UserBaseUserTransient'
+        latestTransientUserRoles:
+          description: A list of the latest transient user - roles assignments for this transient user.
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRoleDetailedTransient'
+        latestTransientUserTeams:
+          description: A list of the latest transient user - team assignments for this transient user.
+          type: array
+          items:
+            $ref: '#/components/schemas/UserTeamDetailedTransient'
+    
+    UserRoleTransientId:
+      type: string
+      format: uuid
+            
+    UserRoleTransient:
+      description: |
+        Represents a transient state of a user - role assignment.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/UserRoleTransientId'
+        userId:
+          $ref: '#/components/schemas/UserId'
+        RoleId:
+          $ref: '#/components/schemas/RoleId'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+          description: The current amount of approvals.
+        requiredApprovalCount:
+          type: integer
+          description: The required approval count before this entity is released.
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+          
+    UserRoleDetailedTransient:
+      description: |
+        Represents a transient state of a user - role assignment, but with additional details about the related user role.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/UserRoleTransientId'
+        userId:
+          $ref: '#/components/schemas/UserId'
+        Role:
+          $ref: '#/components/schemas/RoleSimple'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+          description: The current amount of approvals.
+        requiredApprovalCount:
+          type: integer
+          description: The required approval count before this entity is released.
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+    
+    UserTeamTransientId:
+      type: string
+      format: uuid
+          
+    UserTeamTransient:
+      description: |
+        Represents a transient state of a user - team assignment.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/UserTeamTransientId'
+        userId:
+          $ref: '#/components/schemas/UserId'
+        TeamId:
+          $ref: '#/components/schemas/TeamId'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+          description: The current amount of approvals.
+        requiredApprovalCount:
+          type: integer
+          description: The required approval count before this entity is released.
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+          
+    UserTeamDetailedTransient:
+      description: |
+        Represents a transient state of a user - team assignment, but with additional details for the related team.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/UserTeamTransientId'
+        userId:
+          $ref: '#/components/schemas/UserId'
+        Team:
+          $ref: '#/components/schemas/TeamSimple'
+        r_state:
+          type: string
+        action:
+          type: string
+        approvalCount:
+          type: integer
+          description: The current amount of approvals.
+        requiredApprovalCount:
+          type: integer
+          description: The required approval count before this entity is released.
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
     #endregion
     
     # Region - User Profile
