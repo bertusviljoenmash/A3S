@@ -92,5 +92,20 @@ namespace za.co.grindrodbank.a3s.Controllers
             await functionService.DeleteAsync(functionId);
             return NoContent();
         }
+
+        public override Task<IActionResult> ApproveFunctionAsync([FromRoute, Required] Guid functionId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<IActionResult> DeclineFunctionAsync([FromRoute, Required] Guid functionId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<IActionResult> GetFunctionTransientsAsync([FromRoute, Required] Guid functionId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

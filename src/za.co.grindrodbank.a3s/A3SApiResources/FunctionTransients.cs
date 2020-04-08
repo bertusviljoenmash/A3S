@@ -27,29 +27,23 @@ using za.co.grindrodbank.a3s.Converters;
 namespace za.co.grindrodbank.a3s.A3SApiResources
 { 
     /// <summary>
-    /// A simpler model of an application, containing only the application&#39;s direct attributes, but none of it&#39;s relations. 
+    /// Represents the current active transients for a single function and it&#39;s relations. 
     /// </summary>
     [DataContract]
-    public partial class ApplicationSimple : IEquatable<ApplicationSimple>
+    public partial class FunctionTransients : IEquatable<FunctionTransients>
     { 
         /// <summary>
-        /// The UUID of an application.
+        /// Gets or Sets LatestActiveFunctionTransients
         /// </summary>
-        /// <value>The UUID of an application.</value>
-        [DataMember(Name="uuid", EmitDefaultValue=false)]
-        public Guid Uuid { get; set; }
+        [DataMember(Name="latestActiveFunctionTransients", EmitDefaultValue=false)]
+        public List<FunctionBaseFunctionTransient> LatestActiveFunctionTransients { get; set; }
 
         /// <summary>
-        /// Gets or Sets Name
+        /// A list of the latest transient function permission assignments for this transient role.
         /// </summary>
-        [DataMember(Name="name", EmitDefaultValue=false)]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Description
-        /// </summary>
-        [DataMember(Name="description", EmitDefaultValue=false)]
-        public string Description { get; set; }
+        /// <value>A list of the latest transient function permission assignments for this transient role.</value>
+        [DataMember(Name="latestTransientFunctionPermissions", EmitDefaultValue=false)]
+        public List<FunctionPermissionDetailedTransient> LatestTransientFunctionPermissions { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -58,10 +52,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class ApplicationSimple {\n");
-            sb.Append("  Uuid: ").Append(Uuid).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("class FunctionTransients {\n");
+            sb.Append("  LatestActiveFunctionTransients: ").Append(LatestActiveFunctionTransients).Append("\n");
+            sb.Append("  LatestTransientFunctionPermissions: ").Append(LatestTransientFunctionPermissions).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -84,34 +77,31 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((ApplicationSimple)obj);
+            return obj.GetType() == GetType() && Equals((FunctionTransients)obj);
         }
 
         /// <summary>
-        /// Returns true if ApplicationSimple instances are equal
+        /// Returns true if FunctionTransients instances are equal
         /// </summary>
-        /// <param name="other">Instance of ApplicationSimple to be compared</param>
+        /// <param name="other">Instance of FunctionTransients to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(ApplicationSimple other)
+        public bool Equals(FunctionTransients other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    Uuid == other.Uuid ||
-                    Uuid != null &&
-                    Uuid.Equals(other.Uuid)
+                    LatestActiveFunctionTransients == other.LatestActiveFunctionTransients ||
+                    LatestActiveFunctionTransients != null &&
+                    other.LatestActiveFunctionTransients != null &&
+                    LatestActiveFunctionTransients.SequenceEqual(other.LatestActiveFunctionTransients)
                 ) && 
                 (
-                    Name == other.Name ||
-                    Name != null &&
-                    Name.Equals(other.Name)
-                ) && 
-                (
-                    Description == other.Description ||
-                    Description != null &&
-                    Description.Equals(other.Description)
+                    LatestTransientFunctionPermissions == other.LatestTransientFunctionPermissions ||
+                    LatestTransientFunctionPermissions != null &&
+                    other.LatestTransientFunctionPermissions != null &&
+                    LatestTransientFunctionPermissions.SequenceEqual(other.LatestTransientFunctionPermissions)
                 );
         }
 
@@ -125,12 +115,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Uuid != null)
-                    hashCode = hashCode * 59 + Uuid.GetHashCode();
-                    if (Name != null)
-                    hashCode = hashCode * 59 + Name.GetHashCode();
-                    if (Description != null)
-                    hashCode = hashCode * 59 + Description.GetHashCode();
+                    if (LatestActiveFunctionTransients != null)
+                    hashCode = hashCode * 59 + LatestActiveFunctionTransients.GetHashCode();
+                    if (LatestTransientFunctionPermissions != null)
+                    hashCode = hashCode * 59 + LatestTransientFunctionPermissions.GetHashCode();
                 return hashCode;
             }
         }
@@ -138,12 +126,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(ApplicationSimple left, ApplicationSimple right)
+        public static bool operator ==(FunctionTransients left, FunctionTransients right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(ApplicationSimple left, ApplicationSimple right)
+        public static bool operator !=(FunctionTransients left, FunctionTransients right)
         {
             return !Equals(left, right);
         }
