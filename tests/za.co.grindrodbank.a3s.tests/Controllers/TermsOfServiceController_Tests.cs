@@ -123,7 +123,7 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
             var okResult = actionResult as OkObjectResult;
             Assert.NotNull(okResult);
 
-            var outList = okResult.Value as List<TermsOfServiceListItem>;
+            var outList = okResult.Value as List<TermsOfService>;
             Assert.NotNull(outList);
 
             for (var i = 0; i < outList.Count; i++)

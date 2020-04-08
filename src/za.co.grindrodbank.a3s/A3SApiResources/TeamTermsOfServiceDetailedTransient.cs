@@ -27,10 +27,10 @@ using za.co.grindrodbank.a3s.Converters;
 namespace za.co.grindrodbank.a3s.A3SApiResources
 { 
     /// <summary>
-    /// Represents a transient state of a team and all the relations that can potentially have their assignment status changed, such as child teams or data policies. 
+    /// Represents a transient state of a team terms of service agreement assignment. 
     /// </summary>
     [DataContract]
-    public partial class TeamTransient : IEquatable<TeamTransient>
+    public partial class TeamTermsOfServiceDetailedTransient : IEquatable<TeamTermsOfServiceDetailedTransient>
     { 
         /// <summary>
         /// Gets or Sets Uuid
@@ -45,16 +45,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public Guid TeamId { get; set; }
 
         /// <summary>
-        /// Gets or Sets Name
+        /// Gets or Sets TermsOfService
         /// </summary>
-        [DataMember(Name="name", EmitDefaultValue=false)]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Description
-        /// </summary>
-        [DataMember(Name="description", EmitDefaultValue=false)]
-        public string Description { get; set; }
+        [DataMember(Name="termsOfService", EmitDefaultValue=false)]
+        public TermsOfServiceSimple TermsOfService { get; set; }
 
         /// <summary>
         /// Gets or Sets RState
@@ -69,9 +63,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public string Action { get; set; }
 
         /// <summary>
-        /// The current approval count.
+        /// The current amount of approvals.
         /// </summary>
-        /// <value>The current approval count.</value>
+        /// <value>The current amount of approvals.</value>
         [DataMember(Name="approvalCount", EmitDefaultValue=false)]
         public int ApprovalCount { get; set; }
 
@@ -83,39 +77,16 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public int RequiredApprovalCount { get; set; }
 
         /// <summary>
-        /// The UUID of the user who created this transient state record.
+        /// Gets or Sets CreatedBy
         /// </summary>
-        /// <value>The UUID of the user who created this transient state record.</value>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public Guid CreatedBy { get; set; }
 
         /// <summary>
-        /// The date that this transient state was created.
+        /// Gets or Sets CreatedAt
         /// </summary>
-        /// <value>The date that this transient state was created.</value>
         [DataMember(Name="createdAt", EmitDefaultValue=false)]
         public DateTime CreatedAt { get; set; }
-
-        /// <summary>
-        /// A list of the latest transient team data policy assignments for this transient team.
-        /// </summary>
-        /// <value>A list of the latest transient team data policy assignments for this transient team.</value>
-        [DataMember(Name="latestTransientTeamDataPolicies", EmitDefaultValue=false)]
-        public List<TeamDataPolicyTransient> LatestTransientTeamDataPolicies { get; set; }
-
-        /// <summary>
-        /// A list of the latest transient team - child team assignments for this transient team.
-        /// </summary>
-        /// <value>A list of the latest transient team - child team assignments for this transient team.</value>
-        [DataMember(Name="latestTransientTeamChildTeams", EmitDefaultValue=false)]
-        public List<TeamChildTeamTransient> LatestTransientTeamChildTeams { get; set; }
-
-        /// <summary>
-        /// A list of the latest transient team - terms of service assignments for this transient team.
-        /// </summary>
-        /// <value>A list of the latest transient team - terms of service assignments for this transient team.</value>
-        [DataMember(Name="latestTransientTermsOfService", EmitDefaultValue=false)]
-        public List<TeamTermsOfServiceTransient> LatestTransientTermsOfService { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -124,20 +95,16 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class TeamTransient {\n");
+            sb.Append("class TeamTermsOfServiceDetailedTransient {\n");
             sb.Append("  Uuid: ").Append(Uuid).Append("\n");
             sb.Append("  TeamId: ").Append(TeamId).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  TermsOfService: ").Append(TermsOfService).Append("\n");
             sb.Append("  RState: ").Append(RState).Append("\n");
             sb.Append("  Action: ").Append(Action).Append("\n");
             sb.Append("  ApprovalCount: ").Append(ApprovalCount).Append("\n");
             sb.Append("  RequiredApprovalCount: ").Append(RequiredApprovalCount).Append("\n");
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  CreatedAt: ").Append(CreatedAt).Append("\n");
-            sb.Append("  LatestTransientTeamDataPolicies: ").Append(LatestTransientTeamDataPolicies).Append("\n");
-            sb.Append("  LatestTransientTeamChildTeams: ").Append(LatestTransientTeamChildTeams).Append("\n");
-            sb.Append("  LatestTransientTermsOfService: ").Append(LatestTransientTermsOfService).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -160,15 +127,15 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((TeamTransient)obj);
+            return obj.GetType() == GetType() && Equals((TeamTermsOfServiceDetailedTransient)obj);
         }
 
         /// <summary>
-        /// Returns true if TeamTransient instances are equal
+        /// Returns true if TeamTermsOfServiceDetailedTransient instances are equal
         /// </summary>
-        /// <param name="other">Instance of TeamTransient to be compared</param>
+        /// <param name="other">Instance of TeamTermsOfServiceDetailedTransient to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(TeamTransient other)
+        public bool Equals(TeamTermsOfServiceDetailedTransient other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -185,14 +152,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     TeamId.Equals(other.TeamId)
                 ) && 
                 (
-                    Name == other.Name ||
-                    Name != null &&
-                    Name.Equals(other.Name)
-                ) && 
-                (
-                    Description == other.Description ||
-                    Description != null &&
-                    Description.Equals(other.Description)
+                    TermsOfService == other.TermsOfService ||
+                    TermsOfService != null &&
+                    TermsOfService.Equals(other.TermsOfService)
                 ) && 
                 (
                     RState == other.RState ||
@@ -223,24 +185,6 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     CreatedAt == other.CreatedAt ||
                     CreatedAt != null &&
                     CreatedAt.Equals(other.CreatedAt)
-                ) && 
-                (
-                    LatestTransientTeamDataPolicies == other.LatestTransientTeamDataPolicies ||
-                    LatestTransientTeamDataPolicies != null &&
-                    other.LatestTransientTeamDataPolicies != null &&
-                    LatestTransientTeamDataPolicies.SequenceEqual(other.LatestTransientTeamDataPolicies)
-                ) && 
-                (
-                    LatestTransientTeamChildTeams == other.LatestTransientTeamChildTeams ||
-                    LatestTransientTeamChildTeams != null &&
-                    other.LatestTransientTeamChildTeams != null &&
-                    LatestTransientTeamChildTeams.SequenceEqual(other.LatestTransientTeamChildTeams)
-                ) && 
-                (
-                    LatestTransientTermsOfService == other.LatestTransientTermsOfService ||
-                    LatestTransientTermsOfService != null &&
-                    other.LatestTransientTermsOfService != null &&
-                    LatestTransientTermsOfService.SequenceEqual(other.LatestTransientTermsOfService)
                 );
         }
 
@@ -258,10 +202,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + Uuid.GetHashCode();
                     if (TeamId != null)
                     hashCode = hashCode * 59 + TeamId.GetHashCode();
-                    if (Name != null)
-                    hashCode = hashCode * 59 + Name.GetHashCode();
-                    if (Description != null)
-                    hashCode = hashCode * 59 + Description.GetHashCode();
+                    if (TermsOfService != null)
+                    hashCode = hashCode * 59 + TermsOfService.GetHashCode();
                     if (RState != null)
                     hashCode = hashCode * 59 + RState.GetHashCode();
                     if (Action != null)
@@ -274,12 +216,6 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + CreatedBy.GetHashCode();
                     if (CreatedAt != null)
                     hashCode = hashCode * 59 + CreatedAt.GetHashCode();
-                    if (LatestTransientTeamDataPolicies != null)
-                    hashCode = hashCode * 59 + LatestTransientTeamDataPolicies.GetHashCode();
-                    if (LatestTransientTeamChildTeams != null)
-                    hashCode = hashCode * 59 + LatestTransientTeamChildTeams.GetHashCode();
-                    if (LatestTransientTermsOfService != null)
-                    hashCode = hashCode * 59 + LatestTransientTermsOfService.GetHashCode();
                 return hashCode;
             }
         }
@@ -287,12 +223,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(TeamTransient left, TeamTransient right)
+        public static bool operator ==(TeamTermsOfServiceDetailedTransient left, TeamTermsOfServiceDetailedTransient right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(TeamTransient left, TeamTransient right)
+        public static bool operator !=(TeamTermsOfServiceDetailedTransient left, TeamTermsOfServiceDetailedTransient right)
         {
             return !Equals(left, right);
         }

@@ -27,10 +27,10 @@ using za.co.grindrodbank.a3s.Converters;
 namespace za.co.grindrodbank.a3s.A3SApiResources
 { 
     /// <summary>
-    /// Models a terms of service agreement returned inside lists. 
+    /// Models a simple terms of service agreement that needs to be agreed to by a user on login, which does not model any terms of service relations. 
     /// </summary>
     [DataContract]
-    public partial class TermsOfServiceListItem : IEquatable<TermsOfServiceListItem>
+    public partial class TermsOfServiceSimple : IEquatable<TermsOfServiceSimple>
     { 
         /// <summary>
         /// Gets or Sets Uuid
@@ -51,40 +51,16 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public string Version { get; set; }
 
         /// <summary>
-        /// Teams linked to this terms of service entry.
-        /// </summary>
-        /// <value>Teams linked to this terms of service entry.</value>
-        [DataMember(Name="teamIds", EmitDefaultValue=false)]
-        public List<Guid> TeamIds { get; set; }
-
-        /// <summary>
-        /// A list of User Id&#39;s that have accepted this terms of service entry.
-        /// </summary>
-        /// <value>A list of User Id&#39;s that have accepted this terms of service entry.</value>
-        [DataMember(Name="acceptedUserIds", EmitDefaultValue=false)]
-        public List<Guid> AcceptedUserIds { get; set; }
-
-        /// <summary>
-        /// The UUID identifier for a sub-realm.
-        /// </summary>
-        /// <value>The UUID identifier for a sub-realm.</value>
-        [DataMember(Name="subRealmId", EmitDefaultValue=false)]
-        public Guid SubRealmId { get; set; }
-
-        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class TermsOfServiceListItem {\n");
+            sb.Append("class TermsOfServiceSimple {\n");
             sb.Append("  Uuid: ").Append(Uuid).Append("\n");
             sb.Append("  AgreementName: ").Append(AgreementName).Append("\n");
             sb.Append("  Version: ").Append(Version).Append("\n");
-            sb.Append("  TeamIds: ").Append(TeamIds).Append("\n");
-            sb.Append("  AcceptedUserIds: ").Append(AcceptedUserIds).Append("\n");
-            sb.Append("  SubRealmId: ").Append(SubRealmId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -107,15 +83,15 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((TermsOfServiceListItem)obj);
+            return obj.GetType() == GetType() && Equals((TermsOfServiceSimple)obj);
         }
 
         /// <summary>
-        /// Returns true if TermsOfServiceListItem instances are equal
+        /// Returns true if TermsOfServiceSimple instances are equal
         /// </summary>
-        /// <param name="other">Instance of TermsOfServiceListItem to be compared</param>
+        /// <param name="other">Instance of TermsOfServiceSimple to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(TermsOfServiceListItem other)
+        public bool Equals(TermsOfServiceSimple other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -135,23 +111,6 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     Version == other.Version ||
                     Version != null &&
                     Version.Equals(other.Version)
-                ) && 
-                (
-                    TeamIds == other.TeamIds ||
-                    TeamIds != null &&
-                    other.TeamIds != null &&
-                    TeamIds.SequenceEqual(other.TeamIds)
-                ) && 
-                (
-                    AcceptedUserIds == other.AcceptedUserIds ||
-                    AcceptedUserIds != null &&
-                    other.AcceptedUserIds != null &&
-                    AcceptedUserIds.SequenceEqual(other.AcceptedUserIds)
-                ) && 
-                (
-                    SubRealmId == other.SubRealmId ||
-                    SubRealmId != null &&
-                    SubRealmId.Equals(other.SubRealmId)
                 );
         }
 
@@ -171,12 +130,6 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + AgreementName.GetHashCode();
                     if (Version != null)
                     hashCode = hashCode * 59 + Version.GetHashCode();
-                    if (TeamIds != null)
-                    hashCode = hashCode * 59 + TeamIds.GetHashCode();
-                    if (AcceptedUserIds != null)
-                    hashCode = hashCode * 59 + AcceptedUserIds.GetHashCode();
-                    if (SubRealmId != null)
-                    hashCode = hashCode * 59 + SubRealmId.GetHashCode();
                 return hashCode;
             }
         }
@@ -184,12 +137,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(TermsOfServiceListItem left, TermsOfServiceListItem right)
+        public static bool operator ==(TermsOfServiceSimple left, TermsOfServiceSimple right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(TermsOfServiceListItem left, TermsOfServiceListItem right)
+        public static bool operator !=(TermsOfServiceSimple left, TermsOfServiceSimple right)
         {
             return !Equals(left, right);
         }

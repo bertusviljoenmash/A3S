@@ -93,7 +93,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         /// Gets or Sets CreatedAt
         /// </summary>
         [DataMember(Name="createdAt", EmitDefaultValue=false)]
-        public string CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
