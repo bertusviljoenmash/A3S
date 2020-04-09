@@ -207,6 +207,8 @@ namespace za.co.grindrodbank.a3s
             services.AddScoped<ILdapAuthenticationModeRepository, LdapAuthenticationModeRepository>();
             services.AddScoped<IPermissionRepository, PermissionRepository>();
             services.AddScoped<IFunctionRepository, FunctionRepository>();
+            services.AddScoped<IFunctionTransientRepository, FunctionTransientRepository>();
+            services.AddScoped<IFunctionPermissionTransientRepository, FunctionPermissionTransientRepository>();
             services.AddScoped<IApplicationFunctionRepository, ApplicationFunctionRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
