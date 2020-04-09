@@ -91,9 +91,18 @@ jobs:
     machine: true
     working_directory: ~/repo
     steps:
-      # Install NPM.
-      - run: curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-      - run: sudo apt install nodejs
+      # Install NPM
+      # By default the circleci images come with node v6.1.0, the latest version of newman: requires node version >=10
+      # the steps below overide the default version on circleci machine image. Solution found in this link: 
+      # https://discuss.circleci.com/t/circleci-forgetting-node-version-on-machine-executor/28813/7 
+      - run: |
+          echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
+          echo ' [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
+      - run: |
+          nvm install v10
+          node -v
+          nvm alias default v10
+      - run: node -v
       # Install Newman Using NPM
       - run: npm install -g newman
       - run: npm install -g newman-reporter-htmlextra
