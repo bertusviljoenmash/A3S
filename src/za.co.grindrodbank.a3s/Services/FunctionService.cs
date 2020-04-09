@@ -48,8 +48,7 @@ namespace za.co.grindrodbank.a3s.Services
                 {
                     Name = functionSubmit.Name,
                     Description = functionSubmit.Description,
-                    FunctionPermissions = new List<FunctionPermissionModel>(),
-                    ChangedBy = createdByGuid
+                    FunctionPermissions = new List<FunctionPermissionModel>()
                 };
 
                 await CheckForApplicationAndAssignToFunctionIfExists(function, functionSubmit);
@@ -101,7 +100,6 @@ namespace za.co.grindrodbank.a3s.Services
                 function.Name = functionSubmit.Name;
                 function.Description = functionSubmit.Description;
                 function.FunctionPermissions = new List<FunctionPermissionModel>();
-                function.ChangedBy = updatedByGuid;
 
                 await CheckForApplicationAndAssignToFunctionIfExists(function, functionSubmit);
                 await CheckThatPermissionsExistAndAssignToFunction(function, functionSubmit);

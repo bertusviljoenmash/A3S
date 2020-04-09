@@ -360,19 +360,16 @@ namespace za.co.grindrodbank.a3s
                         Name = "a3s.securityContractMaintenance",
                         Description = "Functionality to apply security contracts for micro-services.",
                         Application = application,
-                        ChangedBy = Guid.Empty
                     };
                     function.FunctionPermissions.Add(new FunctionPermissionModel
                     {
                         Function = function,
                         Permission = writePermission,
-                        ChangedBy = Guid.Empty
                     });
                     function.FunctionPermissions.Add(new FunctionPermissionModel
                     {
                         Function = function,
                         Permission = readPermission,
-                        ChangedBy = Guid.Empty
                     });
 
                     context.Function.Add(function);

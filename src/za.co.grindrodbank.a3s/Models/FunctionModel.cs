@@ -12,7 +12,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace za.co.grindrodbank.a3s.Models
 {
     [Table("Function")]
-    public class FunctionModel : AuditableModel
+    public class FunctionModel
     {
         [Key]
         public Guid Id { get; set; }

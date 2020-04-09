@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 namespace za.co.grindrodbank.a3s.Models
 {
     [Table("FunctionPermission")]
-    public class FunctionPermissionModel : AuditableModel
+    public class FunctionPermissionModel
     {
         public Guid FunctionId { get; set; }
         public FunctionModel Function { get; set; }
