@@ -86,6 +86,12 @@
     <Compile Include="..\za.co.grindrodbank.a3s\Models\FunctionModel.cs">
       <Link>Models\FunctionModel.cs</Link>
     </Compile>
+    <Compile Include="..\za.co.grindrodbank.a3s\Models\FunctionTransientModel.cs">
+      <Link>Models\FunctionTransientModel.cs</Link>
+    </Compile>
+    <Compile Include="..\za.co.grindrodbank.a3s\Models\FunctionPermissionTransientModel.cs">
+      <Link>Models\FunctionPermissionTransientModel.cs</Link>
+    </Compile>
     <Compile Include="..\za.co.grindrodbank.a3s\Models\RoleModel.cs">
       <Link>Models\RoleModel.cs</Link>
     </Compile>

@@ -12,7 +12,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace za.co.grindrodbank.a3s.Models
 {
     [Table("FunctionTransient")]
-    public class FunctionTransient : TransientStateMachineRecord
+    public class FunctionTransientModel : TransientStateMachineRecord
     {
         [Required]
         [Key]
@@ -25,12 +25,12 @@ namespace za.co.grindrodbank.a3s.Models
         public string Description { get; set; }
 
         [Required]
-        public Guid RoleId { get; set; }
+        public Guid FunctionId { get; set; }
 
         [Required]
         public Guid SubRealmId { get; set; }
 
         [NotMapped]
-        public List<FunctionPermissionTransientModel> LatestTransientRolePermissions { get; set; }
+        public List<FunctionPermissionTransientModel> LatestTransientFunctionPermissions { get; set; }
     }
 }

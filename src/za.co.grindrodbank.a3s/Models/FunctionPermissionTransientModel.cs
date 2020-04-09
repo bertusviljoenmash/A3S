@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace za.co.grindrodbank.a3s.Models
 {
-    public class FunctionPermissionTransientModel 
+    public class FunctionPermissionTransientModel : TransientStateMachineRecord
     {
         [Required]
         [Key]

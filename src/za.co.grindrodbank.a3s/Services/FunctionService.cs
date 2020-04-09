@@ -13,6 +13,7 @@ using za.co.grindrodbank.a3s.Models;
 using za.co.grindrodbank.a3s.Repositories;
 using AutoMapper;
 using za.co.grindrodbank.a3s.A3SApiResources;
+using static za.co.grindrodbank.a3s.Models.TransientStateMachineRecord;
 
 namespace za.co.grindrodbank.a3s.Services
 {
@@ -21,14 +22,16 @@ namespace za.co.grindrodbank.a3s.Services
         private readonly IFunctionRepository functionRepository;
         private readonly IPermissionRepository permissionRepository;
         private readonly IApplicationRepository applicationRepository;
+        private readonly IFunctionTransientRepository functionTransientRepository;
         private readonly ISubRealmRepository subRealmRepository;
         private readonly IMapper mapper;
 
-        public FunctionService(IFunctionRepository functionRepository, IPermissionRepository permissionRepository, IApplicationRepository applicationRepository, ISubRealmRepository subRealmRepository, IMapper mapper)
+        public FunctionService(IFunctionRepository functionRepository, IPermissionRepository permissionRepository, IApplicationRepository applicationRepository, IFunctionTransientRepository functionTransientRepository, ISubRealmRepository subRealmRepository, IMapper mapper)
         {
             this.functionRepository = functionRepository;
             this.applicationRepository = applicationRepository;
             this.permissionRepository = permissionRepository;
+            this.functionTransientRepository = functionTransientRepository;
             this.subRealmRepository = subRealmRepository;
             this.mapper = mapper;
         }
@@ -66,6 +69,85 @@ namespace za.co.grindrodbank.a3s.Services
                 throw;
             }
         }
+
+        private async Task<FunctionTransientModel> CaptureTransientFunctionAsync(Guid functionId, string functionName, string functionDescription, Guid subRealmId, TransientAction action, Guid createdById)
+        {
+            FunctionTransientModel latestTransientFunction = null;
+            List<FunctionTransientModel> transientFunctions = new List<FunctionTransientModel>();
+
+            // Recall - there might not be a Guid for the function if we are creating it.
+            if (functionId != Guid.Empty)
+            {
+                transientFunctions = await functionTransientRepository.GetTransientsForFunctionAsync(functionId);
+                latestTransientFunction = transientFunctions.LastOrDefault();
+            }
+
+            if (subRealmId != Guid.Empty)
+            {
+                await CheckSubRealmIdIsValid(subRealmId);
+            }
+
+            FunctionTransientModel newTransientFunction = new FunctionTransientModel
+            {
+                Action = action,
+                ChangedBy = createdById,
+                ApprovalCount = latestTransientFunction == null ? 0 : latestTransientFunction.ApprovalCount,
+                // Pending is the initial state of the state machine for all transient records.
+                R_State = latestTransientFunction == null ? DatabaseRecordState.Pending : latestTransientFunction.R_State,
+                Name = functionName,
+                Description = functionDescription,
+                SubRealmId = subRealmId,
+                FunctionId = functionId == Guid.Empty ? Guid.NewGuid() : functionId
+            };
+
+            try
+            {
+                newTransientFunction.Capture(createdById.ToString());
+            }
+            catch (Exception e)
+            {
+                throw new InvalidStateTransitionException($"Cannot capture function with ID '{functionId}'. Error: {e.Message}");
+            }
+
+            var latestReleasedRecord = transientFunctions.Where(transientFunction => transientFunction.R_State == DatabaseRecordState.Released).LastOrDefault();
+
+            // Only persist the new captured state of the role if it actually different from the latest released state.
+            return IsCapturedFunctionDifferentFromLatestReleasedTransientFunctionState(latestReleasedRecord, functionName, functionDescription, subRealmId, action) ? await functionTransientRepository.CreateAsync(newTransientFunction) : latestTransientFunction;
+        }
+
+        private bool IsCapturedFunctionDifferentFromLatestReleasedTransientFunctionState(FunctionTransientModel latestReleasedTransientFunction, string currentFunctionName, string currentFunctionDescription, Guid currentFunctionSubRealmId, TransientAction action)
+        {
+            if (latestReleasedTransientFunction == null)
+            {
+                return true;
+            }
+
+            // Always capture the intent to perform a deletion.
+            if (action == TransientAction.Delete)
+            {
+                return true;
+            }
+
+            return (latestReleasedTransientFunction.Name != currentFunctionName
+                   || latestReleasedTransientFunction.Description != currentFunctionDescription
+                   || latestReleasedTransientFunction.SubRealmId != currentFunctionSubRealmId);
+        }
+
+        private async Task CheckSubRealmIdIsValid(Guid subRealmId)
+        {
+            var subRealm = await subRealmRepository.GetByIdAsync(subRealmId, false);
+
+            if (subRealm == null)
+            {
+                throw new ItemNotFoundException($"Sub-realm with ID '{subRealmId}' not found when attempting to assign it to a function.");
+            }
+        }
+
+
+
+
+
+
 
         public async Task<Function> GetByIdAsync(Guid functionId)
         {

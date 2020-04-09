@@ -31,6 +31,8 @@ namespace za.co.grindrodbank.a3s.Models
         public DbSet<UserTeamModel> UserTeam { get; set; }
         public DbSet<FunctionModel> Function { get; set; }
         public DbSet<FunctionPermissionModel> FunctionPermission { get; set; }
+        public DbSet<FunctionTransientModel> FunctionTransient { get; set; }
+        public DbSet<FunctionPermissionTransientModel> FunctionPermissionTransient { get; set; }
         public DbSet<ApplicationFunctionModel> ApplicationFunction { get; set; }
         public DbSet<ApplicationFunctionPermissionModel> ApplicationFunctionPermission { get; set; }
         public DbSet<RoleFunctionModel> RoleFunction { get; set; }
@@ -311,6 +313,14 @@ namespace za.co.grindrodbank.a3s.Models
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             modelBuilder.Entity<RoleRoleTransientModel>()
+                .Property(b => b.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<FunctionTransientModel>()
+                .Property(b => b.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<FunctionPermissionTransientModel>()
                 .Property(b => b.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
