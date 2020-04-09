@@ -180,7 +180,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/UserSubmit"
+                  "$ref" : "#/components/schemas/UserTransient"
                 }
               }
             },
@@ -267,8 +267,15 @@
           "style" : "simple"
         } ],
         "responses" : {
-          "204" : {
-            "description" : "No Content."
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserTransient"
+                }
+              }
+            },
+            "description" : "Successful. User Deletion captured."
           },
           "400" : {
             "content" : {
@@ -431,7 +438,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/User"
+                  "$ref" : "#/components/schemas/UserTransient"
                 }
               }
             },
@@ -527,6 +534,16 @@
           }
         },
         "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserTransient"
+                }
+              }
+            },
+            "description" : "Successful. User update captured."
+          },
           "400" : {
             "content" : {
               "application/json" : {
@@ -579,6 +596,269 @@
           }
         },
         "summary" : "Change a user password.",
+        "tags" : [ "User" ]
+      }
+    },
+    "/users/{userId}/transients" : {
+      "get" : {
+        "description" : "Get the latest transients for a user by it's UUID.",
+        "operationId" : "getUserTransients",
+        "parameters" : [ {
+          "description" : "The UUID of the user.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "userId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UserId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserTransients"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access users."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "User not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Get the current active (all transients since last declined or released state) for a user.",
+        "tags" : [ "User" ]
+      }
+    },
+    "/users/{userId}/approve" : {
+      "patch" : {
+        "description" : "Approve all current transient states for a user, given it's UUID.",
+        "operationId" : "approveUser",
+        "parameters" : [ {
+          "description" : "The UUID of the user.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "userId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UserId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserTransient"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to approve the user."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "User not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Approve all current transient states for a user.",
+        "tags" : [ "User" ]
+      }
+    },
+    "/users/{userId}/decline" : {
+      "patch" : {
+        "description" : "Decline all current transient states for a user, given it's UUID.",
+        "operationId" : "declineUser",
+        "parameters" : [ {
+          "description" : "The UUID of the user.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "userId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UserId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserTransient"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to decline the user."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "User not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Decline all current transient states for a user.",
         "tags" : [ "User" ]
       }
     },
@@ -3860,7 +4140,7 @@
                 }
               }
             },
-            "description" : "Function not found."
+            "description" : "Terms of service agreement not found."
           },
           "422" : {
             "content" : {
@@ -7621,6 +7901,151 @@
             },
             "LdapAuthenticationModeName" : "LdapAuthenticationModeName",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          } ],
+          "Users" : [ {
+            "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "latestTransientUserTeams" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : 2,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "TeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 5
+            }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : 2,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "TeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 5
+            } ],
+            "capturerName" : "capturerName",
+            "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+            "latestActiveUserTransient" : {
+              "requiredApprovalCount" : 6,
+              "r_state" : "r_state",
+              "avatar" : "avatar",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 0,
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "password" : true,
+              "phoneNumber" : "phoneNumber",
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "surname" : "surname",
+              "name" : "name",
+              "action" : "action",
+              "email" : "email",
+              "username" : "username",
+              "customAttributes" : [ {
+                "value" : "value",
+                "key" : "key"
+              }, {
+                "value" : "value",
+                "key" : "key"
+              } ]
+            },
+            "userName" : "userName",
+            "latestTransientUserRoles" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : 5,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "RoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : 5,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "RoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            } ],
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          }, {
+            "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "latestTransientUserTeams" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : 2,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "TeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 5
+            }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : 2,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "TeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 5
+            } ],
+            "capturerName" : "capturerName",
+            "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+            "latestActiveUserTransient" : {
+              "requiredApprovalCount" : 6,
+              "r_state" : "r_state",
+              "avatar" : "avatar",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 0,
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "password" : true,
+              "phoneNumber" : "phoneNumber",
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "surname" : "surname",
+              "name" : "name",
+              "action" : "action",
+              "email" : "email",
+              "username" : "username",
+              "customAttributes" : [ {
+                "value" : "value",
+                "key" : "key"
+              }, {
+                "value" : "value",
+                "key" : "key"
+              } ]
+            },
+            "userName" : "userName",
+            "latestTransientUserRoles" : [ {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : 5,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "RoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            }, {
+              "createdAt" : "2000-01-23T04:56:07.000+00:00",
+              "requiredApprovalCount" : 5,
+              "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "r_state" : "r_state",
+              "action" : "action",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "RoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "approvalCount" : 1
+            } ],
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
           } ]
         },
         "properties" : {
@@ -7651,6 +8076,12 @@
           "TermsOfServiceAgreements" : {
             "items" : {
               "$ref" : "#/components/schemas/SystemTransientsTermsOfService"
+            },
+            "type" : "array"
+          },
+          "Users" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SystemTransientsUser"
             },
             "type" : "array"
           }
@@ -8034,6 +8465,120 @@
           },
           "latestActiveTermsOfServiceTransient" : {
             "$ref" : "#/components/schemas/TermsOfServiceTransient"
+          }
+        },
+        "type" : "object"
+      },
+      "SystemTransientsUser" : {
+        "description" : "Represents the latest transients (only the most recent transient record) for a user with any active transients.\n",
+        "example" : {
+          "capturerUuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "latestTransientUserTeams" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 2,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "TeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 2,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "TeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          } ],
+          "capturerName" : "capturerName",
+          "capturedDate" : "2000-01-23T04:56:07.000+00:00",
+          "latestActiveUserTransient" : {
+            "requiredApprovalCount" : 6,
+            "r_state" : "r_state",
+            "avatar" : "avatar",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 0,
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "password" : true,
+            "phoneNumber" : "phoneNumber",
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "surname" : "surname",
+            "name" : "name",
+            "action" : "action",
+            "email" : "email",
+            "username" : "username",
+            "customAttributes" : [ {
+              "value" : "value",
+              "key" : "key"
+            }, {
+              "value" : "value",
+              "key" : "key"
+            } ]
+          },
+          "userName" : "userName",
+          "latestTransientUserRoles" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 5,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "RoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 5,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "RoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          } ],
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "userName" : {
+            "type" : "string"
+          },
+          "capturerUuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "capturerName" : {
+            "type" : "string"
+          },
+          "capturedDate" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "latestActiveUserTransient" : {
+            "$ref" : "#/components/schemas/UserBaseUserTransient"
+          },
+          "latestTransientUserRoles" : {
+            "description" : "A list of the latest (most recent one per relation) transient user - role assignment changes for this transient user.",
+            "items" : {
+              "$ref" : "#/components/schemas/UserRoleTransient"
+            },
+            "type" : "array"
+          },
+          "latestTransientUserTeams" : {
+            "description" : "A list of the latest (most recent one per relation) transient user - team assignment changes for this transient user.",
+            "items" : {
+              "$ref" : "#/components/schemas/UserTeamTransient"
+            },
+            "type" : "array"
           }
         },
         "type" : "object"
@@ -9164,6 +9709,598 @@
             "type" : "string"
           },
           "value" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "UserTransientId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "UserTransient" : {
+        "description" : "Models the transient state of a user.\n",
+        "example" : {
+          "requiredApprovalCount" : 6,
+          "latestTransientUserTeams" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 2,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "TeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 2,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "TeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          } ],
+          "r_state" : "r_state",
+          "avatar" : "avatar",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 0,
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "password" : true,
+          "phoneNumber" : "phoneNumber",
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "surname" : "surname",
+          "name" : "name",
+          "action" : "action",
+          "latestTransientUserRoles" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 5,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "RoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 5,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "RoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          } ],
+          "email" : "email",
+          "username" : "username",
+          "customAttributes" : [ {
+            "value" : "value",
+            "key" : "key"
+          }, {
+            "value" : "value",
+            "key" : "key"
+          } ]
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "userId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "surname" : {
+            "type" : "string"
+          },
+          "username" : {
+            "type" : "string"
+          },
+          "password" : {
+            "description" : "Tracks whether the user's password has been changed.",
+            "type" : "boolean"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "phoneNumber" : {
+            "nullable" : true,
+            "type" : "string"
+          },
+          "avatar" : {
+            "nullable" : true,
+            "type" : "string"
+          },
+          "customAttributes" : {
+            "items" : {
+              "$ref" : "#/components/schemas/UserCustomAttribute"
+            },
+            "type" : "array"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current approval count.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "createdBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "latestTransientUserRoles" : {
+            "description" : "A list of the latest transient user role assignments for this transient user.",
+            "items" : {
+              "$ref" : "#/components/schemas/UserRoleTransient"
+            },
+            "type" : "array"
+          },
+          "latestTransientUserTeams" : {
+            "description" : "A list of the latest transient user - team assignments for this transient user.",
+            "items" : {
+              "$ref" : "#/components/schemas/UserTeamTransient"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "UserBaseUserTransient" : {
+        "description" : "Models the transient state of a user.\n",
+        "example" : {
+          "requiredApprovalCount" : 6,
+          "r_state" : "r_state",
+          "avatar" : "avatar",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 0,
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "password" : true,
+          "phoneNumber" : "phoneNumber",
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "surname" : "surname",
+          "name" : "name",
+          "action" : "action",
+          "email" : "email",
+          "username" : "username",
+          "customAttributes" : [ {
+            "value" : "value",
+            "key" : "key"
+          }, {
+            "value" : "value",
+            "key" : "key"
+          } ]
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "userId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "surname" : {
+            "type" : "string"
+          },
+          "username" : {
+            "type" : "string"
+          },
+          "password" : {
+            "description" : "Tracks whether the user's password has been changed.",
+            "type" : "boolean"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "phoneNumber" : {
+            "nullable" : true,
+            "type" : "string"
+          },
+          "avatar" : {
+            "nullable" : true,
+            "type" : "string"
+          },
+          "customAttributes" : {
+            "items" : {
+              "$ref" : "#/components/schemas/UserCustomAttribute"
+            },
+            "type" : "array"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current approval count.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "createdBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "UserTransients" : {
+        "description" : "Represents the current active transients for a user and it's relations.\n",
+        "example" : {
+          "latestTransientUserTeams" : [ {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 2,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "Team" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          }, {
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 2,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "Team" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 5
+          } ],
+          "latestActiveUserTransients" : [ {
+            "requiredApprovalCount" : 6,
+            "r_state" : "r_state",
+            "avatar" : "avatar",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 0,
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "password" : true,
+            "phoneNumber" : "phoneNumber",
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "surname" : "surname",
+            "name" : "name",
+            "action" : "action",
+            "email" : "email",
+            "username" : "username",
+            "customAttributes" : [ {
+              "value" : "value",
+              "key" : "key"
+            }, {
+              "value" : "value",
+              "key" : "key"
+            } ]
+          }, {
+            "requiredApprovalCount" : 6,
+            "r_state" : "r_state",
+            "avatar" : "avatar",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 0,
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "password" : true,
+            "phoneNumber" : "phoneNumber",
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "surname" : "surname",
+            "name" : "name",
+            "action" : "action",
+            "email" : "email",
+            "username" : "username",
+            "customAttributes" : [ {
+              "value" : "value",
+              "key" : "key"
+            }, {
+              "value" : "value",
+              "key" : "key"
+            } ]
+          } ],
+          "latestTransientUserRoles" : [ {
+            "Role" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 5,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          }, {
+            "Role" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
+            "createdAt" : "2000-01-23T04:56:07.000+00:00",
+            "requiredApprovalCount" : 5,
+            "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "r_state" : "r_state",
+            "action" : "action",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "approvalCount" : 1
+          } ]
+        },
+        "properties" : {
+          "latestActiveUserTransients" : {
+            "description" : "A list of the latest transient base user records for this transient user.",
+            "items" : {
+              "$ref" : "#/components/schemas/UserBaseUserTransient"
+            },
+            "type" : "array"
+          },
+          "latestTransientUserRoles" : {
+            "description" : "A list of the latest transient user - roles assignments for this transient user.",
+            "items" : {
+              "$ref" : "#/components/schemas/UserRoleDetailedTransient"
+            },
+            "type" : "array"
+          },
+          "latestTransientUserTeams" : {
+            "description" : "A list of the latest transient user - team assignments for this transient user.",
+            "items" : {
+              "$ref" : "#/components/schemas/UserTeamDetailedTransient"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "UserRoleTransientId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "UserRoleTransient" : {
+        "description" : "Represents a transient state of a user - role assignment.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "requiredApprovalCount" : 5,
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "RoleId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 1
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "userId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "RoleId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current amount of approvals.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "createdBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "UserRoleDetailedTransient" : {
+        "description" : "Represents a transient state of a user - role assignment, but with additional details about the related user role.\n",
+        "example" : {
+          "Role" : {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          },
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "requiredApprovalCount" : 5,
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "r_state" : "r_state",
+          "action" : "action",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 1
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "userId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "Role" : {
+            "$ref" : "#/components/schemas/RoleSimple"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current amount of approvals.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "createdBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "UserTeamTransientId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "UserTeamTransient" : {
+        "description" : "Represents a transient state of a user - team assignment.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "requiredApprovalCount" : 2,
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "r_state" : "r_state",
+          "action" : "action",
+          "TeamId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 5
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "userId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "TeamId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current amount of approvals.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "createdBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "UserTeamDetailedTransient" : {
+        "description" : "Represents a transient state of a user - team assignment, but with additional details for the related team.\n",
+        "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "requiredApprovalCount" : 2,
+          "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "r_state" : "r_state",
+          "action" : "action",
+          "Team" : {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          },
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "approvalCount" : 5
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "userId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "Team" : {
+            "$ref" : "#/components/schemas/TeamSimple"
+          },
+          "r_state" : {
+            "type" : "string"
+          },
+          "action" : {
+            "type" : "string"
+          },
+          "approvalCount" : {
+            "description" : "The current amount of approvals.",
+            "type" : "integer"
+          },
+          "requiredApprovalCount" : {
+            "description" : "The required approval count before this entity is released.",
+            "type" : "integer"
+          },
+          "createdBy" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
             "type" : "string"
           }
         },

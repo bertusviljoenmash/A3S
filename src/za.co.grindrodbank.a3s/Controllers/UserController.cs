@@ -152,5 +152,20 @@ namespace za.co.grindrodbank.a3s.Controllers
         {
             return Ok(await profileService.UpdateUserProfileAsync(userId, profileId, userProfileSubmit, ClaimsHelper.GetUserId(User)));
         }
+
+        public override Task<IActionResult> ApproveUserAsync([FromRoute, Required] Guid userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<IActionResult> DeclineUserAsync([FromRoute, Required] Guid userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<IActionResult> GetUserTransientsAsync([FromRoute, Required] Guid userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

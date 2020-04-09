@@ -41,7 +41,7 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         /// <response code="400">Bad Request.</response>
         /// <response code="401">Not authenticated.</response>
         /// <response code="403">Forbidden - You are not authorized to approve the terms of service agreement.</response>
-        /// <response code="404">Function not found.</response>
+        /// <response code="404">Terms of service agreement not found.</response>
         /// <response code="422">Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.</response>
         /// <response code="500">An unexpected error occurred.</response>
         [HttpPatch]
