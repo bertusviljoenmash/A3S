@@ -47,21 +47,28 @@ namespace za.co.grindrodbank.a3s.Services
                 if (existingFunction != null)
                     throw new ItemNotProcessableException($"Function with Name '{functionSubmit.Name}' already exist.");
 
-                var function = new FunctionModel
-                {
-                    Name = functionSubmit.Name,
-                    Description = functionSubmit.Description,
-                    FunctionPermissions = new List<FunctionPermissionModel>()
-                };
+                FunctionTransientModel newFunctionTransient = await CaptureTransientFunctionAsync(Guid.Empty, functionSubmit.Name, functionSubmit.Description, functionSubmit.SubRealmId, TransientAction.Create, createdByGuid);
 
-                await CheckForApplicationAndAssignToFunctionIfExists(function, functionSubmit);
-                await CheckForSubRealmAndAssignToFunctionIfExists(function, functionSubmit);
-                await CheckThatPermissionsExistAndAssignToFunction(function, functionSubmit);
+                // Even though we are creating/capturing the function here, it is possible that the configured approval count is 0,
+                // which means that we need to check for whether the transient state is released, and process the affected function accrodingly.
+                // NOTE: It is possible for an empty function (not persisted) to be returned if the function is not released in the following step.
+                FunctionModel role = await UpdateFunctionBasedOnTransientActionIfTransientFunctionStateIsReleased(newFunctionTransient);
 
-                // All successful
-                CommitTransaction();
+                //var function = new FunctionModel
+                //{
+                //    Name = functionSubmit.Name,
+                //    Description = functionSubmit.Description,
+                //    FunctionPermissions = new List<FunctionPermissionModel>()
+                //};
 
-                return mapper.Map<Function>(await functionRepository.CreateAsync(function));
+                //await CheckForApplicationAndAssignToFunctionIfExists(function, functionSubmit);
+                //await CheckForSubRealmAndAssignToFunctionIfExists(function, functionSubmit);
+                //await CheckThatPermissionsExistAndAssignToFunction(function, functionSubmit);
+
+                //// All successful
+                //CommitTransaction();
+
+                //return mapper.Map<Function>(await functionRepository.CreateAsync(function));
             }
             catch
             {
@@ -143,7 +150,76 @@ namespace za.co.grindrodbank.a3s.Services
             }
         }
 
+        private async Task<FunctionModel> UpdateFunctionBasedOnTransientActionIfTransientFunctionStateIsReleased(FunctionTransientModel functionTransientModel)
+        {
+            FunctionModel functionToUpdate = new FunctionModel();
 
+            if (functionTransientModel.R_State != DatabaseRecordState.Released)
+            {
+                return functionToUpdate;
+            }
+
+            functionToUpdate = await functionRepository.GetByIdAsync(functionTransientModel.FunctionId);
+
+            if (functionToUpdate == null && functionTransientModel.Action != TransientAction.Create)
+            {
+                throw new ItemNotFoundException($"Function with ID '{functionTransientModel.FunctionId}' not found when attempting to release function.");
+            }
+
+            if (functionTransientModel.Action == TransientAction.Modify)
+            {
+                await UpdateFunctionWithCurrentTransientState(functionToUpdate, functionTransientModel);
+                return functionToUpdate;
+            }
+
+            if (functionTransientModel.Action == TransientAction.Delete)
+            {
+                await functionRepository.DeleteAsync(functionToUpdate);
+                return functionToUpdate;
+            }
+
+            // Only attempt to re-create the role if there is no existing role.
+            if (functionToUpdate == null)
+            {
+                return await CreateFunctionFromCurrentTransientState(functionTransientModel);
+            }
+
+            return functionToUpdate;
+        }
+
+        private async Task UpdateFunctionWithCurrentTransientState(FunctionModel functionToRelease, FunctionTransientModel transientFunction)
+        {
+            functionToRelease.Name = transientFunction.Name;
+            functionToRelease.Description = transientFunction.Description;
+
+            await functionRepository.UpdateAsync(functionToRelease);
+        }
+
+        private async Task<FunctionModel> CreateFunctionFromCurrentTransientState(FunctionTransientModel transientFunction)
+        {
+            FunctionModel functionToCreate = new FunctionModel
+            {
+                Name = transientFunction.Name,
+                Description = transientFunction.Description,
+                Id = transientFunction.FunctionId
+            };
+
+            await AssignSubRealmToFunctionFromTransientFunctionIfSubRealmNotEmpty(functionToCreate, transientFunction);
+
+            return await functionRepository.CreateAsync(functionToCreate);
+        }
+
+        private async Task AssignSubRealmToFunctionFromTransientFunctionIfSubRealmNotEmpty(FunctionModel functionModel, FunctionTransientModel transientFunction)
+        {
+            if (transientFunction.SubRealmId == Guid.Empty)
+            {
+                return;
+            }
+
+            var subRealm = await subRealmRepository.GetByIdAsync(transientFunction.SubRealmId, false);
+
+            functionModel.SubRealm = subRealm ?? throw new ItemNotProcessableException($"Sub-Realm with ID '{transientFunction.SubRealmId}' not found when attempting to assign it to a function with ID '{functionModel.Id}' from a transient state.");
+        }
 
 
         // OLD IMPLEMENTATION BELOW
