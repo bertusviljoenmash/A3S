@@ -24,15 +24,18 @@ namespace za.co.grindrodbank.a3s.Services
         private readonly IApplicationRepository applicationRepository;
         private readonly IFunctionTransientRepository functionTransientRepository;
         private readonly ISubRealmRepository subRealmRepository;
+        private readonly IFunctionPermissionTransientRepository functionPermissionTransientRepository;
         private readonly IMapper mapper;
 
-        public FunctionService(IFunctionRepository functionRepository, IPermissionRepository permissionRepository, IApplicationRepository applicationRepository, IFunctionTransientRepository functionTransientRepository, ISubRealmRepository subRealmRepository, IMapper mapper)
+        public FunctionService(IFunctionRepository functionRepository, IPermissionRepository permissionRepository, IApplicationRepository applicationRepository, IFunctionTransientRepository functionTransientRepository, ISubRealmRepository subRealmRepository, IFunctionPermissionTransientRepository functionPermissionTransientRepository, IMapper mapper)
         {
             this.functionRepository = functionRepository;
             this.applicationRepository = applicationRepository;
             this.permissionRepository = permissionRepository;
             this.functionTransientRepository = functionTransientRepository;
             this.subRealmRepository = subRealmRepository;
+            this.functionPermissionTransientRepository = functionPermissionTransientRepository;
+
             this.mapper = mapper;
         }
 
@@ -52,7 +55,9 @@ namespace za.co.grindrodbank.a3s.Services
                 // Even though we are creating/capturing the function here, it is possible that the configured approval count is 0,
                 // which means that we need to check for whether the transient state is released, and process the affected function accrodingly.
                 // NOTE: It is possible for an empty function (not persisted) to be returned if the function is not released in the following step.
-                FunctionModel role = await UpdateFunctionBasedOnTransientActionIfTransientFunctionStateIsReleased(newFunctionTransient);
+                FunctionModel function = await UpdateFunctionBasedOnTransientActionIfTransientFunctionStateIsReleased(newFunctionTransient);
+
+                newFunctionTransient.LatestTransientFunctionPermissions = await CaptureFunctionPermissionAssignmentChanges(function, newFunctionTransient.FunctionId, functionSubmit, createdByGuid, functionSubmit.SubRealmId);
 
                 //var function = new FunctionModel
                 //{
@@ -221,6 +226,165 @@ namespace za.co.grindrodbank.a3s.Services
             functionModel.SubRealm = subRealm ?? throw new ItemNotProcessableException($"Sub-Realm with ID '{transientFunction.SubRealmId}' not found when attempting to assign it to a function with ID '{functionModel.Id}' from a transient state.");
         }
 
+        private async Task<List<FunctionPermissionTransientModel>> CaptureFunctionPermissionAssignmentChanges(FunctionModel functionModel, Guid functionId, FunctionSubmit functionSubmit, Guid capturedBy, Guid functionSubRealmId)
+        {
+            await CheckIfThereAreExistingCapturedOrApprovedTransientFunctionPermissionsForRoleAndThrowExceptionIfThereAre(functionId);
+            List<FunctionPermissionTransientModel> affectedFunctionPermissionTransientRecords = new List<FunctionPermissionTransientModel>();
+
+            await DetectAndCaptureNewFunctionPermissionAssignments(functionModel, functionId, functionSubmit, capturedBy, functionSubRealmId, affectedFunctionPermissionTransientRecords);
+            await DetectAndCapturePermissionsRemovedFromFunction(functionModel, functionId, functionSubmit, capturedBy, affectedFunctionPermissionTransientRecords);
+
+            return affectedFunctionPermissionTransientRecords;
+        }
+
+        private async Task CheckIfThereAreExistingCapturedOrApprovedTransientFunctionPermissionsForRoleAndThrowExceptionIfThereAre(Guid functionId)
+        {
+            var allTransientFunctionPermissions = await functionPermissionTransientRepository.GetAllTransientPermissionRelationsForFunctionAsync(functionId);
+
+            // Extract a distinct list of permission IDs from all the function permission transients records.
+            var distinctPermissionIds = allTransientFunctionPermissions.Select(tfp => tfp.PermissionId).Distinct();
+
+            // Iterate through all the distinc function IDs, find the latest transient record for each function, and process accordingly.
+            foreach (var permissionId in distinctPermissionIds)
+            {
+                var latestTransientFunctionPermissionRecord = allTransientFunctionPermissions.Where(tfp => tfp.PermissionId == permissionId).LastOrDefault();
+
+                if (latestTransientFunctionPermissionRecord.R_State == DatabaseRecordState.Captured || latestTransientFunctionPermissionRecord.R_State == DatabaseRecordState.Approved)
+                {
+                    throw new ItemNotProcessableException($"Cannot capture new state for function with ID '{functionId}' as there is a transient function permission for permission with ID '{permissionId}' in a '{latestTransientFunctionPermissionRecord.R_State}' state.");
+                }
+            }
+        }
+
+        private async Task<List<FunctionPermissionTransientModel>> DetectAndCaptureNewFunctionPermissionAssignments(FunctionModel functionModel, Guid functionId, FunctionSubmit functionSubmit, Guid capturedBy, Guid functionSubRealm, List<FunctionPermissionTransientModel> affectedFunctionPermissionTransientRecords)
+        {
+            // Recall, the role might not actually exist at this stage, so safely get access to a role function list.
+            var currentReleasedFunctionPermissions = functionModel.FunctionPermissions ?? new List<FunctionPermissionModel>();
+
+            foreach (var permissionId in functionSubmit.Permissions)
+            {
+                var existingRoleFunction = currentReleasedFunctionPermissions.Where(fp => fp.PermissionId == permissionId).FirstOrDefault();
+
+                if (existingRoleFunction == null)
+                {
+                    var newTransientFunctionPermissionRecord = await CaptureFunctionPermissionAssignmentChange(functionId, permissionId, capturedBy, TransientAction.Create, functionSubRealm);
+                    CheckForAndProcessReleasedFunctionPermissionTransientRecord(functionModel, newTransientFunctionPermissionRecord);
+                    affectedFunctionPermissionTransientRecords.Add(newTransientFunctionPermissionRecord);
+                }
+            }
+
+            return affectedFunctionPermissionTransientRecords;
+        }
+
+        private async Task<FunctionPermissionTransientModel> CaptureFunctionPermissionAssignmentChange(Guid functionId, Guid permissionId, Guid capturedBy, TransientAction action, Guid fuctionSubRealmId)
+        {
+            var permissionToAdd = await permissionRepository.GetByIdAsync(permissionId);
+
+            if (permissionToAdd == null)
+            {
+                throw new ItemNotFoundException($"Permission with ID '{permissionId}' not found when attempting to assign it to a function.");
+            }
+
+            ConfirmSubRealmAssociation(fuctionSubRealmId, permissionToAdd);
+
+            var functionPermissionTransientRecords = await functionPermissionTransientRepository.GetTransientPermissionRelationsForFunctionAsync(functionId, permissionId);
+            var latestFunctionPermissionTransientState = functionPermissionTransientRecords.LastOrDefault();
+
+            var transientFunctionPermission = new FunctionPermissionTransientModel
+            {
+                PermissionId = permissionId,
+                FunctionId = functionId,
+                R_State = latestFunctionPermissionTransientState == null ? DatabaseRecordState.Pending : latestFunctionPermissionTransientState.R_State,
+                ChangedBy = capturedBy,
+                ApprovalCount = latestFunctionPermissionTransientState == null ? 0 : latestFunctionPermissionTransientState.ApprovalCount,
+                Action = action
+            };
+
+            try // Attempt to transition the state of the transient function permission, but be prepared for a possible state transition exception.
+            {
+                transientFunctionPermission.Capture(capturedBy.ToString());
+            }
+            catch (Exception e)
+            {
+                throw new InvalidStateTransitionException($"Cannot capture function permission assignment change for function with ID '{functionId}', Permission with ID '{permissionId}'. State transition violation. Assignment Action: '{action}'. Error: {e.Message}");
+            }
+
+            await functionPermissionTransientRepository.CreateNewTransientStateForFunctionPermissionAsync(transientFunctionPermission);
+
+            return transientFunctionPermission;
+        }
+
+        private void ConfirmSubRealmAssociation(Guid functionSubRealmId, PermissionModel permission)
+        {
+            // if there is a sub-realm associated with the function, we must ensure that the permission we are wanting to assign to it is at least assigned to that sub-realm.
+            // Recall: Permissions have a many to many relationship with sub-realms.
+            if (functionSubRealmId != null && functionSubRealmId != Guid.Empty)
+            {
+                if (!permission.SubRealmPermissions.Select(srp => srp.SubRealmId).ToList().Contains(functionSubRealmId))
+                {
+                    throw new ItemNotProcessableException($"Attempting to add a permission with ID '{permission.Id}' to a function within the sub-realm with ID '{functionSubRealmId}', but the permission does not exist within that sub-realm.");
+                }
+            }
+        }
+
+        private void CheckForAndProcessReleasedFunctionPermissionTransientRecord(FunctionModel functionModel, FunctionPermissionTransientModel functionPermissionTransientModel)
+        {
+            if (functionPermissionTransientModel.R_State != DatabaseRecordState.Released)
+            {
+                return;
+            }
+
+            // It is important to check that the associated role actually exists.
+            if (functionModel.Id == Guid.Empty)
+            {
+                throw new InvalidStateTransitionException($"Attempting to process a released transient function permission assignment update for function with ID '{functionPermissionTransientModel.FunctionId}' and permission with ID '{functionPermissionTransientModel.PermissionId}', but the function does not exist or is not released yet.");
+            }
+
+            // Ensure there is a function permissions relation.
+            functionModel.FunctionPermissions ??= new List<FunctionPermissionModel>();
+
+            if (functionPermissionTransientModel.Action == TransientAction.Create)
+            {
+                functionModel.FunctionPermissions.Add(new FunctionPermissionModel
+                {
+                    FunctionId = functionPermissionTransientModel.FunctionId,
+                    PermissionId = functionPermissionTransientModel.PermissionId
+                });
+
+                return;
+            }
+
+            // The only remaining action is the removal of the permission from the function.
+            var functionPermissionToRemove = functionModel.FunctionPermissions.Where(fp => fp.PermissionId == functionPermissionTransientModel.PermissionId).FirstOrDefault();
+            functionModel.FunctionPermissions.Remove(functionPermissionToRemove);
+        }
+
+        private async Task<List<FunctionPermissionTransientModel>> DetectAndCapturePermissionsRemovedFromFunction(FunctionModel functionModel, Guid functionId, FunctionSubmit functionSubmit, Guid capturedBy, List<FunctionPermissionTransientModel> affectedFunctionPermissionTransientRecords)
+        {
+            var currentReleasedFunctionPermissions = functionModel.FunctionPermissions ?? new List<FunctionPermissionModel>();
+            // Extract the IDs of the currently assigned permissions, as we want to iterate through this array, as opposed to the actual
+            // function permissions collection, as we are looking to modify the function permissions collection.
+            var currentReleasedFunctionPermissionIds = currentReleasedFunctionPermissions.Select(fp => fp.PermissionId).ToArray();
+
+            foreach (var assignedPermissionId in currentReleasedFunctionPermissionIds)
+            {
+                var permissionIdFromSubmitList = functionSubmit.Permissions.Where(p => p == assignedPermissionId).FirstOrDefault();
+
+                if (permissionIdFromSubmitList != Guid.Empty)
+                {
+                    // Continue if the currently assigned permission is within the function submit permission IDs.
+                    continue;
+                }
+
+                // If this portion of the execution is reached, we have a permission that is currently assigned to the function but no longer
+                // appears within the newly declared associated permissions list within the function submit. Capture a deletion of the currently assigned permission.
+                var removedTransientFunctionPermissionRecord = await CaptureFunctionPermissionAssignmentChange(functionId, assignedPermissionId, capturedBy, TransientAction.Create, functionSubmit.SubRealmId);
+                CheckForAndProcessReleasedFunctionPermissionTransientRecord(functionModel, removedTransientFunctionPermissionRecord);
+                affectedFunctionPermissionTransientRecords.Add(removedTransientFunctionPermissionRecord);
+            }
+
+            return affectedFunctionPermissionTransientRecords;
+        }
 
         // OLD IMPLEMENTATION BELOW
 
