@@ -30,6 +30,9 @@ namespace za.co.grindrodbank.a3s.Models
         [Required]
         public Guid SubRealmId { get; set; }
 
+        [Required]
+        public Guid ApplicationId { get; set; }
+
         [NotMapped]
         public List<FunctionPermissionTransientModel> LatestTransientFunctionPermissions { get; set; }
     }

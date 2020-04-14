@@ -39,7 +39,7 @@ namespace za.co.grindrodbank.a3s.Services
             this.mapper = mapper;
         }
 
-        public async Task<Function> CreateAsync(FunctionSubmit functionSubmit, Guid createdByGuid)
+        public async Task<FunctionTransient> CreateAsync(FunctionSubmit functionSubmit, Guid createdByGuid)
         {
             // Start transactions to allow complete rollback in case of an error
             InitSharedTransaction();
@@ -50,7 +50,7 @@ namespace za.co.grindrodbank.a3s.Services
                 if (existingFunction != null)
                     throw new ItemNotProcessableException($"Function with Name '{functionSubmit.Name}' already exist.");
 
-                FunctionTransientModel newFunctionTransient = await CaptureTransientFunctionAsync(Guid.Empty, functionSubmit.Name, functionSubmit.Description, functionSubmit.SubRealmId, TransientAction.Create, createdByGuid);
+                FunctionTransientModel newFunctionTransient = await CaptureTransientFunctionAsync(Guid.Empty, functionSubmit.Name, functionSubmit.Description, functionSubmit.ApplicationId, functionSubmit.SubRealmId, TransientAction.Create, createdByGuid);
 
                 // Even though we are creating/capturing the function here, it is possible that the configured approval count is 0,
                 // which means that we need to check for whether the transient state is released, and process the affected function accrodingly.
@@ -58,6 +58,17 @@ namespace za.co.grindrodbank.a3s.Services
                 FunctionModel function = await UpdateFunctionBasedOnTransientActionIfTransientFunctionStateIsReleased(newFunctionTransient);
 
                 newFunctionTransient.LatestTransientFunctionPermissions = await CaptureFunctionPermissionAssignmentChanges(function, newFunctionTransient.FunctionId, functionSubmit, createdByGuid, functionSubmit.SubRealmId);
+
+                // It is possible that the assigned permisisons state has changed. Update the model, but only if it has an ID.
+                if (function.Id != Guid.Empty)
+                {
+                    await functionRepository.UpdateAsync(function);
+                }
+
+                // All successful
+                CommitTransaction();
+
+                return mapper.Map<FunctionTransient>(newFunctionTransient);
 
                 //var function = new FunctionModel
                 //{
@@ -82,7 +93,7 @@ namespace za.co.grindrodbank.a3s.Services
             }
         }
 
-        private async Task<FunctionTransientModel> CaptureTransientFunctionAsync(Guid functionId, string functionName, string functionDescription, Guid subRealmId, TransientAction action, Guid createdById)
+        private async Task<FunctionTransientModel> CaptureTransientFunctionAsync(Guid functionId, string functionName, string functionDescription, Guid applicationId, Guid subRealmId, TransientAction action, Guid createdById)
         {
             FunctionTransientModel latestTransientFunction = null;
             List<FunctionTransientModel> transientFunctions = new List<FunctionTransientModel>();
@@ -111,6 +122,8 @@ namespace za.co.grindrodbank.a3s.Services
                 SubRealmId = subRealmId,
                 FunctionId = functionId == Guid.Empty ? Guid.NewGuid() : functionId
             };
+
+            await CheckForApplicationAndAssignToFunctionTransientIfExists(newTransientFunction, applicationId);
 
             try
             {
@@ -278,7 +291,7 @@ namespace za.co.grindrodbank.a3s.Services
 
         private async Task<FunctionPermissionTransientModel> CaptureFunctionPermissionAssignmentChange(Guid functionId, Guid permissionId, Guid capturedBy, TransientAction action, Guid fuctionSubRealmId)
         {
-            var permissionToAdd = await permissionRepository.GetByIdAsync(permissionId);
+            var permissionToAdd = await permissionRepository.GetByIdWithApplicationAsync(permissionId);
 
             if (permissionToAdd == null)
             {
@@ -286,6 +299,7 @@ namespace za.co.grindrodbank.a3s.Services
             }
 
             ConfirmSubRealmAssociation(fuctionSubRealmId, permissionToAdd);
+            await ConfirmPermissionInSameApplicationAsFunction(functionId, permissionToAdd);
 
             var functionPermissionTransientRecords = await functionPermissionTransientRepository.GetTransientPermissionRelationsForFunctionAsync(functionId, permissionId);
             var latestFunctionPermissionTransientState = functionPermissionTransientRecords.LastOrDefault();
@@ -324,6 +338,21 @@ namespace za.co.grindrodbank.a3s.Services
                 {
                     throw new ItemNotProcessableException($"Attempting to add a permission with ID '{permission.Id}' to a function within the sub-realm with ID '{functionSubRealmId}', but the permission does not exist within that sub-realm.");
                 }
+            }
+        }
+
+        private async Task ConfirmPermissionInSameApplicationAsFunction(Guid functionId, PermissionModel permission)
+        {
+            FunctionModel function = await functionRepository.GetByIdAsync(functionId);
+
+            if(function == null)
+            {
+                throw new ItemNotFoundException($"Function with ID '{functionId}' not found when attepting to check it's associated application for function permission assignment checks.");
+            }
+            // All the application functions associated with a permission must resolve to the same application, so choosing any related application from the collection is fine.
+            if(function.Application.Id != permission.ApplicationFunctionPermissions.Select(afp => afp.ApplicationFunction.Application.Id).FirstOrDefault())
+            {
+                throw new ItemNotProcessableException($"Cannot assign Permission with ID '{permission.Id}' to function with ID '{functionId}'. They are not related to the same application, and must be.");
             }
         }
 
@@ -384,6 +413,20 @@ namespace za.co.grindrodbank.a3s.Services
             }
 
             return affectedFunctionPermissionTransientRecords;
+        }
+
+        private async Task CheckForApplicationAndAssignToFunctionTransientIfExists(FunctionTransientModel functionTransient, Guid applicationId)
+        {
+            var application = await applicationRepository.GetByIdAsync(applicationId);
+
+            if(application != null)
+            {
+                functionTransient.ApplicationId = application.Id;
+            }
+            else
+            {
+                throw new ItemNotFoundException($"Application with UUID: '{applicationId}' not found. Cannot assign this application to the function.");
+            }
         }
 
         // OLD IMPLEMENTATION BELOW
@@ -525,6 +568,8 @@ namespace za.co.grindrodbank.a3s.Services
             applicationRepository.InitSharedTransaction();
             functionRepository.InitSharedTransaction();
             subRealmRepository.InitSharedTransaction();
+            functionPermissionTransientRepository.InitSharedTransaction();
+            functionTransientRepository.InitSharedTransaction();    
         }
 
         public void CommitTransaction()
@@ -533,6 +578,8 @@ namespace za.co.grindrodbank.a3s.Services
             applicationRepository.CommitTransaction();
             functionRepository.CommitTransaction();
             subRealmRepository.CommitTransaction();
+            functionPermissionTransientRepository.CommitTransaction();
+            functionTransientRepository.CommitTransaction();
         }
 
         public void RollbackTransaction()
@@ -541,6 +588,8 @@ namespace za.co.grindrodbank.a3s.Services
             applicationRepository.RollbackTransaction();
             functionRepository.RollbackTransaction();
             subRealmRepository.RollbackTransaction();
+            functionPermissionTransientRepository.RollbackTransaction();
+            functionTransientRepository.RollbackTransaction();
         }
     }
 }

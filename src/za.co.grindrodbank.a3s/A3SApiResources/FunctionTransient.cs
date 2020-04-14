@@ -57,6 +57,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public string Description { get; set; }
 
         /// <summary>
+        /// Gets or Sets ApplicationId
+        /// </summary>
+        [DataMember(Name="applicationId", EmitDefaultValue=false)]
+        public Guid ApplicationId { get; set; }
+
+        /// <summary>
         /// Gets or Sets RState
         /// </summary>
         [DataMember(Name="r_state", EmitDefaultValue=false)]
@@ -89,6 +95,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public Guid ChangedBy { get; set; }
 
         /// <summary>
+        /// Gets or Sets CreatedAt
+        /// </summary>
+        [DataMember(Name="createdAt", EmitDefaultValue=false)]
+        public DateTime CreatedAt { get; set; }
+
+        /// <summary>
         /// A list of the latest transient function permission assignments for this transient function.
         /// </summary>
         /// <value>A list of the latest transient function permission assignments for this transient function.</value>
@@ -107,11 +119,13 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  FunctionId: ").Append(FunctionId).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  ApplicationId: ").Append(ApplicationId).Append("\n");
             sb.Append("  RState: ").Append(RState).Append("\n");
             sb.Append("  Action: ").Append(Action).Append("\n");
             sb.Append("  ApprovalCount: ").Append(ApprovalCount).Append("\n");
             sb.Append("  RequiredApprovalCount: ").Append(RequiredApprovalCount).Append("\n");
             sb.Append("  ChangedBy: ").Append(ChangedBy).Append("\n");
+            sb.Append("  CreatedAt: ").Append(CreatedAt).Append("\n");
             sb.Append("  LatestTransientFunctionPermissions: ").Append(LatestTransientFunctionPermissions).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -170,6 +184,11 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     Description.Equals(other.Description)
                 ) && 
                 (
+                    ApplicationId == other.ApplicationId ||
+                    ApplicationId != null &&
+                    ApplicationId.Equals(other.ApplicationId)
+                ) && 
+                (
                     RState == other.RState ||
                     RState != null &&
                     RState.Equals(other.RState)
@@ -193,6 +212,11 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     ChangedBy == other.ChangedBy ||
                     ChangedBy != null &&
                     ChangedBy.Equals(other.ChangedBy)
+                ) && 
+                (
+                    CreatedAt == other.CreatedAt ||
+                    CreatedAt != null &&
+                    CreatedAt.Equals(other.CreatedAt)
                 ) && 
                 (
                     LatestTransientFunctionPermissions == other.LatestTransientFunctionPermissions ||
@@ -220,6 +244,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + Name.GetHashCode();
                     if (Description != null)
                     hashCode = hashCode * 59 + Description.GetHashCode();
+                    if (ApplicationId != null)
+                    hashCode = hashCode * 59 + ApplicationId.GetHashCode();
                     if (RState != null)
                     hashCode = hashCode * 59 + RState.GetHashCode();
                     if (Action != null)
@@ -230,6 +256,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + RequiredApprovalCount.GetHashCode();
                     if (ChangedBy != null)
                     hashCode = hashCode * 59 + ChangedBy.GetHashCode();
+                    if (CreatedAt != null)
+                    hashCode = hashCode * 59 + CreatedAt.GetHashCode();
                     if (LatestTransientFunctionPermissions != null)
                     hashCode = hashCode * 59 + LatestTransientFunctionPermissions.GetHashCode();
                 return hashCode;
