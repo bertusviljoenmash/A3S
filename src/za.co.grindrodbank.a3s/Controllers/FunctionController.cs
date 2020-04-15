@@ -83,7 +83,7 @@ namespace za.co.grindrodbank.a3s.Controllers
                 return BadRequest();
 
             var loggedOnUser = ClaimsHelper.GetScalarClaimValue<Guid>(User, ClaimTypes.NameIdentifier, Guid.Empty);
-            return Ok(await functionService.UpdateAsync(functionSubmit, loggedOnUser));
+            return Ok(await functionService.UpdateAsync(functionSubmit, functionId, loggedOnUser));
         }
 
         [Authorize(Policy = "permission:a3s.functions.delete")]

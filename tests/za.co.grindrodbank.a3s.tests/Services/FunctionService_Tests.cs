@@ -380,7 +380,7 @@ namespace za.co.grindrodbank.a3s.tests.Services
         }
 
         [Fact]
-        public async Task UpdateAsync_GivenFullProcessableModel_ReturnsUpdatedModel()
+        public async Task UpdateAsync_GivenFullProcessableModel_ReturnsUpdateFunctiontransientModel()
         {
             // Arrange
             mockedApplicationRepository.GetByIdAsync(mockedFunctionModel.Application.Id)
@@ -389,17 +389,44 @@ namespace za.co.grindrodbank.a3s.tests.Services
                 .Returns(mockedFunctionModel.FunctionPermissions[0].Permission);
             mockedFunctionRepository.GetByIdAsync(mockedFunctionModel.Id).Returns(mockedFunctionModel);
             mockedFunctionRepository.UpdateAsync(Arg.Any<FunctionModel>()).Returns(mockedFunctionModel);
+            mockedFunctionTransientRepository.GetLatestActiveTransientsForAllFunctionsAsync().Returns(new List<FunctionTransientModel> {
+                new FunctionTransientModel
+                {
+                    Name = mockedFunctionModel.Name + "Not same",
+                    Description = mockedFunctionModel.Description,
+                    ApplicationId = mockedFunctionModel.Application.Id,
+                    FunctionId = Guid.NewGuid()
+                }
+            });
+
+            // Ensure an empty list of existing transients is returned when capturing the function transient changes.
+            mockedFunctionTransientRepository.GetTransientsForFunctionAsync(mockedFunctionModel.Id).Returns(new List<FunctionTransientModel> { });
+            // Ensure that a 'captured' transient is returned when creating a function transient.
+            mockedFunctionTransientRepository.CreateAsync(Arg.Any<FunctionTransientModel>()).Returns(new FunctionTransientModel
+            {
+                Name = mockedFunctionModel.Name,
+                Description = mockedFunctionModel.Description,
+                ApplicationId = mockedFunctionModel.Application.Id,
+                FunctionId = mockedFunctionModel.Id,
+                R_State = DatabaseRecordState.Captured,
+                Action = TransientAction.Modify,
+            });
+
+            // Ensure that no transient function permissions are returned when processing the assigned function permissions
+            mockedFunctionPermissionTransientRepository.GetAllTransientPermissionRelationsForFunctionAsync(Arg.Any<Guid>()).Returns(new List<FunctionPermissionTransientModel>());
+            mockedFunctionPermissionTransientRepository.GetTransientPermissionRelationsForFunctionAsync(mockedFunctionModel.Id, Arg.Any<Guid>()).Returns(new List<FunctionPermissionTransientModel>());
 
             var functionService = new FunctionService(mockedFunctionRepository, mockedPermissionRepository, mockedApplicationRepository, mockedFunctionTransientRepository, mockedSubRealmRepository, mockedFunctionPermissionTransientRepository, mapper);
 
             // Act
-            var functionResource = await functionService.UpdateAsync(mockedFunctionSubmitModel, Guid.NewGuid());
+            var functionTransientResource = await functionService.UpdateAsync(mockedFunctionSubmitModel, mockedFunctionModel.Id, Guid.NewGuid());
 
             // Assert
-            Assert.NotNull(functionResource);
-            Assert.True(functionResource.Name == mockedFunctionSubmitModel.Name, $"Function Resource name: '{functionResource.Name}' not the expected value: '{mockedFunctionSubmitModel.Name}'");
-            Assert.True(functionResource.Application.Uuid == mockedFunctionSubmitModel.ApplicationId, $"Function Resource name: '{functionResource.Application.Uuid}' not the expected value: '{mockedFunctionSubmitModel.ApplicationId}'");
-            Assert.True(functionResource.Permissions.Count == mockedFunctionSubmitModel.Permissions.Count, $"Function Resource Permission Count: '{functionResource.Permissions.Count}' not the expected value: '{mockedFunctionSubmitModel.Permissions.Count}'");
+            Assert.NotNull(functionTransientResource);
+            Assert.True(functionTransientResource.Name == mockedFunctionSubmitModel.Name, $"Function Transient Resource name: '{functionTransientResource.Name}' not the expected value: '{mockedFunctionSubmitModel.Name}'");
+            Assert.True(functionTransientResource.ApplicationId == mockedFunctionSubmitModel.ApplicationId, $"Function Transient Resource name: '{functionTransientResource.ApplicationId}' not the expected value: '{mockedFunctionSubmitModel.ApplicationId}'");
+            Assert.True(functionTransientResource.RState == "Captured", $"Transient function Rstate expected to be 'Captured' but is actually: '{functionTransientResource.RState}'");
+            Assert.True(functionTransientResource.Action == "Modify", $"Transient function Action expected to be 'Modify' but is actually: '{functionTransientResource.Action}'");
         }
 
         [Fact]
@@ -411,6 +438,15 @@ namespace za.co.grindrodbank.a3s.tests.Services
             mockedPermissionRepository.GetByIdWithApplicationAsync(mockedFunctionModel.FunctionPermissions[0].PermissionId)
                 .Returns(mockedFunctionModel.FunctionPermissions[0].Permission);
             mockedFunctionRepository.UpdateAsync(Arg.Any<FunctionModel>()).Returns(mockedFunctionModel);
+            mockedFunctionTransientRepository.GetLatestActiveTransientsForAllFunctionsAsync().Returns(new List<FunctionTransientModel> {
+                new FunctionTransientModel
+                {
+                    Name = mockedFunctionModel.Name + "Not same",
+                    Description = mockedFunctionModel.Description,
+                    ApplicationId = mockedFunctionModel.Application.Id,
+                    FunctionId = Guid.NewGuid()
+                }
+            });
 
             var functionService = new FunctionService(mockedFunctionRepository, mockedPermissionRepository, mockedApplicationRepository, mockedFunctionTransientRepository, mockedSubRealmRepository, mockedFunctionPermissionTransientRepository, mapper);
 
@@ -418,7 +454,7 @@ namespace za.co.grindrodbank.a3s.tests.Services
             Exception caughEx = null;
             try
             {
-                var functionResource = await functionService.UpdateAsync(mockedFunctionSubmitModel, Guid.NewGuid());
+                var functionResource = await functionService.UpdateAsync(mockedFunctionSubmitModel, mockedFunctionModel.Id, Guid.NewGuid());
             }
             catch (Exception ex)
             {
@@ -433,15 +469,20 @@ namespace za.co.grindrodbank.a3s.tests.Services
         public async Task UpdateAsync_GivenNewTakenName_ThrowsItemNotProcessableException()
         {
             // Arrange
-            mockedFunctionSubmitModel.Name += "_changed_name";
+            //mockedFunctionSubmitModel.Name += "_changed_name";
 
             mockedApplicationRepository.GetByIdAsync(mockedFunctionModel.Application.Id)
                 .Returns(mockedFunctionModel.Application);
             mockedPermissionRepository.GetByIdWithApplicationAsync(mockedFunctionModel.FunctionPermissions[0].PermissionId)
                 .Returns(mockedFunctionModel.FunctionPermissions[0].Permission);
             mockedFunctionRepository.GetByIdAsync(mockedFunctionModel.Id).Returns(mockedFunctionModel);
-            mockedFunctionRepository.GetByNameAsync(mockedFunctionSubmitModel.Name).Returns(mockedFunctionModel);
-            mockedFunctionRepository.UpdateAsync(Arg.Any<FunctionModel>()).Returns(mockedFunctionModel);
+
+            // set up a the function repo to return a function that has a different ID than the mocked function to simulate a name conflict.
+            mockedFunctionRepository.GetByNameAsync(mockedFunctionSubmitModel.Name).Returns(new FunctionModel {
+               Name = mockedFunctionModel.Name,
+               Description = mockedFunctionModel.Description,
+               Id = Guid.NewGuid()
+            });
 
             var functionService = new FunctionService(mockedFunctionRepository, mockedPermissionRepository, mockedApplicationRepository, mockedFunctionTransientRepository, mockedSubRealmRepository, mockedFunctionPermissionTransientRepository, mapper);
 
@@ -449,7 +490,7 @@ namespace za.co.grindrodbank.a3s.tests.Services
             Exception caughEx = null;
             try
             {
-                var functionResource = await functionService.UpdateAsync(mockedFunctionSubmitModel, Guid.NewGuid());
+                var functionResource = await functionService.UpdateAsync(mockedFunctionSubmitModel, mockedFunctionModel.Id, Guid.NewGuid());
             }
             catch (Exception ex)
             {
@@ -457,32 +498,7 @@ namespace za.co.grindrodbank.a3s.tests.Services
             }
 
             // Assert
-            Assert.True(caughEx is ItemNotProcessableException, "New taken name must throw an ItemNotProcessableException");
-        }
-
-        [Fact]
-        public async Task UpdateAsync_GivenNewUntakenName_ReturnsUpdatedFunction()
-        {
-            // Arrange
-            mockedFunctionSubmitModel.Name += "_changed_name";
-
-            mockedApplicationRepository.GetByIdAsync(mockedFunctionModel.Application.Id)
-                .Returns(mockedFunctionModel.Application);
-            mockedPermissionRepository.GetByIdWithApplicationAsync(mockedFunctionModel.FunctionPermissions[0].PermissionId)
-                .Returns(mockedFunctionModel.FunctionPermissions[0].Permission);
-            mockedFunctionRepository.GetByIdAsync(mockedFunctionModel.Id).Returns(mockedFunctionModel);
-            mockedFunctionRepository.UpdateAsync(Arg.Any<FunctionModel>()).Returns(mockedFunctionModel);
-
-            var functionService = new FunctionService(mockedFunctionRepository, mockedPermissionRepository, mockedApplicationRepository, mockedFunctionTransientRepository, mockedSubRealmRepository, mockedFunctionPermissionTransientRepository, mapper);
-
-            // Act
-            var functionResource = await functionService.UpdateAsync(mockedFunctionSubmitModel, Guid.NewGuid());
-
-            // Assert
-            Assert.NotNull(functionResource);
-            Assert.True(functionResource.Name == mockedFunctionSubmitModel.Name, $"Function Resource name: '{functionResource.Name}' not the expected value: '{mockedFunctionSubmitModel.Name}'");
-            Assert.True(functionResource.Application.Uuid == mockedFunctionSubmitModel.ApplicationId, $"Function Resource name: '{functionResource.Application.Uuid}' not the expected value: '{mockedFunctionSubmitModel.ApplicationId}'");
-            Assert.True(functionResource.Permissions.Count == mockedFunctionSubmitModel.Permissions.Count, $"Function Resource Permission Count: '{functionResource.Permissions.Count}' not the expected value: '{mockedFunctionSubmitModel.Permissions.Count}'");
+            Assert.True(caughEx is EntityStateConflictException, $"New taken name must throw an'EntityStateConflictException' but actually threw a '{caughEx}' Exception");
         }
 
         [Fact]

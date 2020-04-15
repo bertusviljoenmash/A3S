@@ -18,7 +18,8 @@ namespace za.co.grindrodbank.a3s.MappingProfiles
             CreateMap<FunctionPermissionTransient, FunctionPermissionTransientModel>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Uuid));
             CreateMap<FunctionPermissionTransientModel, FunctionPermissionTransient>().ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.Id))
                                                 .ForMember(dest => dest.FunctionId, opt => opt.MapFrom(src => src.FunctionId))
-                                                .ForMember(dest => dest.PermissionId, opt => opt.MapFrom(src => src.PermissionId));
+                                                .ForMember(dest => dest.PermissionId, opt => opt.MapFrom(src => src.PermissionId))
+                                                .ForMember(dest => dest.RState, opt => opt.MapFrom(src => src.R_State));
         }
     }
 }

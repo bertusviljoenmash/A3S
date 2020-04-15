@@ -451,7 +451,7 @@ namespace za.co.grindrodbank.a3s.Services
 
                 // If this portion of the execution is reached, we have a permission that is currently assigned to the function but no longer
                 // appears within the newly declared associated permissions list within the function submit. Capture a deletion of the currently assigned permission.
-                var removedTransientFunctionPermissionRecord = await CaptureFunctionPermissionAssignmentChange(functionId, assignedPermissionId, capturedBy, TransientAction.Create, functionSubmit.SubRealmId);
+                var removedTransientFunctionPermissionRecord = await CaptureFunctionPermissionAssignmentChange(functionId, assignedPermissionId, capturedBy, TransientAction.Delete, functionSubmit.SubRealmId);
                 CheckForAndProcessReleasedFunctionPermissionTransientRecord(functionModel, removedTransientFunctionPermissionRecord);
                 affectedFunctionPermissionTransientRecords.Add(removedTransientFunctionPermissionRecord);
             }
@@ -473,7 +473,7 @@ namespace za.co.grindrodbank.a3s.Services
             }
         }
 
-        // OLD IMPLEMENTATION BELOW
+        
 
 
 
@@ -487,37 +487,47 @@ namespace za.co.grindrodbank.a3s.Services
             return mapper.Map<List<Function>>(await functionRepository.GetListAsync());
         }
 
-        public async Task<Function> UpdateAsync(FunctionSubmit functionSubmit, Guid updatedByGuid)
+        public async Task<FunctionTransient> UpdateAsync(FunctionSubmit functionSubmit, Guid functionId, Guid updatedByGuid)
         {
             // Start transactions to allow complete rollback in case of an error
             InitSharedTransaction();
 
             try
             {
-                var function = await functionRepository.GetByIdAsync(functionSubmit.Uuid);
+                FunctionModel existingFunction = await functionRepository.GetByIdAsync(functionId);
 
-                if (function == null)
-                    throw new ItemNotFoundException($"Function {functionSubmit.Uuid} not found!");
-
-                if (function.Name != functionSubmit.Name)
+                if(existingFunction == null)
                 {
-                    // Confirm the new name is available
-                    var checkExistingNameModel = await functionRepository.GetByNameAsync(functionSubmit.Name);
-                    if (checkExistingNameModel != null)
-                        throw new ItemNotProcessableException($"Function with name '{functionSubmit.Name}' already exists.");
+                    throw new ItemNotFoundException($"Function with ID '{functionId}' not found.");
                 }
 
-                function.Name = functionSubmit.Name;
-                function.Description = functionSubmit.Description;
-                function.FunctionPermissions = new List<FunctionPermissionModel>();
+                await CheckFunctionsAndTransientFunctionsForUniqueName(functionSubmit.Name, functionId);
 
-                await CheckForApplicationAndAssignToFunctionIfExists(function, functionSubmit);
-                await CheckThatPermissionsExistAndAssignToFunction(function, functionSubmit);
+                FunctionTransientModel newFunctionTransient = await CaptureTransientFunctionAsync(functionId, functionSubmit.Name, functionSubmit.Description, functionSubmit.ApplicationId, functionSubmit.SubRealmId, TransientAction.Modify, updatedByGuid);
+
+                // Even though we are creating/capturing the function here, it is possible that the configured approval count is 0,
+                // which means that we need to check for whether the transient state is released, and process the affected function accrodingly.
+                // NOTE: It is possible for an empty function (not persisted) to be returned if the function is not released in the following step.
+                FunctionModel function = await UpdateFunctionBasedOnTransientActionIfTransientFunctionStateIsReleased(newFunctionTransient);
+
+                // If there was not update to the function (as a result of released state being processed, use the exiting state as the authoratative one.
+                if(function.Id == Guid.Empty)
+                {
+                    function = existingFunction;
+                }
+
+                newFunctionTransient.LatestTransientFunctionPermissions = await CaptureFunctionPermissionAssignmentChanges(function, newFunctionTransient.FunctionId, functionSubmit, updatedByGuid, functionSubmit.SubRealmId);
+
+                // It is possible that the assigned permisisons state has changed. Update the model, but only if it has an ID.
+                if (function.Id != Guid.Empty)
+                {
+                    await functionRepository.UpdateAsync(function);
+                }
 
                 // All successful
                 CommitTransaction();
 
-                return mapper.Map<Function>(await functionRepository.UpdateAsync(function));
+                return mapper.Map<FunctionTransient>(newFunctionTransient);
             }
             catch
             {
@@ -525,6 +535,9 @@ namespace za.co.grindrodbank.a3s.Services
                 throw;
             }
         }
+
+
+        // OLD IMPLEMENTATION BELOW
 
         private async Task CheckForSubRealmAndAssignToFunctionIfExists(FunctionModel function, FunctionSubmit functionSubmit)
         {

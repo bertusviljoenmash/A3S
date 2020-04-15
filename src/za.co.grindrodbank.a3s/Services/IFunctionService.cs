@@ -16,7 +16,7 @@ namespace za.co.grindrodbank.a3s.Services
     public interface IFunctionService : ITransactableService
     {
         Task<Function> GetByIdAsync(Guid functionId);
-        Task<Function> UpdateAsync(FunctionSubmit functionSubmit, Guid updatedByGuid);
+        Task<FunctionTransient> UpdateAsync(FunctionSubmit functionSubmit, Guid functionId, Guid updatedByGuid);
         Task<FunctionTransient> CreateAsync(FunctionSubmit functionSubmit, Guid createdByGuid);
         Task<List<Function>> GetListAsync();
         Task DeleteAsync(Guid functionId);

@@ -182,8 +182,14 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
             // Arrange
             var controller = new FunctionController(functionService, orderByHelper, paginationHelper, mapper);
 
-            functionService.UpdateAsync(functionSubmitModel, Arg.Any<Guid>())
-                .Returns(functionModel);
+            functionService.UpdateAsync(functionSubmitModel, Arg.Any<Guid>(), Arg.Any<Guid>())
+                .Returns(new FunctionTransient
+                {
+                    Name = functionSubmitModel.Name,
+                    FunctionId = functionSubmitModel.Uuid,
+                    Description = functionSubmitModel.Description,
+                    ApplicationId = functionSubmitModel.ApplicationId
+                });
 
             // Act
             IActionResult actionResult = await controller.UpdateFunctionAsync(Guid.Empty, functionSubmitModel);
@@ -199,8 +205,14 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
             // Arrange
             var controller = new FunctionController(functionService, orderByHelper, paginationHelper, mapper);
 
-            functionService.UpdateAsync(functionSubmitModel, Arg.Any<Guid>())
-                .Returns(functionModel);
+            functionService.UpdateAsync(functionSubmitModel, Arg.Any<Guid>(), Arg.Any<Guid>())
+                .Returns(new FunctionTransient
+                {
+                    Name = functionSubmitModel.Name,
+                    FunctionId = functionSubmitModel.Uuid,
+                    Description = functionSubmitModel.Description,
+                    ApplicationId = functionSubmitModel.ApplicationId
+                });
 
             functionSubmitModel.Uuid = Guid.Empty;
 
@@ -218,8 +230,13 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
             // Arrange
             var controller = new FunctionController(functionService, orderByHelper, paginationHelper, mapper);
 
-            functionService.UpdateAsync(functionSubmitModel, Arg.Any<Guid>())
-                .Returns(functionModel);
+            functionService.UpdateAsync(functionSubmitModel, Arg.Any<Guid>(), Arg.Any<Guid>())
+                .Returns(new FunctionTransient {
+                    Name = functionSubmitModel.Name,
+                    FunctionId = functionSubmitModel.Uuid,
+                    Description = functionSubmitModel.Description,
+                    ApplicationId = functionSubmitModel.ApplicationId
+                });
 
             // Act
             IActionResult actionResult = await controller.UpdateFunctionAsync(functionSubmitModel.Uuid, functionSubmitModel);
@@ -228,14 +245,13 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
             var okResult = actionResult as OkObjectResult;
             Assert.NotNull(okResult);
 
-            var function = okResult.Value as Function;
+            var function = okResult.Value as FunctionTransient;
             Assert.NotNull(function);
-            Assert.True(function.Uuid == functionSubmitModel.Uuid, $"Retrieved Id {function.Uuid} not the same as sample id {functionSubmitModel.Uuid}.");
+            Assert.True(function.FunctionId == functionSubmitModel.Uuid, $"Retrieved Id {function.Uuid} not the same as sample id {functionSubmitModel.Uuid}.");
             Assert.True(function.Name == functionSubmitModel.Name, $"Retrieved Name {function.Name} not the same as sample Name {functionSubmitModel.Name}.");
             Assert.True(function.Description == functionSubmitModel.Description, $"Retrieved Description {function.Description} not the same as sample Description {functionSubmitModel.Description}.");
-            Assert.True(function.Application.Uuid == functionSubmitModel.ApplicationId, $"Retrieved ApplicationId {function.Application.Uuid} not the same as sample ApplicationId {functionSubmitModel.ApplicationId}.");
-            Assert.True(function.Permissions[0].Uuid == functionSubmitModel.Permissions[0], $"Retrieved Permissions id {function.Permissions[0].Uuid} not the same as sample Permissions id {functionSubmitModel.Permissions[0]}.");
-            Assert.True(function.Permissions[1].Uuid == functionSubmitModel.Permissions[1], $"Retrieved Permissions id {function.Permissions[1].Uuid} not the same as sample Permissions id {functionSubmitModel.Permissions[1]}.");
+            Assert.True(function.ApplicationId == functionSubmitModel.ApplicationId, $"Retrieved ApplicationId {function.ApplicationId} not the same as sample ApplicationId {functionSubmitModel.ApplicationId}.");
+
         }
     }
 }
