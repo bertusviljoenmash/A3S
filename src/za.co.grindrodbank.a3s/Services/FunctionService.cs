@@ -389,7 +389,6 @@ namespace za.co.grindrodbank.a3s.Services
                 {
                     throw new ItemNotProcessableException($"Cannot assign Permission with ID '{permission.Id}' to function with ID '{functionId}'. They are not related to the same application, and must be.");
                 }
-
             }
             else
             {

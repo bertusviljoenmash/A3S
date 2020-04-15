@@ -126,6 +126,15 @@ namespace za.co.grindrodbank.a3s.tests.Services
         {
             mockedPermissionRepository.GetByIdWithApplicationAsync(mockedFunctionModel.FunctionPermissions[0].PermissionId)
                 .Returns(mockedFunctionModel.FunctionPermissions[0].Permission);
+            mockedFunctionTransientRepository.GetLatestActiveTransientsForAllFunctionsAsync().Returns(new List<FunctionTransientModel> {
+                new FunctionTransientModel
+                {
+                    Name = mockedFunctionModel.Name + "Not same",
+                    Description = mockedFunctionModel.Description,
+                    ApplicationId = mockedFunctionModel.Application.Id,
+                    FunctionId = Guid.NewGuid()
+                }
+            });
 
             var functionService = new FunctionService(mockedFunctionRepository, mockedPermissionRepository, mockedApplicationRepository, mockedFunctionTransientRepository, mockedSubRealmRepository, mockedFunctionPermissionTransientRepository, mapper);
 
@@ -154,6 +163,15 @@ namespace za.co.grindrodbank.a3s.tests.Services
             mockedApplicationRepository.GetByIdAsync(mockedFunctionModel.Application.Id)
                 .Returns(mockedFunctionModel.Application);
             mockedFunctionRepository.CreateAsync(Arg.Any<FunctionModel>()).Returns(mockedFunctionModel);
+            mockedFunctionTransientRepository.GetLatestActiveTransientsForAllFunctionsAsync().Returns(new List<FunctionTransientModel> {
+                new FunctionTransientModel
+                {
+                    Name = mockedFunctionModel.Name + "Not same",
+                    Description = mockedFunctionModel.Description,
+                    ApplicationId = mockedFunctionModel.Application.Id,
+                    FunctionId = Guid.NewGuid()
+                }
+            });
 
             var changeByGuid = Guid.NewGuid();
 
@@ -209,6 +227,15 @@ namespace za.co.grindrodbank.a3s.tests.Services
                 .Returns(mockedFunctionModel.FunctionPermissions[0].Permission);
             mockedFunctionRepository.CreateAsync(Arg.Any<FunctionModel>()).Returns(mockedFunctionModel);
             mockedFunctionRepository.GetByIdAsync(mockedFunctionSubmitModel.Uuid).Returns(mockedFunctionModel);
+            mockedFunctionTransientRepository.GetLatestActiveTransientsForAllFunctionsAsync().Returns(new List<FunctionTransientModel> {
+                new FunctionTransientModel
+                {
+                    Name = mockedFunctionModel.Name + "Not same",
+                    Description = mockedFunctionModel.Description,
+                    ApplicationId = mockedFunctionModel.Application.Id,
+                    FunctionId = Guid.NewGuid()
+                }
+            });
 
 
             var changeByGuid = Guid.NewGuid();
@@ -259,6 +286,16 @@ namespace za.co.grindrodbank.a3s.tests.Services
                 .Returns(mockedFunctionModel.FunctionPermissions[0].Permission);
             mockedFunctionRepository.CreateAsync(Arg.Any<FunctionModel>()).Returns(mockedFunctionModel);
             mockedFunctionRepository.GetByIdAsync(mockedFunctionSubmitModel.Uuid).Returns(mockedFunctionModel);
+
+            mockedFunctionTransientRepository.GetLatestActiveTransientsForAllFunctionsAsync().Returns(new List<FunctionTransientModel> {
+                new FunctionTransientModel
+                {
+                    Name = mockedFunctionModel.Name + "Not same",
+                    Description = mockedFunctionModel.Description,
+                    ApplicationId = mockedFunctionModel.Application.Id,
+                    FunctionId = Guid.NewGuid()
+                }
+            });
 
             var changeByGuid = Guid.NewGuid();
 
@@ -316,7 +353,7 @@ namespace za.co.grindrodbank.a3s.tests.Services
             }
 
             // Assert
-            Assert.True(caughEx is ItemNotProcessableException, "Attempted create with an already used name must throw an ItemNotProcessableException.");
+            Assert.True(caughEx is EntityStateConflictException, $"Attempted create with an already used name must throw an EntityStateConflictException, but threw a '{caughEx}' Exception instead.");
         }
 
         [Fact]
