@@ -42,7 +42,7 @@ namespace za.co.grindrodbank.a3s.Repositories
         public async Task<FunctionTransientModel> GetLatestCapturedTransientForFunctionsAsync(Guid functionId)
         {
             return await a3SContext.FunctionTransient
-                .FromSqlRaw("SELECT \"FucntionTransient\".* " +
+                .FromSqlRaw("SELECT \"FunctionTransient\".* " +
                             "FROM _a3s.function_transient AS \"FunctionTransient\"  " +
                             "WHERE r_state = 'Captured' AND function_id = {0} " +
                             "ORDER BY created_at desc", functionId)

@@ -377,12 +377,27 @@ namespace za.co.grindrodbank.a3s.Services
 
             if(function == null)
             {
-                throw new ItemNotFoundException($"Function with ID '{functionId}' not found when attepting to check it's associated application for function permission assignment checks.");
+                // If the function is null, it might be because it is new and not released. Check for active function transients for the function, and the corresponding application.
+                var latestCapturedFunctionTransient = await functionTransientRepository.GetLatestCapturedTransientForFunctionsAsync(functionId);
+
+                if(latestCapturedFunctionTransient == null)
+                {
+                    throw new ItemNotFoundException($"Function or Function Transient with ID '{functionId}' not found when attepting to check it's associated application for function permission assignment checks.");
+                }
+
+                if(latestCapturedFunctionTransient.ApplicationId != permission.ApplicationFunctionPermissions.Select(afp => afp.ApplicationFunction.Application.Id).FirstOrDefault())
+                {
+                    throw new ItemNotProcessableException($"Cannot assign Permission with ID '{permission.Id}' to function with ID '{functionId}'. They are not related to the same application, and must be.");
+                }
+
             }
-            // All the application functions associated with a permission must resolve to the same application, so choosing any related application from the collection is fine.
-            if(function.Application.Id != permission.ApplicationFunctionPermissions.Select(afp => afp.ApplicationFunction.Application.Id).FirstOrDefault())
+            else
             {
-                throw new ItemNotProcessableException($"Cannot assign Permission with ID '{permission.Id}' to function with ID '{functionId}'. They are not related to the same application, and must be.");
+                // All the application functions associated with a permission must resolve to the same application, so choosing any related application from the collection is fine.
+                if (function.Application.Id != permission.ApplicationFunctionPermissions.Select(afp => afp.ApplicationFunction.Application.Id).FirstOrDefault())
+                {
+                    throw new ItemNotProcessableException($"Cannot assign Permission with ID '{permission.Id}' to function with ID '{functionId}'. They are not related to the same application, and must be.");
+                }
             }
         }
 
