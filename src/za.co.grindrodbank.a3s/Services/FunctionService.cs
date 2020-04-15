@@ -46,9 +46,7 @@ namespace za.co.grindrodbank.a3s.Services
 
             try
             {
-                FunctionModel existingFunction = await functionRepository.GetByNameAsync(functionSubmit.Name);
-                if (existingFunction != null)
-                    throw new ItemNotProcessableException($"Function with Name '{functionSubmit.Name}' already exist.");
+                await CheckFunctionsAndTransientFunctionsForUniqueName(functionSubmit.Name, Guid.Empty);
 
                 FunctionTransientModel newFunctionTransient = await CaptureTransientFunctionAsync(Guid.Empty, functionSubmit.Name, functionSubmit.Description, functionSubmit.ApplicationId, functionSubmit.SubRealmId, TransientAction.Create, createdByGuid);
 
@@ -69,27 +67,59 @@ namespace za.co.grindrodbank.a3s.Services
                 CommitTransaction();
 
                 return mapper.Map<FunctionTransient>(newFunctionTransient);
-
-                //var function = new FunctionModel
-                //{
-                //    Name = functionSubmit.Name,
-                //    Description = functionSubmit.Description,
-                //    FunctionPermissions = new List<FunctionPermissionModel>()
-                //};
-
-                //await CheckForApplicationAndAssignToFunctionIfExists(function, functionSubmit);
-                //await CheckForSubRealmAndAssignToFunctionIfExists(function, functionSubmit);
-                //await CheckThatPermissionsExistAndAssignToFunction(function, functionSubmit);
-
-                //// All successful
-                //CommitTransaction();
-
-                //return mapper.Map<Function>(await functionRepository.CreateAsync(function));
             }
             catch
             {
                 RollbackTransaction();
                 throw;
+            }
+        }
+
+        private async Task CheckFunctionsAndTransientFunctionsForUniqueName(string name, Guid functionId)
+        {
+            await CheckFunctionsForUniqueName(name, functionId);
+            await CheckTransientFunctionsForUniqueName(name, functionId);
+        }
+
+        private async Task CheckFunctionsForUniqueName(string name, Guid functionId)
+        {
+            FunctionModel existingFunction = await functionRepository.GetByNameAsync(name);
+
+            if (existingFunction != null)
+            {
+                if (functionId == Guid.Empty)
+                {
+                    throw new EntityStateConflictException($"Function with Name '{name}' already exist.");
+                }
+                else // If there is a function with that name, ensure it is for the function we are operating on.
+                {
+                    if (existingFunction.Id != functionId)
+                    {
+                        throw new EntityStateConflictException($"Function with Name '{name}' already exist.");
+                    }
+                }
+            }
+        }
+
+        private async Task CheckTransientFunctionsForUniqueName(string Name, Guid functionId)
+        {
+            var allActiveFunctionTransients = await functionTransientRepository.GetLatestActiveTransientsForAllFunctionsAsync();
+            // We can take the first transient result of active transients that have a certain name.
+            var activeFunctionTransientWithName = allActiveFunctionTransients.Where(aft => aft.Name == Name).FirstOrDefault();
+
+            if(activeFunctionTransientWithName != null)
+            {
+                if(functionId == Guid.Empty)
+                {
+                    throw new EntityStateConflictException($"There are active transient functions using the function name '{Name}'.");
+                }
+                else
+                {
+                    if(activeFunctionTransientWithName.FunctionId != functionId)
+                    {
+                        throw new EntityStateConflictException($"There are active transient functions using the function name '{Name}'.");
+                    }
+                }
             }
         }
 
