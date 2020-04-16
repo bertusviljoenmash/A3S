@@ -166,7 +166,7 @@ namespace za.co.grindrodbank.a3s.Services
 
             var latestReleasedRecord = transientFunctions.Where(transientFunction => transientFunction.R_State == DatabaseRecordState.Released).LastOrDefault();
 
-            // Only persist the new captured state of the role if it actually different from the latest released state.
+            // Only persist the new captured state of the function if it actually different from the latest released state.
             return IsCapturedFunctionDifferentFromLatestReleasedTransientFunctionState(latestReleasedRecord, functionName, functionDescription, subRealmId, action) ? await functionTransientRepository.CreateAsync(newTransientFunction) : latestTransientFunction;
         }
 
@@ -226,7 +226,7 @@ namespace za.co.grindrodbank.a3s.Services
                 return functionToUpdate;
             }
 
-            // Only attempt to re-create the role if there is no existing role.
+            // Only attempt to re-create the function if there is no existing function.
             if (functionToUpdate == null)
             {
                 return await CreateFunctionFromCurrentTransientState(functionTransientModel);
@@ -271,7 +271,7 @@ namespace za.co.grindrodbank.a3s.Services
 
         private async Task<List<FunctionPermissionTransientModel>> CaptureFunctionPermissionAssignmentChanges(FunctionModel functionModel, Guid functionId, FunctionSubmit functionSubmit, Guid capturedBy, Guid functionSubRealmId)
         {
-            await CheckIfThereAreExistingCapturedOrApprovedTransientFunctionPermissionsForRoleAndThrowExceptionIfThereAre(functionId);
+            await CheckIfThereAreExistingCapturedOrApprovedTransientFunctionPermissionsForFunctionAndThrowExceptionIfThereAre(functionId);
             List<FunctionPermissionTransientModel> affectedFunctionPermissionTransientRecords = new List<FunctionPermissionTransientModel>();
 
             await DetectAndCaptureNewFunctionPermissionAssignments(functionModel, functionId, functionSubmit, capturedBy, functionSubRealmId, affectedFunctionPermissionTransientRecords);
@@ -280,7 +280,7 @@ namespace za.co.grindrodbank.a3s.Services
             return affectedFunctionPermissionTransientRecords;
         }
 
-        private async Task CheckIfThereAreExistingCapturedOrApprovedTransientFunctionPermissionsForRoleAndThrowExceptionIfThereAre(Guid functionId)
+        private async Task CheckIfThereAreExistingCapturedOrApprovedTransientFunctionPermissionsForFunctionAndThrowExceptionIfThereAre(Guid functionId)
         {
             var allTransientFunctionPermissions = await functionPermissionTransientRepository.GetAllTransientPermissionRelationsForFunctionAsync(functionId);
 
@@ -301,14 +301,14 @@ namespace za.co.grindrodbank.a3s.Services
 
         private async Task<List<FunctionPermissionTransientModel>> DetectAndCaptureNewFunctionPermissionAssignments(FunctionModel functionModel, Guid functionId, FunctionSubmit functionSubmit, Guid capturedBy, Guid functionSubRealm, List<FunctionPermissionTransientModel> affectedFunctionPermissionTransientRecords)
         {
-            // Recall, the role might not actually exist at this stage, so safely get access to a role function list.
+            // Recall, the function might not actually exist at this stage, so safely get access to a function permission list.
             var currentReleasedFunctionPermissions = functionModel.FunctionPermissions ?? new List<FunctionPermissionModel>();
 
             foreach (var permissionId in functionSubmit.Permissions)
             {
-                var existingRoleFunction = currentReleasedFunctionPermissions.Where(fp => fp.PermissionId == permissionId).FirstOrDefault();
+                var existingFunctionPermission = currentReleasedFunctionPermissions.Where(fp => fp.PermissionId == permissionId).FirstOrDefault();
 
-                if (existingRoleFunction == null)
+                if (existingFunctionPermission == null)
                 {
                     var newTransientFunctionPermissionRecord = await CaptureFunctionPermissionAssignmentChange(functionId, permissionId, capturedBy, TransientAction.Create, functionSubRealm);
                     CheckForAndProcessReleasedFunctionPermissionTransientRecord(functionModel, newTransientFunctionPermissionRecord);
@@ -407,7 +407,7 @@ namespace za.co.grindrodbank.a3s.Services
                 return;
             }
 
-            // It is important to check that the associated role actually exists.
+            // It is important to check that the associated function actually exists.
             if (functionModel.Id == Guid.Empty)
             {
                 throw new InvalidStateTransitionException($"Attempting to process a released transient function permission assignment update for function with ID '{functionPermissionTransientModel.FunctionId}' and permission with ID '{functionPermissionTransientModel.PermissionId}', but the function does not exist or is not released yet.");
@@ -472,10 +472,6 @@ namespace za.co.grindrodbank.a3s.Services
                 throw new ItemNotFoundException($"Application with UUID: '{applicationId}' not found. Cannot assign this application to the function.");
             }
         }
-
-        
-
-
 
         public async Task<Function> GetByIdAsync(Guid functionId)
         {
@@ -551,6 +547,229 @@ namespace za.co.grindrodbank.a3s.Services
         public async Task<PaginatedResult<FunctionModel>> GetPaginatedListAsync(int page, int pageSize, bool includeRelations, string filterName, List<KeyValuePair<string, string>> orderBy)
         {
             return await functionRepository.GetPaginatedListAsync(page, pageSize, includeRelations, filterName, orderBy);
+        }
+
+        public async Task<FunctionTransient> ApproveFunctionAsync(Guid functionId, Guid approvedBy)
+        {
+            InitSharedTransaction();
+
+            try
+            {
+                var latestTransientFunction = await ApproveFunctionTransientState(functionId, approvedBy);
+                FunctionModel function = await UpdateFunctionBasedOnTransientActionIfTransientFunctionStateIsReleased(latestTransientFunction);
+                latestTransientFunction.LatestTransientFunctionPermissions = await FindTransientFunctionPermissionsForFunctionAndApproveThem(function, functionId, approvedBy);
+
+                // It is possible that the assigned permisisons state has changed. Update the model, but only if it has an ID and the function is not being deleted!
+                if (function.Id != Guid.Empty && (latestTransientFunction.Action != TransientAction.Delete))
+                {
+                    await functionRepository.UpdateAsync(function);
+                }
+
+                CommitTransaction();
+
+                return mapper.Map<FunctionTransient>(latestTransientFunction);
+            }
+            catch (Exception e)
+            {
+                RollbackTransaction();
+                throw e;
+            }
+        }
+
+        private async Task<FunctionTransientModel> ApproveFunctionTransientState(Guid functionId, Guid approvedBy)
+        {
+            var transientFunctions = await functionTransientRepository.GetTransientsForFunctionAsync(functionId);
+            var latestTransientFunction = transientFunctions.LastOrDefault();
+
+            if (latestTransientFunction == null)
+            {
+                throw new InvalidStateTransitionException($"Cannot approve function with ID '{functionId}' as it has no previous transient states.");
+            }
+
+            // Recall, that there may be no transient record changes when approving a function-permission assignment change.
+            if (latestTransientFunction.R_State == DatabaseRecordState.Released)
+            {
+                return latestTransientFunction;
+            }
+
+            EnsureFunctionNotAlreadyApprovedByUser(transientFunctions, approvedBy);
+
+            try
+            {
+                latestTransientFunction.Approve(approvedBy.ToString());
+            }
+            catch (Exception e)
+            {
+                throw new InvalidStateTransitionException($"Cannot approve a transient function state for function with ID '{functionId}'. Error: {e.Message}");
+            }
+
+            // Reset the Transient Function ID to force the creation of a new transient record.
+            latestTransientFunction.Id = Guid.Empty;
+            // Clear the createAt column so that the DB can set it.
+            latestTransientFunction.CreatedAt = new DateTime();
+
+            return await functionTransientRepository.CreateAsync(latestTransientFunction);
+        }
+
+        private void EnsureFunctionNotAlreadyApprovedByUser(List<FunctionTransientModel> transientFunctions, Guid userId)
+        {
+            var latestActiveTransientFunctions = GetLatestActiveTransientFunctionsSincePreviousReleasedState(transientFunctions);
+            var transientFunctionWithApprover = latestActiveTransientFunctions.Where(rt => rt.ChangedBy == userId && rt.R_State == DatabaseRecordState.Approved).FirstOrDefault();
+
+            if (transientFunctionWithApprover != null)
+            {
+                throw new ItemNotProcessableException($"Cannot execute action. Function with ID '{transientFunctionWithApprover.FunctionId}' has already been approved by this user.");
+            }
+
+            var transientFunctionWithCapturer = latestActiveTransientFunctions.Where(rt => rt.ChangedBy == userId && rt.R_State == DatabaseRecordState.Captured).FirstOrDefault();
+
+            if (transientFunctionWithCapturer != null)
+            {
+                throw new ItemNotProcessableException($"Cannot execute approve/decline. The changes to function with ID '{transientFunctionWithCapturer.FunctionId}' were captured by this user.");
+            }
+        }
+
+        private List<FunctionTransientModel> GetLatestActiveTransientFunctionsSincePreviousReleasedState(List<FunctionTransientModel> allTransientFunctions)
+        {
+            List<FunctionTransientModel> lastestActiveTransients = new List<FunctionTransientModel>();
+
+            // Iterate backwards through the transients to get to the last 'released' or 'declined', or the the beginning of the
+            // collection if the function was captured for the first time.
+            for (int i = allTransientFunctions.Count - 1; i >= 0; i--)
+            {
+                if (allTransientFunctions.ElementAt(i).R_State == DatabaseRecordState.Released || allTransientFunctions.ElementAt(i).R_State == DatabaseRecordState.Declined)
+                {
+                    return lastestActiveTransients;
+                }
+
+                lastestActiveTransients.Add(allTransientFunctions.ElementAt(i));
+            }
+
+            return lastestActiveTransients;
+        }
+
+        private async Task<List<FunctionPermissionTransientModel>> FindTransientFunctionPermissionsForFunctionAndApproveThem(FunctionModel function, Guid functionId, Guid approvedBy)
+        {
+            await EnsureFunctionPermissionsNotCapturedOrApprovedByUser(functionId, approvedBy);
+
+            List<FunctionPermissionTransientModel> affectedFunctionPermissionTransientRecords = new List<FunctionPermissionTransientModel>();
+            var allTransientFunctionPermissions = await functionPermissionTransientRepository.GetAllTransientPermissionRelationsForFunctionAsync(functionId);
+
+            // Extract a distinct list of permission IDs from the function permission transients records.
+            var distinctPermissionIds = allTransientFunctionPermissions.Select(trf => trf.PermissionId).Distinct();
+
+            // Iterate through all the distint permission IDs, find the latest transient record for each permission, and process accordingly.
+            foreach (var permissionId in distinctPermissionIds)
+            {
+                var latestTransientFunctionPermissionRecord = allTransientFunctionPermissions.Where(trf => trf.PermissionId == permissionId).LastOrDefault();
+
+                if (latestTransientFunctionPermissionRecord.R_State == DatabaseRecordState.Released || latestTransientFunctionPermissionRecord.R_State == DatabaseRecordState.Declined)
+                {
+                    // This must be an old - already released or declined transient, so ignore.
+                    continue;
+                }
+
+                try
+                {
+                    latestTransientFunctionPermissionRecord.Approve(approvedBy.ToString());
+                }
+                catch (Exception e)
+                {
+                    throw new InvalidStateTransitionException($"Error approving transient function permission for function with ID '{latestTransientFunctionPermissionRecord.FunctionId} and permission with ID '{latestTransientFunctionPermissionRecord.PermissionId} owing to invalid state transition. Error: {e.Message}''");
+                }
+
+                // reset the ID of the transient function permission so a new one can be persisted from it's current state.
+                latestTransientFunctionPermissionRecord.Id = Guid.Empty;
+                // Null the created At date on the object so that it can be recreated.
+                latestTransientFunctionPermissionRecord.CreatedAt = new DateTime();
+
+                await functionPermissionTransientRepository.CreateNewTransientStateForFunctionPermissionAsync(latestTransientFunctionPermissionRecord);
+                CheckForAndProcessReleasedFunctionPermissionTransientRecord(function, latestTransientFunctionPermissionRecord);
+                affectedFunctionPermissionTransientRecords.Add(latestTransientFunctionPermissionRecord);
+            }
+
+            return affectedFunctionPermissionTransientRecords;
+        }
+
+        private async Task EnsureFunctionPermissionsNotCapturedOrApprovedByUser(Guid functionId, Guid userId)
+        {
+            var latestActiveFunctionPermissionTransients = await GetLatestActiveTransientFunctionPermissionsSincePreviousReleasedState(functionId);
+
+            var transientFunctionPermissionWithApprover = latestActiveFunctionPermissionTransients.Where(rt => rt.ChangedBy == userId && rt.R_State == DatabaseRecordState.Approved).FirstOrDefault();
+
+            if (transientFunctionPermissionWithApprover != null)
+            {
+                throw new ItemNotProcessableException($"Cannot execute action. Function with ID '{functionId}' has already been approved by this user.");
+            }
+
+            var transientFunctionPermissionsWithCapturer = latestActiveFunctionPermissionTransients.Where(rt => rt.ChangedBy == userId && rt.R_State == DatabaseRecordState.Captured).FirstOrDefault();
+
+            if (transientFunctionPermissionsWithCapturer != null)
+            {
+                throw new ItemNotProcessableException($"Cannot execute approve/decline. The changes to function with ID '{functionId}' were captured by this user.");
+            }
+        }
+
+        private async Task<List<FunctionPermissionTransientDetailModel>> GetLatestActiveTransientFunctionPermissionsSincePreviousReleasedState(Guid functionId)
+        {
+            List<FunctionPermissionTransientDetailModel> affectedFunctionPermissionTransientRecords = new List<FunctionPermissionTransientDetailModel>();
+            var allTransientFunctionPermissions = await functionPermissionTransientRepository.GetAllTransientPermissionRelationsForFunctionAsync(functionId);
+
+            // Extract a distinct list of permission IDs from this all the function permission transients records.
+            var distinctPermissionIds = allTransientFunctionPermissions.Select(trf => trf.PermissionId).Distinct();
+
+            // Iterate through all the distinct permission IDs, find the latest transient record for each function, and process accordingly.
+            foreach (var permissionId in distinctPermissionIds)
+            {
+                var allTransientFunctionPermissionRecordsForPermission = allTransientFunctionPermissions.Where(trf => trf.PermissionId == permissionId).ToList();
+                var latestActiveTransientFunctionPermissionsForFunction = GetAllLatestActiveTransientFunctionPermissionsForFunctionPermissionAsync(allTransientFunctionPermissionRecordsForPermission);
+                // Get the function details so they can be sent back along with the more detailed transient records.
+                var permission = await permissionRepository.GetByIdAsync(permissionId);
+                latestActiveTransientFunctionPermissionsForFunction.ForEach(item => AddLatestTransientFunctionPermissionsForPermissionsElement(item, permission, affectedFunctionPermissionTransientRecords));
+            }
+
+            return affectedFunctionPermissionTransientRecords;
+        }
+
+        private List<FunctionPermissionTransientModel> GetAllLatestActiveTransientFunctionPermissionsForFunctionPermissionAsync(List<FunctionPermissionTransientModel> allTransientFunctionPermissionsForPermission)
+        {
+            List<FunctionPermissionTransientModel> lastestActiveTransients = new List<FunctionPermissionTransientModel>();
+
+            // Iterate backwards through the transients to get to the last 'released' or 'declined', or the the beginning of the
+            // collection if the function was captured for the first time.
+            for (int i = allTransientFunctionPermissionsForPermission.Count - 1; i >= 0; i--)
+            {
+                if (allTransientFunctionPermissionsForPermission.ElementAt(i).R_State == DatabaseRecordState.Released || allTransientFunctionPermissionsForPermission.ElementAt(i).R_State == DatabaseRecordState.Declined)
+                {
+                    return lastestActiveTransients;
+                }
+
+                lastestActiveTransients.Add(allTransientFunctionPermissionsForPermission.ElementAt(i));
+            }
+
+            return lastestActiveTransients;
+        }
+
+        private void AddLatestTransientFunctionPermissionsForPermissionsElement(FunctionPermissionTransientModel functionPermissionTransientModel, PermissionModel permissionDetails, List<FunctionPermissionTransientDetailModel> affectedFunctionPermissionTransientRecords)
+        {
+            affectedFunctionPermissionTransientRecords.Add(new FunctionPermissionTransientDetailModel
+            {
+                Id = functionPermissionTransientModel.Id,
+                FunctionId = functionPermissionTransientModel.FunctionId,
+                R_State = functionPermissionTransientModel.R_State,
+                Action = functionPermissionTransientModel.Action,
+                ApprovalCount = functionPermissionTransientModel.ApprovalCount,
+                RequiredApprovalCount = functionPermissionTransientModel.RequiredApprovalCount,
+                Permission = permissionDetails,
+                CreatedAt = functionPermissionTransientModel.CreatedAt,
+                ChangedBy = functionPermissionTransientModel.ChangedBy
+            });
+        }
+
+
+        public Task<FunctionTransient> DeclineFunctionAsync(Guid functionId, Guid declinedBy)
+        {
+            throw new NotImplementedException();
         }
 
         public void InitSharedTransaction()

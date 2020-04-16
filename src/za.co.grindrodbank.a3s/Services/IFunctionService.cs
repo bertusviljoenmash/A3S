@@ -21,5 +21,7 @@ namespace za.co.grindrodbank.a3s.Services
         Task<List<Function>> GetListAsync();
         Task DeleteAsync(Guid functionId);
         Task<PaginatedResult<FunctionModel>> GetPaginatedListAsync(int page, int pageSize, bool includeRelations, string filterName, List<KeyValuePair<string, string>> orderBy);
+        Task<FunctionTransient> ApproveFunctionAsync(Guid functionId, Guid approvedBy);
+        Task<FunctionTransient> DeclineFunctionAsync(Guid functionId, Guid declinedBy);
     }
 }

@@ -93,9 +93,10 @@ namespace za.co.grindrodbank.a3s.Controllers
             return NoContent();
         }
 
-        public override Task<IActionResult> ApproveFunctionAsync([FromRoute, Required] Guid functionId)
+        [Authorize(Policy = "permission:a3s.changeReview.approveFunction")]
+        public async override Task<IActionResult> ApproveFunctionAsync([FromRoute, Required] Guid functionId)
         {
-            throw new NotImplementedException();
+            return Ok(await functionService.ApproveFunctionAsync(functionId, ClaimsHelper.GetUserId(User)));
         }
 
         public override Task<IActionResult> DeclineFunctionAsync([FromRoute, Required] Guid functionId)

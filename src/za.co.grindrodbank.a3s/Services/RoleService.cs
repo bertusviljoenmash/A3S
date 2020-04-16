@@ -515,7 +515,7 @@ namespace za.co.grindrodbank.a3s.Services
                    || latestReleasedTransientRole.SubRealmId != currentRoleSubRealmId);
         }
 
-        public async Task<RoleTransient> DeclineRole(Guid roleId, Guid approvedBy)
+        public async Task<RoleTransient> DeclineRoleAsync(Guid roleId, Guid approvedBy)
         {
             InitSharedTransaction();
 
@@ -535,7 +535,7 @@ namespace za.co.grindrodbank.a3s.Services
             }
         }
 
-        public async Task<RoleTransient> ApproveRole(Guid roleId, Guid approvedBy)
+        public async Task<RoleTransient> ApproveRoleAsync(Guid roleId, Guid approvedBy)
         {
             InitSharedTransaction();
 

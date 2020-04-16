@@ -4,7 +4,7 @@
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -39,7 +39,7 @@ namespace za.co.grindrodbank.a3s.Controllers
         [Authorize(Policy = "permission:a3s.changeReview.approveRole")]
         public async override Task<IActionResult> ApproveRoleAsync([FromRoute, Required] Guid roleId)
         {
-            return Ok(await roleService.ApproveRole(roleId, ClaimsHelper.GetUserId(User)));
+            return Ok(await roleService.ApproveRoleAsync(roleId, ClaimsHelper.GetUserId(User)));
         }
 
         [Authorize(Policy = "permission:a3s.roles.create")]
@@ -52,7 +52,7 @@ namespace za.co.grindrodbank.a3s.Controllers
         [Authorize(Policy = "permission:a3s.changeReview.declineRole")]
         public async override Task<IActionResult> DeclineRoleAsync([FromRoute, Required] Guid roleId)
         {
-            return Ok(await roleService.DeclineRole(roleId, ClaimsHelper.GetUserId(User)));
+            return Ok(await roleService.DeclineRoleAsync(roleId, ClaimsHelper.GetUserId(User)));
         }
 
         [Authorize(Policy = "permission:a3s.roles.delete")]
@@ -69,7 +69,7 @@ namespace za.co.grindrodbank.a3s.Controllers
 
             var role = await roleService.GetByIdAsync(roleId);
 
-            if(role == null)
+            if (role == null)
                 return NotFound();
 
             return Ok(role);

@@ -20,8 +20,8 @@ namespace za.co.grindrodbank.a3s.Services
         Task<RoleTransient> CreateAsync(RoleSubmit roleSubmit, Guid createdById);
         Task<List<Role>> GetListAsync();
         Task<PaginatedResult<RoleModel>> GetPaginatedListAsync(int page, int pageSize, bool includeRelations, string filterName, List<KeyValuePair<string, string>> orderBy);
-        Task<RoleTransient> ApproveRole(Guid roleId, Guid approvedBy);
-        Task<RoleTransient> DeclineRole(Guid roleId, Guid approvedBy);
+        Task<RoleTransient> ApproveRoleAsync(Guid roleId, Guid approvedBy);
+        Task<RoleTransient> DeclineRoleAsync(Guid roleId, Guid approvedBy);
         Task<RoleTransient> DeleteAsync(Guid roleId, Guid deletedById);
         Task<RoleTransients> GetLatestRoleTransientsAsync(Guid roleId);
     }
