@@ -7636,6 +7636,11 @@
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "requiredApprovalCount" : 6,
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
               "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "name" : "name",
               "description" : "description",
@@ -7675,6 +7680,11 @@
               "createdAt" : "2000-01-23T04:56:07.000+00:00",
               "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "requiredApprovalCount" : 6,
+              "application" : {
+                "name" : "name",
+                "description" : "description",
+                "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+              },
               "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
               "name" : "name",
               "description" : "description",
@@ -8324,6 +8334,11 @@
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "requiredApprovalCount" : 6,
+            "application" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "name" : "name",
             "description" : "description",
@@ -9050,6 +9065,7 @@
       "FunctionTransient" : {
         "description" : "Represents a transient state of a function and it's relations.\n",
         "example" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
           "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "requiredApprovalCount" : 6,
           "changedBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
@@ -9078,6 +9094,7 @@
           "description" : "description",
           "r_state" : "r_state",
           "action" : "action",
+          "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "approvalCount" : 0
         },
@@ -9096,6 +9113,10 @@
           "description" : {
             "type" : "string"
           },
+          "applicationId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
           "r_state" : {
             "type" : "string"
           },
@@ -9112,6 +9133,10 @@
           },
           "changedBy" : {
             "format" : "uuid",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
             "type" : "string"
           },
           "latestTransientFunctionPermissions" : {
@@ -9240,6 +9265,11 @@
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "requiredApprovalCount" : 6,
+            "application" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "name" : "name",
             "description" : "description",
@@ -9251,6 +9281,11 @@
             "createdAt" : "2000-01-23T04:56:07.000+00:00",
             "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "requiredApprovalCount" : 6,
+            "application" : {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            },
             "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "name" : "name",
             "description" : "description",
@@ -9312,6 +9347,11 @@
           "createdAt" : "2000-01-23T04:56:07.000+00:00",
           "functionId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "requiredApprovalCount" : 6,
+          "application" : {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          },
           "createdBy" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "name" : "name",
           "description" : "description",
@@ -9334,6 +9374,9 @@
           },
           "description" : {
             "type" : "string"
+          },
+          "application" : {
+            "$ref" : "#/components/schemas/ApplicationSimple"
           },
           "r_state" : {
             "type" : "string"

@@ -11,17 +11,29 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace za.co.grindrodbank.a3s.Models
 {
-    [Table("Function")]
-    public class FunctionModel
+    [Table("FunctionTransient")]
+    public class FunctionTransientModel : TransientStateMachineRecord
     {
+        [Required]
         [Key]
         public Guid Id { get; set; }
+
+        [Required]
         public string Name { get; set; }
+
+        [Required]
         public string Description { get; set; }
-        public List<FunctionPermissionModel> FunctionPermissions { get; set; }
-        public List<RoleFunctionModel> RoleFunctions { get; set; }
-        public ApplicationModel Application { get; set; }
-        // A function can be associated with a single Sub Realm.
-        public SubRealmModel SubRealm { get; set; }
+
+        [Required]
+        public Guid FunctionId { get; set; }
+
+        [Required]
+        public Guid SubRealmId { get; set; }
+
+        [Required]
+        public Guid ApplicationId { get; set; }
+
+        [NotMapped]
+        public List<FunctionPermissionTransientModel> LatestTransientFunctionPermissions { get; set; }
     }
 }

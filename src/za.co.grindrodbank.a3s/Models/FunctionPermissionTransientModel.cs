@@ -5,17 +5,18 @@
  * **************************************************
  */
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace za.co.grindrodbank.a3s.Models
 {
-    [Table("FunctionPermission")]
-    public class FunctionPermissionModel
+    public class FunctionPermissionTransientModel : TransientStateMachineRecord
     {
+        [Required]
+        [Key]
+        public Guid Id { get; set; }
+        [Required]
         public Guid FunctionId { get; set; }
-        public FunctionModel Function { get; set; }
+        [Required]
         public Guid PermissionId { get; set; }
-        public PermissionModel Permission { get; set; }
     }
 }

@@ -5162,6 +5162,9 @@ components:
           type: string
         description:
           type: string
+        applicationId:
+          type: string
+          format: uuid
         r_state:
           type: string
         action:
@@ -5175,6 +5178,9 @@ components:
         changedBy:
           type: string
           format: uuid
+        createdAt:
+          type: string
+          format: date-time
         latestTransientFunctionPermissions:
           description: A list of the latest transient function permission assignments for this transient function.
           type: array
@@ -5269,6 +5275,8 @@ components:
           type: string
         description:
           type: string
+        application:
+          $ref: '#/components/schemas/ApplicationSimple'
         r_state:
           type: string
         action:

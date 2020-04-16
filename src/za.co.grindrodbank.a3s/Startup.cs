@@ -207,6 +207,8 @@ namespace za.co.grindrodbank.a3s
             services.AddScoped<ILdapAuthenticationModeRepository, LdapAuthenticationModeRepository>();
             services.AddScoped<IPermissionRepository, PermissionRepository>();
             services.AddScoped<IFunctionRepository, FunctionRepository>();
+            services.AddScoped<IFunctionTransientRepository, FunctionTransientRepository>();
+            services.AddScoped<IFunctionPermissionTransientRepository, FunctionPermissionTransientRepository>();
             services.AddScoped<IApplicationFunctionRepository, ApplicationFunctionRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
@@ -360,19 +362,16 @@ namespace za.co.grindrodbank.a3s
                         Name = "a3s.securityContractMaintenance",
                         Description = "Functionality to apply security contracts for micro-services.",
                         Application = application,
-                        ChangedBy = Guid.Empty
                     };
                     function.FunctionPermissions.Add(new FunctionPermissionModel
                     {
                         Function = function,
                         Permission = writePermission,
-                        ChangedBy = Guid.Empty
                     });
                     function.FunctionPermissions.Add(new FunctionPermissionModel
                     {
                         Function = function,
                         Permission = readPermission,
-                        ChangedBy = Guid.Empty
                     });
 
                     context.Function.Add(function);

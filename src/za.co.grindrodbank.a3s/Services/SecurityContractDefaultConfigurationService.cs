@@ -157,7 +157,6 @@ namespace za.co.grindrodbank.a3s.Services
             functionModelToAdd.Application = application;
             functionModelToAdd.Description = defaultFunction.Description;
             functionModelToAdd.Name = defaultFunction.Name;
-            functionModelToAdd.ChangedBy = updatedById;
 
             // Clear the current permissions assigned to the function as they are to be re-created.
             functionModelToAdd.FunctionPermissions = new List<FunctionPermissionModel>();
@@ -205,7 +204,6 @@ namespace za.co.grindrodbank.a3s.Services
                         {
                             Function = functionModelToAdd,
                             Permission = permission.Permission,
-                            ChangedBy = updatedById
                         });
                     }
                 }
@@ -883,7 +881,7 @@ namespace za.co.grindrodbank.a3s.Services
                     Functions = new List<SecurityContractDefaultConfigurationFunction>()
                 };
 
-                foreach (var function in application.Functions.OrderBy(o => o.SysPeriod.LowerBound))
+                foreach (var function in application.Functions.OrderBy(o => o.Name))
                 {
                     logger.Debug($"Retrieving default configuration contract definition for Function [{function.Name}].");
 
@@ -934,7 +932,7 @@ namespace za.co.grindrodbank.a3s.Services
                 Roles = new List<string>()
             };
 
-            foreach (var function in role.RoleFunctions.OrderBy(o => o.Function.SysPeriod.LowerBound))
+            foreach (var function in role.RoleFunctions.OrderBy(o => o.Function.Name))
                 contractRole.Functions.Add(function.Function.Name);
 
             foreach (var childRole in role.ChildRoles)

@@ -57,6 +57,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public string Description { get; set; }
 
         /// <summary>
+        /// Gets or Sets Application
+        /// </summary>
+        [DataMember(Name="application", EmitDefaultValue=false)]
+        public ApplicationSimple Application { get; set; }
+
+        /// <summary>
         /// Gets or Sets RState
         /// </summary>
         [DataMember(Name="r_state", EmitDefaultValue=false)]
@@ -108,6 +114,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  FunctionId: ").Append(FunctionId).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  Application: ").Append(Application).Append("\n");
             sb.Append("  RState: ").Append(RState).Append("\n");
             sb.Append("  Action: ").Append(Action).Append("\n");
             sb.Append("  ApprovalCount: ").Append(ApprovalCount).Append("\n");
@@ -171,6 +178,11 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     Description.Equals(other.Description)
                 ) && 
                 (
+                    Application == other.Application ||
+                    Application != null &&
+                    Application.Equals(other.Application)
+                ) && 
+                (
                     RState == other.RState ||
                     RState != null &&
                     RState.Equals(other.RState)
@@ -220,6 +232,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + Name.GetHashCode();
                     if (Description != null)
                     hashCode = hashCode * 59 + Description.GetHashCode();
+                    if (Application != null)
+                    hashCode = hashCode * 59 + Application.GetHashCode();
                     if (RState != null)
                     hashCode = hashCode * 59 + RState.GetHashCode();
                     if (Action != null)

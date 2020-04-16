@@ -96,6 +96,20 @@ namespace GlobalErrorHandling.Extensions
                 return;
             }
 
+            // Check for a entity state conflict exception - should return a 409.
+            if (contextFeature.Error is EntityStateConflictException)
+            {
+                WriteException(contextFeature.Error);
+                context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+
+                await context.Response.WriteAsync(new ErrorResponse()
+                {
+                    Message = contextFeature.Error.Message
+                }.ToJson());
+
+                return;
+            }
+
             // Check for a Invalid Format Exception error
             if (contextFeature.Error is InvalidFormatException)
             {
