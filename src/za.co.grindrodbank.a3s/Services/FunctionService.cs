@@ -510,7 +510,7 @@ namespace za.co.grindrodbank.a3s.Services
                 // NOTE: It is possible for an empty function (not persisted) to be returned if the function is not released in the following step.
                 FunctionModel function = await UpdateFunctionBasedOnTransientActionIfTransientFunctionStateIsReleased(newFunctionTransient);
 
-                // If there was not update to the function (as a result of released state being processed, use the exiting state as the authoratative one.
+                // If there was not update to the function (as a result of released state being processed), use the exiting state as the authoratative one.
                 if(function.Id == Guid.Empty)
                 {
                     function = existingFunction;
@@ -536,21 +536,6 @@ namespace za.co.grindrodbank.a3s.Services
             }
         }
 
-
-        // OLD IMPLEMENTATION BELOW
-
-        private async Task CheckForSubRealmAndAssignToFunctionIfExists(FunctionModel function, FunctionSubmit functionSubmit)
-        {
-            // Recall that submit models with empty GUIDs will not be null but rather Guid.Empty.
-            if (functionSubmit.SubRealmId == null || functionSubmit.SubRealmId == Guid.Empty)
-            {
-                return;
-            }
-
-            var existingSubRealm = await subRealmRepository.GetByIdAsync(functionSubmit.SubRealmId, false);
-            function.SubRealm = existingSubRealm ?? throw new ItemNotFoundException($"Sub-realm with ID '{functionSubmit.SubRealmId}' does not exist.");
-        }
-
         public async Task DeleteAsync(Guid functionId)
         {
             var function = await functionRepository.GetByIdAsync(functionId);
@@ -563,60 +548,9 @@ namespace za.co.grindrodbank.a3s.Services
             await functionRepository.DeleteAsync(function);
         }
 
-        private async Task CheckForApplicationAndAssignToFunctionIfExists(FunctionModel function, FunctionSubmit functionSubmit)
-        {
-            var application = await applicationRepository.GetByIdAsync(functionSubmit.ApplicationId);
-            function.Application = application ?? throw new ItemNotFoundException($"Application with UUID: '{functionSubmit.ApplicationId}' not found. Cannot create function '{functionSubmit.Name}' with this application.");
-        }
-
-        private async Task CheckThatPermissionsExistAndAssignToFunction(FunctionModel function, FunctionSubmit functionSubmit)
-        {
-            if (functionSubmit.Permissions != null && functionSubmit.Permissions.Count > 0)
-            {
-                foreach (var permissionId in functionSubmit.Permissions)
-                {
-                    var permission = await permissionRepository.GetByIdWithApplicationAsync(permissionId);
-
-                    if (permission == null)
-                    {
-                        throw new ItemNotFoundException($"Permission with UUID: '{permissionId}' not found. Not adding it to function '{functionSubmit.Name}'.");
-                    }
-
-                    // NB!! Must check that the permission actually attached to an application function where the application is the same as the Funciton
-                    // application. Functions cannot be created from permissions across applications.
-                    if (permission.ApplicationFunctionPermissions.First().ApplicationFunction.Application.Id != functionSubmit.ApplicationId)
-                    {
-                        throw new ItemNotProcessableException($"Permission with UUID: '{permissionId}' does not belong to application with ID: {functionSubmit.ApplicationId}. Not adding it to function '{functionSubmit.Name}'.");
-                    }
-
-                    PerformSubrealmCheck(function, permission);
-
-                    function.FunctionPermissions.Add(new FunctionPermissionModel
-                    {
-                        Function = function,
-                        Permission = permission
-                    });
-                }
-            }
-        }
-
         public async Task<PaginatedResult<FunctionModel>> GetPaginatedListAsync(int page, int pageSize, bool includeRelations, string filterName, List<KeyValuePair<string, string>> orderBy)
         {
             return await functionRepository.GetPaginatedListAsync(page, pageSize, includeRelations, filterName, orderBy);
-        }
-
-        private void PerformSubrealmCheck(FunctionModel function, PermissionModel permission)
-        {
-            // If there is a Sub-Realm associated with function, we must ensure that the permission is associated with the same sub realm.
-            if (function.SubRealm != null)
-            {
-                var subRealmPermission = permission.SubRealmPermissions.FirstOrDefault(psrp => psrp.SubRealm.Id == function.SubRealm.Id);
-
-                if (subRealmPermission == null)
-                {
-                    throw new ItemNotProcessableException($"Attempting to add a permission with ID '{permission.Id}' to a function within the '{function.SubRealm.Name}' sub-realm but the permission does not exist within that sub-realm.");
-                }
-            }
         }
 
         public void InitSharedTransaction()
