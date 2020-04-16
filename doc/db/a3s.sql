@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 11.7
--- Dumped by pg_dump version 12.1
+-- Dumped by pg_dump version 11.7
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -25,21 +25,9 @@ CREATE SCHEMA _a3s;
 
 ALTER SCHEMA _a3s OWNER TO postgres;
 
---
--- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA _a3s;
-
-
---
--- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
-
-
 SET default_tablespace = '';
+
+SET default_with_oids = false;
 
 --
 -- Name: application; Type: TABLE; Schema: _a3s; Owner: postgres
@@ -359,6 +347,26 @@ COMMENT ON TABLE _a3s.aspnet_user_role IS 'Asp.Net identity default table. Not U
 
 
 --
+-- Name: flyway_schema_history; Type: TABLE; Schema: _a3s; Owner: postgres
+--
+
+CREATE TABLE _a3s.flyway_schema_history (
+    installed_rank integer NOT NULL,
+    version character varying(50),
+    description character varying(200) NOT NULL,
+    type character varying(20) NOT NULL,
+    script character varying(1000) NOT NULL,
+    checksum integer,
+    installed_by character varying(100) NOT NULL,
+    installed_on timestamp without time zone DEFAULT now() NOT NULL,
+    execution_time integer NOT NULL,
+    success boolean NOT NULL
+);
+
+
+ALTER TABLE _a3s.flyway_schema_history OWNER TO postgres;
+
+--
 -- Name: function; Type: TABLE; Schema: _a3s; Owner: postgres
 --
 
@@ -367,8 +375,6 @@ CREATE TABLE _a3s.function (
     name text NOT NULL,
     description text,
     application_id uuid NOT NULL,
-    changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL,
     sub_realm_id uuid
 );
 
@@ -388,9 +394,7 @@ COMMENT ON TABLE _a3s.function IS 'A grouping of permissions belonging to a spec
 
 CREATE TABLE _a3s.function_permission (
     function_id uuid NOT NULL,
-    permission_id uuid NOT NULL,
-    changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    permission_id uuid NOT NULL
 );
 
 
@@ -402,6 +406,45 @@ ALTER TABLE _a3s.function_permission OWNER TO postgres;
 
 COMMENT ON TABLE _a3s.function_permission IS 'Function and Permission link';
 
+
+--
+-- Name: function_permission_transient; Type: TABLE; Schema: _a3s; Owner: postgres
+--
+
+CREATE TABLE _a3s.function_permission_transient (
+    id uuid NOT NULL,
+    function_id uuid NOT NULL,
+    permission_id uuid NOT NULL,
+    r_state text NOT NULL,
+    changed_by uuid NOT NULL,
+    approval_count integer NOT NULL,
+    action text NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE _a3s.function_permission_transient OWNER TO postgres;
+
+--
+-- Name: function_transient; Type: TABLE; Schema: _a3s; Owner: postgres
+--
+
+CREATE TABLE _a3s.function_transient (
+    id uuid NOT NULL,
+    function_id uuid NOT NULL,
+    name text NOT NULL,
+    description text NOT NULL,
+    application_id uuid NOT NULL,
+    sub_realm_id uuid,
+    r_state text NOT NULL,
+    changed_by uuid NOT NULL,
+    approval_count integer NOT NULL,
+    action text NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE _a3s.function_transient OWNER TO postgres;
 
 --
 -- Name: ldap_authentication_mode; Type: TABLE; Schema: _a3s; Owner: postgres
@@ -648,8 +691,6 @@ CREATE TABLE _a3s.role (
     id uuid NOT NULL,
     name text NOT NULL,
     description text,
-    changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL,
     sub_realm_id uuid
 );
 
@@ -669,9 +710,7 @@ COMMENT ON TABLE _a3s.role IS 'A role a user belongs to';
 
 CREATE TABLE _a3s.role_function (
     role_id uuid NOT NULL,
-    function_id uuid NOT NULL,
-    changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    function_id uuid NOT NULL
 );
 
 
@@ -685,14 +724,30 @@ COMMENT ON TABLE _a3s.role_function IS 'Role and Function link';
 
 
 --
+-- Name: role_function_transient; Type: TABLE; Schema: _a3s; Owner: postgres
+--
+
+CREATE TABLE _a3s.role_function_transient (
+    id uuid NOT NULL,
+    role_id uuid,
+    function_id uuid NOT NULL,
+    r_state text NOT NULL,
+    changed_by uuid NOT NULL,
+    approval_count integer NOT NULL,
+    action text NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE _a3s.role_function_transient OWNER TO postgres;
+
+--
 -- Name: role_role; Type: TABLE; Schema: _a3s; Owner: postgres
 --
 
 CREATE TABLE _a3s.role_role (
     parent_role_id uuid NOT NULL,
-    child_role_id uuid NOT NULL,
-    changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    child_role_id uuid NOT NULL
 );
 
 
@@ -704,6 +759,44 @@ ALTER TABLE _a3s.role_role OWNER TO postgres;
 
 COMMENT ON TABLE _a3s.role_role IS 'Role of Roles (compound role) definition';
 
+
+--
+-- Name: role_role_transient; Type: TABLE; Schema: _a3s; Owner: postgres
+--
+
+CREATE TABLE _a3s.role_role_transient (
+    id uuid NOT NULL,
+    parent_role_id uuid,
+    child_role_id uuid NOT NULL,
+    r_state text NOT NULL,
+    changed_by uuid NOT NULL,
+    approval_count integer NOT NULL,
+    action text NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE _a3s.role_role_transient OWNER TO postgres;
+
+--
+-- Name: role_transient; Type: TABLE; Schema: _a3s; Owner: postgres
+--
+
+CREATE TABLE _a3s.role_transient (
+    id uuid NOT NULL,
+    role_id uuid NOT NULL,
+    name text NOT NULL,
+    description text NOT NULL,
+    sub_realm_id uuid,
+    r_state text NOT NULL,
+    changed_by uuid NOT NULL,
+    approval_count integer NOT NULL,
+    action text NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE _a3s.role_transient OWNER TO postgres;
 
 --
 -- Name: sub_realm; Type: TABLE; Schema: _a3s; Owner: postgres
@@ -826,9 +919,9 @@ CREATE TABLE _a3s.team (
     id uuid NOT NULL,
     name text NOT NULL,
     description text,
-    terms_of_service_id uuid,
     changed_by uuid NOT NULL,
     sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL,
+    terms_of_service_id uuid,
     sub_realm_id uuid
 );
 
@@ -1043,6 +1136,14 @@ COMMENT ON TABLE _a3s.user_team IS 'Users and Teams link';
 
 
 --
+-- Name: flyway_schema_history flyway_schema_history_pk; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.flyway_schema_history
+    ADD CONSTRAINT flyway_schema_history_pk PRIMARY KEY (installed_rank);
+
+
+--
 -- Name: ldap_authentication_mode_ldap_attribute ldap_authentication_mode_ldap_attribute_pkey; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
 --
 
@@ -1163,6 +1264,22 @@ ALTER TABLE ONLY _a3s.function_permission
 
 
 --
+-- Name: function_permission_transient pk_function_permission_transient; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.function_permission_transient
+    ADD CONSTRAINT pk_function_permission_transient PRIMARY KEY (id);
+
+
+--
+-- Name: function_transient pk_function_transient; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.function_transient
+    ADD CONSTRAINT pk_function_transient PRIMARY KEY (id);
+
+
+--
 -- Name: permission pk_permission; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
 --
 
@@ -1211,11 +1328,35 @@ ALTER TABLE ONLY _a3s.role_function
 
 
 --
+-- Name: role_function_transient pk_role_function_transient; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.role_function_transient
+    ADD CONSTRAINT pk_role_function_transient PRIMARY KEY (id);
+
+
+--
 -- Name: role_role pk_role_role; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
 --
 
 ALTER TABLE ONLY _a3s.role_role
     ADD CONSTRAINT pk_role_role PRIMARY KEY (parent_role_id, child_role_id);
+
+
+--
+-- Name: role_role_transient pk_role_role_transient; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.role_role_transient
+    ADD CONSTRAINT pk_role_role_transient PRIMARY KEY (id);
+
+
+--
+-- Name: role_transient pk_role_transient; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.role_transient
+    ADD CONSTRAINT pk_role_transient PRIMARY KEY (id);
 
 
 --
@@ -1442,6 +1583,13 @@ ALTER TABLE ONLY _a3s.user_custom_attribute
 
 
 --
+-- Name: flyway_schema_history_s_idx; Type: INDEX; Schema: _a3s; Owner: postgres
+--
+
+CREATE INDEX flyway_schema_history_s_idx ON _a3s.flyway_schema_history USING btree (success);
+
+
+--
 -- Name: ix_application_data_policy_name; Type: INDEX; Schema: _a3s; Owner: postgres
 --
 
@@ -1591,6 +1739,14 @@ ALTER TABLE ONLY _a3s.application_function_permission
 
 ALTER TABLE ONLY _a3s.application_function_permission
     ADD CONSTRAINT fk_application_function_permission_permission_permission_id FOREIGN KEY (permission_id) REFERENCES _a3s.permission(id) ON DELETE CASCADE;
+
+
+--
+-- Name: user_custom_attribute fk_application_user.user_id; Type: FK CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.user_custom_attribute
+    ADD CONSTRAINT "fk_application_user.user_id" FOREIGN KEY (user_id) REFERENCES _a3s.application_user(id) MATCH FULL;
 
 
 --
@@ -1879,14 +2035,6 @@ ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance
 
 ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance
     ADD CONSTRAINT fk_terms_of_service_user_acceptance_user_user_id FOREIGN KEY (user_id) REFERENCES _a3s.application_user(id) MATCH FULL;
-
-
---
--- Name: user_custom_attribute "fk_application_user.user_id"; Type: FK CONSTRAINT; Schema: _a3s; Owner: postgres
---
-
-ALTER TABLE ONLY _a3s.user_custom_attribute
-    ADD CONSTRAINT "fk_application_user.user_id" FOREIGN KEY (user_id) REFERENCES _a3s.application_user(id) MATCH FULL;
 
 
 --
